@@ -3128,7 +3128,7 @@ void add_predefines() {
   lpc_predef_t *tmpf;
 
   add_predefine("MUDOS", -1, "");
-  add_predefine("FLUFFOS", -1, "");
+  add_predefine("MUDOS_NG", -1, "");
 
 #define _STR_HELPER(x) #x
 #define _STR(x) _STR_HELPER(x)

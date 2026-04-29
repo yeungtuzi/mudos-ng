@@ -2,7 +2,7 @@
  * json.c
  *
  * LPC support functions for JSON serialization and deserialization.
- * Attempts to be compatible with reasonably current FluffOS and LDMud
+ * Attempts to be compatible with reasonably current MudOS-NG and LDMud
  * drivers, with at least a gesture or two toward compatibility with
  * older drivers.
  *
@@ -14,7 +14,7 @@
  *     Serializes an LPC value into JSON text.
  *
  * v1.0: initial release
- * v1.0.1: fix for handling of \uXXXX on FLUFFOS
+ * v1.0.1: fix for handling of \uXXXX on MUDOS_NG
  * v1.0.2: define array keyword for LDMud & use it consistently
  * v1.0.3: fix for empty data structures
  * v1.0.4: Removed array keyword. (Yucong Sun)

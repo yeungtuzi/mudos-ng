@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUD Game Client - FluffOS</title>
+    <title>MUD Game Client - MudOS-NG</title>
     <style>
         * {
             margin: 0;
@@ -702,7 +702,7 @@
                 this.send('Client.GUI', {
                     version: '1.0.0',
                     type: 'websocket',
-                    client: 'FluffOS-WebClient'
+                    client: 'MudOS-NG-WebClient'
                 });
 
                 this.send('Client.Window', {
@@ -1189,7 +1189,7 @@
                 this.sendGMCP('Client.GUI', {
                     version: '1.0.0',
                     type: 'websocket',
-                    client: 'FluffOS-WebClient'
+                    client: 'MudOS-NG-WebClient'
                 });
 
                 this.sendWindowSize();

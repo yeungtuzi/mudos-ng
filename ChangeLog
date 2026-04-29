@@ -1,14 +1,14 @@
 Wodan announced 3.x release will be maintained by
 "Yucong Sun" (sunyucong@gmail.com) for now.
 
-Please submit issue to https://github.com/fluffos/fluffos
+Please submit issue to https://github.com/mudos-ng/mudos-ng
 
 Major changes compare to 2.x:
 
 Build:
-  * FluffOS has switched to c++ language, C++11 (G++ 4.6+, CLANG 2.9+) is required to build.
-  * FluffOS now use C++ try/catch instead of setjmp/longjmp for LPC error recovery. (wodan)
-  * FluffOS now uses autoconf for dependency configuraiton. (alpha4 done)
+  * MudOS-NG has switched to c++ language, C++11 (G++ 4.6+, CLANG 2.9+) is required to build.
+  * MudOS-NG now use C++ try/catch instead of setjmp/longjmp for LPC error recovery. (wodan)
+  * MudOS-NG now uses autoconf for dependency configuraiton. (alpha4 done)
   * Libevent 2.0+ is required to build, by default epoll() is used instead of select(). (alpha6)
   * all *.c files has been renamed to *.cc. all *_spec.c files has been renamed to
       *.spec . (alpha6)
@@ -32,7 +32,7 @@ New compile options/packages:
   * REVERSE_DEFER: fifo execution order for defer() efun (default to lifo)
 
 Misc:
-  * FluffOS now provide 64bit LPC runtime regardless of host system. (including 32bit linux/CYGWIN).
+  * MudOS-NG now provide 64bit LPC runtime regardless of host system. (including 32bit linux/CYGWIN).
   * addr_server is now obsolete and deleted, the functionaltiy is built-in. (alpha6)
   * DEBUG_MACRO is now always true, the functionaltiy is being canonicalized as built-in.
   * Various bug/crash fixes.
@@ -47,7 +47,7 @@ Known Issues:
   Per-release ChangeLog
 ================================================================================
 
-FluffOS 3.0-alpha7.4
+MudOS-NG 3.0-alpha7.4
 New features
   * PACKAGE_DB: MYSQL NewDecimal Type This is needed in my system for read
     a column SUM(xxx) in a SELECT. (Zoilder)
@@ -65,7 +65,7 @@ Misc
   * various compile fixing, althrough not complete, but should be compileable under
     CYGWIN64 and freebsd using gcc 4.8.
 
-FluffOS 3.0-alpha7.3
+MudOS-NG 3.0-alpha7.3
   * User command execution is now integrated into event loop.
     (at least 10% CPU decrease and better fairness among users).
   * Fixed unique_mapping() crash when callback returns new objects/array etc.
@@ -79,34 +79,34 @@ FluffOS 3.0-alpha7.3
   * Previously if a user object is destructed, the message in the buffer would be lost.
     Now the driver will correctly send them out before terminating connection.
 
-FluffOS 3.0-alpha7.2
+MudOS-NG 3.0-alpha7.2
   * unique_mapping() crash when callback returns a non-shared string.
   * move some outdated doc to /doc/archive.
   * some format change in EFUN/APPLY doc.
 
-FluffOS 3.0-alpha7.1
+MudOS-NG 3.0-alpha7.1
   * disable_commands() change is reverted, not thought through.
   * enable_commands() now accepts a int instead (see 3.0 vs 2.0)
 
-FluffOS 3.0-alpha7
+MudOS-NG 3.0-alpha7
   * Check c++11 capability during configuring.
   * new LPC predefine __CXXFLAGS__.
   * Fixes cmud/zmud problem with TCP_NODELAY with MCCP.
   * new debug macro "-dadd_action" to show add_action related logs.
   * disable_commands() now accepts one int argument. (see above).
 
-FluffOS 3.0-alpha6.4
+MudOS-NG 3.0-alpha6.4
   * Fixed efun present() issue for object id that ends with digits, added test.
 
-FluffOS 3.0-alpha6.3
+MudOS-NG 3.0-alpha6.3
   * Fixed memory corruption issue for PACKAGE_CRYPTO, added a test.
 
-FluffOS 3.0-alpha6.2
+MudOS-NG 3.0-alpha6.2
 
   * Fixed memory corruption issue for store_variable(), added test.
   * Enable TCP_NODELAY on user socket and lpc socket by default.
 
-FluffOS 3.0-alpha6.1
+MudOS-NG 3.0-alpha6.1
 
 Major Stuff:
   * Libevent 2.0 integration: epoll() for user and lpc sockets!
@@ -139,13 +139,13 @@ Other:
   * Force creating dwarf-2 debug info format.
   * Make new_user_handler() safe from LPC error().
   * Add configure check for C++ 11.
-  * Allow passing CXXFLAGS to build.FluffOS.
+  * Allow passing CXXFLAGS to build.MudOS-NG.
   * Fix crash when sending 0 length message through lpc socket.
   * Fix buffer underrun in present("1").
   * deleted text/html version of document, moved nroff version to /doc.
   * add back "-flto" compile option.
 
-FluffOS 3.0-alpha5
+MudOS-NG 3.0-alpha5
     REVERSE_DEFER, fifo execution for defer()
 
     Rewrite unique_mapping(), no more memory leak.
@@ -156,23 +156,23 @@ FluffOS 3.0-alpha5
     Also remove some obsolete signal code.
     Fix build with PCRE, MYSQL, PGSQL, SQLITE3.
 
-FluffOS 3.0-alpha4
+MudOS-NG 3.0-alpha4
   PACKAGE_TRIM: (zoilder), rtrim, ltrim, and trim for string trimming.
 
-  FluffOS has switched to use autoconf for compatibility detection.
+  MudOS-NG has switched to use autoconf for compatibility detection.
   This has lead to removal of almost half of the code in edit_source.c
-  Note: the correct way to build is still to launch ./build.FluffOS first,
+  Note: the correct way to build is still to launch ./build.MudOS-NG first,
     then make.
   Other general code quality imporvements, many old crafts has been removed.
-  FluffOS 3.0 will only support mondern linux distributions.
+  MudOS-NG 3.0 will only support mondern linux distributions.
 
-FluffOS 3.0-alpha3
-  FluffOS has switched to c++ language.
+MudOS-NG 3.0-alpha3
+  MudOS-NG has switched to c++ language.
   use try/catch instead of longjmp. (wodan)
   Code quality improvment.
   Fix using DEBUG without DEBUGMALLOC_EXTENSIONS cause memory corruption.
 
-FluffOS 3.0-alpha2
+MudOS-NG 3.0-alpha2
 
 General:
   Rebased to 2.27 released by wodan.
@@ -187,7 +187,7 @@ Tests:
   Tests are now executed randomly.
   debugmalloc will fill memory with magic values.
 
-FluffOS 3.0-alpha1
+MudOS-NG 3.0-alpha1
 
 New compile options:
   POSIX_TIMERS: better time preceision tracking for eval cost. (voltara@lpmuds.net)

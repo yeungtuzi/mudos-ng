@@ -8,7 +8,7 @@ title: Build (v2017)
 
 v2017 currently supports ubuntu 14.04+, centos 7+, CYGWIN 64.
 
-Compilers: FluffOS uses C++11, which requires at least GCC 4.6+ or LLVM clang 3.0+.
+Compilers: MudOS-NG uses C++11, which requires at least GCC 4.6+ or LLVM clang 3.0+.
 
 Library: libevent 2.0+, additional libraries depends on the package selection. 
 
@@ -22,8 +22,8 @@ To Build fluffOS v2017 (Autoconf & in tree build)
     $ sudo apt install autoconf automake
    
     # 1. checkout git repo
-    $ git clone https://github.com/fluffos/fluffos.git
-    $ cd fluffos
+    $ git clone https://github.com/mudos-ng/mudos-ng.git
+    $ cd mudos-ng
     $ git checkout v2017 (or any specfic release tag)
 
     # 2. modify local_options file as need.
@@ -31,14 +31,14 @@ To Build fluffOS v2017 (Autoconf & in tree build)
     <edit local_options to you need>
 
     # 3. Build!
-    $ ./build.FluffOS
+    $ ./build.MudOS-NG
     $ make
 
     # 4. find the built binary in src/driver and src/portbind
 ```
 ## CentOS
 
-The problem with CentOS is that most of the package is too old for FluffOS,
+The problem with CentOS is that most of the package is too old for MudOS-NG,
 you must upgrade them manually first.
 
 Move to ubuntu or run an ubuntu based docker images is highly recommended.
@@ -76,7 +76,7 @@ Move to ubuntu or run an ubuntu based docker images is highly recommended.
 ```
 ## CYGWIN32/CYGWIN64
 
-FluffOS v2017 is fully functional under CYGWIN32 and CYGWIN64.
+MudOS-NG v2017 is fully functional under CYGWIN32 and CYGWIN64.
 ```bash
     # 1. Get CYGWIN setup file on http://www.cygwin.org , preferably x64 one.
 
@@ -99,5 +99,5 @@ FluffOS v2017 is fully functional under CYGWIN32 and CYGWIN64.
 
     # CYGWIN setup should take care of other dependencies for you
 
-    # 3. Build FluffOS as if we are under normal linux!
+    # 3. Build MudOS-NG as if we are under normal linux!
 ```

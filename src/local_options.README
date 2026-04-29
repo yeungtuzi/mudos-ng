@@ -27,7 +27,7 @@
 /****************************************************************************
  *                          COMPATIBILITY                                   *
  *                         ---------------                                  *
- * The MudOS driver and following this the extensions making up the FluffOS *
+ * The MudOS driver and following this the extensions making up the MudOS-NG *
  * driver has evolved quite a bit over the years.  These defines are mainly *
  * to preserve old behavior in case people didn't want to rewrite the       *
  * relevant portions of their code.                                         *

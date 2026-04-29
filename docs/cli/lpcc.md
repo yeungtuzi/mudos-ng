@@ -5,7 +5,7 @@ title: cli / lpcc
 
 # cli / lpcc
 
-`lpcc` is a command line tool to dump compiled LPC code, it is useful for understanding how FluffOS compiles LPC code.
+`lpcc` is a command line tool to dump compiled LPC code, it is useful for understanding how MudOS-NG compiles LPC code.
 
 ## Usage
 

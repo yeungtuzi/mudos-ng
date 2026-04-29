@@ -27,7 +27,7 @@ void f_trace_start() {
   std::string const filename(realfile);
 
   Tracer::start(filename.c_str());
-  Tracer::setThreadName("FluffOS Main");
+  Tracer::setThreadName("MudOS-NG Main");
   // register closure.
   add_walltime_event(std::chrono::seconds(duration_secs), TickEvent::callback_type([] {
                        if (Tracer::enabled()) {

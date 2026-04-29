@@ -9,9 +9,9 @@ title: Build
 
 ## Supported Environment
 
-The best platform to build FluffOS is ubuntu 22.04+ (including WSL), macOS latest (both Intel and Apple Silicon), and Windows on MSYS2/MINGW64.
+The best platform to build MudOS-NG is ubuntu 22.04+ (including WSL), macOS latest (both Intel and Apple Silicon), and Windows on MSYS2/MINGW64.
 
-**Compilers**: FluffOS uses C++17 and C11, which requires at least GCC 7+ or LLVM clang 4+.
+**Compilers**: MudOS-NG uses C++17 and C11, which requires at least GCC 7+ or LLVM clang 4+.
 
 **Tested Configurations** (validated by CI):
 - **Ubuntu 22.04**: GCC and Clang with Debug/RelWithDebInfo builds
@@ -21,7 +21,7 @@ The best platform to build FluffOS is ubuntu 22.04+ (including WSL), macOS lates
 
 **System Library Requirements** (Must install):
 
-1. **ICU**: FluffOS uses ICU for UTF-8 and transcoding support.
+1. **ICU**: MudOS-NG uses ICU for UTF-8 and transcoding support.
 2. **jemalloc**: Release build use JEMALLOC by default, and is highly recommended in production.
 3. **OpenSSL** (if PACKAGE_CRYPTO enabled) - Note: typically disabled on Windows
 4. **PCRE** (if PACKAGE_PCRE enabled)
@@ -42,7 +42,7 @@ Bundled thirdparty library (no need to install):
 
 ## Ubuntu LTS
 
-This is the best linux distro to build & run FluffOS, support for other distro is best effort only.
+This is the best linux distro to build & run MudOS-NG, support for other distro is best effort only.
 
 ### Installing Dependencies
 
@@ -62,14 +62,14 @@ $ sudo apt install -y libdw-dev libbz2-dev
 ### Checkout Git Repo
 
 ```shell
-$ git clone https://github.com/fluffos/fluffos.git
-$ cd fluffos
+$ git clone https://github.com/mudos-ng/mudos-ng.git
+$ cd mudos-ng
 $ git checkout master  # or a release tag like v2019
 ```
 
 ### Ensure CMake 3.22+
 
-FluffOS requires CMake 3.22 or higher. Ubuntu 22.04+ includes this by default. If needed:
+MudOS-NG requires CMake 3.22 or higher. Ubuntu 22.04+ includes this by default. If needed:
 ```shell
 $ sudo apt install cmake  # or
 $ sudo pip install --upgrade cmake
@@ -173,15 +173,15 @@ $ ../build/bin/driver etc/config.test -ftest
 ```
 
 **Note**: If you encounter issues, check the latest CI configuration at:
-<https://github.com/fluffos/fluffos/blob/master/.github/workflows/ci-osx.yml>
+<https://github.com/mudos-ng/mudos-ng/blob/master/.github/workflows/ci-osx.yml>
 
 ## Windows
 
 **Supported Environment**: Windows 10+ with MSYS2/MINGW64. Binary produced can run on Windows 7+.
 
-**Note**: FluffOS LPC VM is always 64-bit! You can't use more than 4GB memory in 32-bit builds.
+**Note**: MudOS-NG LPC VM is always 64-bit! You can't use more than 4GB memory in 32-bit builds.
 
-For the most up-to-date commands, check: <https://github.com/fluffos/fluffos/blob/master/.github/workflows/ci-windows.yml>
+For the most up-to-date commands, check: <https://github.com/mudos-ng/mudos-ng/blob/master/.github/workflows/ci-windows.yml>
 
 ### Install MSYS2
 
@@ -223,8 +223,8 @@ $ pacman -S mingw-w64-x86_64-libmariadbclient
 In the **MINGW64** shell:
 
 ```shell
-$ git clone https://github.com/fluffos/fluffos.git
-$ cd fluffos
+$ git clone https://github.com/mudos-ng/mudos-ng.git
+$ cd mudos-ng
 $ mkdir build && cd build
 $ cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug \
   -DMARCH_NATIVE=OFF -DPACKAGE_CRYPTO=OFF \
@@ -271,7 +271,7 @@ Common package options:
 
 ### Build Types
 
-FluffOS supports standard CMake build types:
+MudOS-NG supports standard CMake build types:
 
 - **Debug**: No optimization, full debug symbols (`-DCMAKE_BUILD_TYPE=Debug`)
 - **Release**: Full optimization, no debug symbols (`-DCMAKE_BUILD_TYPE=Release`)
@@ -316,7 +316,7 @@ $ cmake .. -DENABLE_SANITIZER=ON
 
 ### Unit Tests
 
-FluffOS includes C++ unit tests using GoogleTest:
+MudOS-NG includes C++ unit tests using GoogleTest:
 
 ```shell
 $ cd build
@@ -336,7 +336,7 @@ $ ../build/bin/driver etc/config.test -ftest
 
 ### Continuous Integration
 
-FluffOS uses GitHub Actions for automated testing on every push and pull request:
+MudOS-NG uses GitHub Actions for automated testing on every push and pull request:
 
 - **Ubuntu CI**: Tests with GCC and Clang on ubuntu-22.04
 - **macOS CI**: Tests on macOS 14 (Apple Silicon)
@@ -378,8 +378,8 @@ $ make && make install
 ### Build Steps
 
 ```shell
-$ git clone https://github.com/fluffos/fluffos.git
-$ cd fluffos
+$ git clone https://github.com/mudos-ng/mudos-ng.git
+$ cd mudos-ng
 $ mkdir build && cd build
 $ cmake .. -DMARCH_NATIVE=OFF -DSTATIC=ON
 $ make install
@@ -396,22 +396,22 @@ $ ldd bin/driver
 
 ### Using Docker
 
-FluffOS provides an official Docker image built automatically on every push to master:
+MudOS-NG provides an official Docker image built automatically on every push to master:
 
 **Pull and run the official image:**
 ```shell
-$ docker pull ghcr.io/fluffos/fluffos:master
-$ docker run -it ghcr.io/fluffos/fluffos:master /path/to/config.cfg
+$ docker pull ghcr.io/mudos-ng/mudos-ng:master
+$ docker run -it ghcr.io/mudos-ng/mudos-ng:master /path/to/config.cfg
 ```
 
 **Build your own Docker image:**
 ```shell
-$ docker build -t fluffos:local .
-$ docker run -it fluffos:local /path/to/config.cfg
+$ docker build -t mudos-ng:local .
+$ docker run -it mudos-ng:local /path/to/config.cfg
 ```
 
 The Dockerfile uses a multi-stage build:
-1. **Builder stage**: Compiles FluffOS statically on Alpine 3.18
+1. **Builder stage**: Compiles MudOS-NG statically on Alpine 3.18
 2. **Runtime stage**: Creates minimal image with just the binary
 
 See the `Dockerfile` in the repository root for details.

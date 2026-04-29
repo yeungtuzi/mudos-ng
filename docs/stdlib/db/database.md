@@ -6,7 +6,7 @@ title: stdlib / database
 
 ## Introduction
 
-The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your mud and works perfectly with all of fluffos supported database systems.
+The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your mud and works perfectly with all of mudos-ng supported database systems.
 
 ## Config
 

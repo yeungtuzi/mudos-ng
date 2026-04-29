@@ -1,8 +1,8 @@
 As MudOS is moving too slow to keep our driver hacks apart, we now call our own
-FluffOS :), note: where it says Cratylus, I got it from his version, usually
+MudOS-NG :), note: where it says Cratylus, I got it from his version, usually
 someone else did the work, but I don't know how to find who did what there.
 
-FluffOS 2.27
+MudOS-NG 2.27
 Fixed Changelog name for 2.26
 fix incorrect sha1() hashes  (Voltara <voltara@gmail.com>)
 Fix db.c with PACKAGE_ASYNC. (mactorg@lpmuds.net)
@@ -19,12 +19,12 @@ LPC MIN_INT, MAX_FLOAT, MIN_FLOAT predefines. (Yucong Sun <sunyucong@gmail.com>)
 Added POSIX_TIMERS alternative for eval timer (Voltara <voltara@gmail.com>)
 IPV6 compile fix on unbuntu. (Yucong Sun <sunyucong@gmail.com>)
 
-FluffOS 2.26.1
+MudOS-NG 2.26.1
 testlib stuff is actually in there
 tiny fix to error messages (missing breaks)
 actually contains Properly report 64 bit linux when starting (sunyc@lpmuds.net)
 
-FluffOS 2.26
+MudOS-NG 2.26
 Compile warning fixes (sunyc@lpmuds.net)
 add_action moved objects fix (vorpal@lpmuds.net)
 Properly report 64 bit linux when starting (sunyc@lpmuds.net)
@@ -67,13 +67,13 @@ Fixed zonetime crasher (sunyc@lpmuds.net)
 Fixed is_daylight_savings_time crasher (sunyc@lpmuds.net)
 Fixed remove_get_char crasher (reported by sunyc@lpmuds.net)
 
-FluffOS 2.25
+MudOS-NG 2.25
 Fixed the defer() fix 
 Added new test_load() efun which will try to load a file, it will return 0 when 
       it failed, 1 when the file can load, and error if there was a compilation
       error
 
-FluffOS 2.24
+MudOS-NG 2.24
 LPC floats are now C doubles
 number of structs (or classes) allowed is now 127 
 defer() now hopefully notices if you try to change this_player, so it won't
@@ -84,7 +84,7 @@ added some flags in debug_info
 added some argument checking to replace() (dwlib.c)
 a fix in pcre (woom) (again, can't remember what was fixed)
 
-FluffOS 2.23
+MudOS-NG 2.23
 added a terminal_colour_replace apply, this will be called with every string between two %^ delimiters, and will be replaced with whatever is returned.
 fixed protocol number for GMCP
 fixed sprintf code for MSSP uptime
@@ -94,7 +94,7 @@ the driver can now be compiled to use either struct or class for structs, or eve
 fixed crasher in uniq_array
 fixed crasher in socket_status
 added missing ',' in non iconv driver pcre support
-FluffOS 2.22
+MudOS-NG 2.22
 fixed potential crasher in pcre_extract
 removed limit for number of matches in pcre efuns
 added classes() efun (woom)
@@ -104,7 +104,7 @@ you can now have more than 256 Globals (qwer@lpmuds.net)
 added postgres support (unagi@lpmuds.net)
 fixed zmp crash
 removed some obsolete malloc options
-FluffOS 2.21
+MudOS-NG 2.21
 small cleanup in malloc32
 added gmcp support
       gmcp_enable() gets called when a user has gmcp
@@ -147,7 +147,7 @@ fixed crasher in async_db_exec (never seen for real, but it was possible!)
 db_fetch will no longer randomly return some 0s as undefined
 dwlib package now has a replace_dollars function which searches for patterns starting with a $ only, otherwise the same as replace() (but faster as it only scans once)
 
-FluffOS 2.20
+MudOS-NG 2.20
 more error checks in malloc64
 bigger arrays   (up to 2^31 elements)
 bigger mappings (see arrays)
@@ -166,7 +166,7 @@ save string length for bigger strings as well instead of using strlen on strings
 NetBSD IPV6 fix (Tiz)
 fixed crasher in reference_allowed() (in dwlib.c)
 
-FluffOS 2.19
+MudOS-NG 2.19
 attempt to fix string block alignments. hopefuly helps sparc64
 open sockets as close on exec if available (so they don't end up in external programs started from the driver) 
 fix conflict between ed and solaris (both used the same define!)
@@ -176,7 +176,7 @@ added missing Mysql data types so they don't always get returned as 0 anymore
 changed some optional efun args to default to 0 instead for slightly cleaner code (Woom)
 new addition to pluralize() (diff from Cratylus)
 
-FluffOS 2.18
+MudOS-NG 2.18
 compiles for netbsd (tiz)
 make more empty arrays point to the_null_array, saves memory and allows 
      comparing with ({}) to see if arrays are empty (reported by Woom)
@@ -193,7 +193,7 @@ parser changed to be less strict (Cratylus)
 stop wasting memory if repeat_string would exceed max string size (reported by woom)
 fixed crasher in pragma optimize
 
-FluffOS 2.17
+MudOS-NG 2.17
 math package updates: Added vector norm, dotprod, distance, angle.
      Also added log2() and round() which works on floats (surprisingly useful).
      Added int args to the efuns as apppropriate (Hamlet)
@@ -233,7 +233,7 @@ new efun restore_from_string(string savedata), does what it says on the tin,
 added optional int argument to request_term_size().  If 0, the client is asked 
      _not_ to offer any further term size updates (Hamlet, suggested by Detah)
 
-FluffOS 2.16
+MudOS-NG 2.16
 improved single char mode support (Cratylus)
 	 this includes some new efuns:
 	      int query_charmode(object);
@@ -259,7 +259,7 @@ added MSSP support, the driver will call get_mud_stats() on the master ob,
       the driver will add the field as those are required.
 new malloc option malloc64 which tries to avoid needing big copies on realloc by spreading all allocations a few MB apart in virtual memory.
 
-FluffOS 2.15:
+MudOS-NG 2.15:
 IPV6 support
 class stats (Skullslayer@Realms of the Dragon)
 some console additions see 'help' in the console (Hamlet)
@@ -270,7 +270,7 @@ updated MySQL support (Shadyman@lpmuds.net)
 fixed crasher when the master apply doesn't allow an object to be created
 
 
-FluffOS 2.14:
+MudOS-NG 2.14:
 fixed crasher in async writes.
 fixed bug in switch/case when using more than 2GB memory
 check 64 bit lib before 32 bit version for mysql
@@ -280,13 +280,13 @@ fixed memory leak in large shared strings
 fixed some memory leaks in async io
 use clone_object sefun (if present) when cloning objects with new() (Kalinash)
 
-FluffOS 2.13:
+MudOS-NG 2.13:
 oh no! unlucky number
 removed binaries support
 fixed crasher in restore_string
 fixed some new compiler warnings (gcc 4.3)
 some cleanups in comm.c (Cratylus@Dead souls)
-cygwin and other changes in build.FluffOS (Cratylus@Dead souls)
+cygwin and other changes in build.MudOS-NG (Cratylus@Dead souls)
 set program_t to {0} for silly OSes that don't clear BBS memory (Cratylus@Dead souls) 
     (I think there may be more places that could go wrong!)
 changed locale to "C" (Cratylus@Dead souls) 
@@ -296,7 +296,7 @@ Added a console, mostly for debugging use.  If driver is started directly
         local_options. (hamlet)
 fixed crasher where we did remove_interactive when people go netdead, bad idea!
 
-FluffOS 2.12:
+MudOS-NG 2.12:
 Crasher fixes in using a mudlib error handler (Cratylus@Dead souls)
 some mingw fixes (Cratylus@Dead souls)
 new localoptions.ds (Cratylus@Dead souls)
@@ -356,20 +356,20 @@ void save_object_async(string name, int flag, function cb){
   async_write(name, implode(lines, "\n"), flag | 1, cb);
 }
 
-FluffOS 2.11:
+MudOS-NG 2.11:
 stop eval_cost() adding to the time you're allowed to run. (libc return a time
      longer than the set time if you query the remaining time right after 
      restarting the timer!
 reset_eval_cost() now stops working after 100*max eval cost.
 hopefully fixed readfile with lines beyond max readsize.
 
-FluffOS 2.10:
+MudOS-NG 2.10:
 can be compiled with g++
 fix bugs in using arrays as sets 
     int *a=({1<<31,0}); return a-a
 fixed crash in the children efun (hamlet)
 
-FluffOS 2.9:
+MudOS-NG 2.9:
 removed amiga support.
 included most DS changes, should work on windows now (except for over
 	 evaluation errors)
@@ -409,7 +409,7 @@ mixed min( mixed *, int | void );
     see max, but then lowest
 mixed abs( int | float );
     guess.
-FluffOS 2.8:
+MudOS-NG 2.8:
 use a hash table for the children() efun
 set the usec field in the select timeout
 fixed sending sending byte value 255 (this will break any code that tries to 
@@ -432,7 +432,7 @@ replace_html and replace_mxp do the < to &lt; etc conversions
 random() can now return larger than 32 bit numbers
 commented out a recursion check in the parser so DS can parse its commands
 
-FluffOS 2.7:
+MudOS-NG 2.7:
 fixes to compile with a Dead Souls config
 changed free_object() and free_program() to overwrite the freed address 
 	(idea and first version by Pinkfish)
@@ -452,7 +452,7 @@ write_file() now has an extra flag (2) that can be ORed with the existing one
 add_ref() destruct objects with high ref counts (they're usually on the way to
 	  wrap around to 0, which is where you crash).
 	  
-FluffOS 2.6:
+MudOS-NG 2.6:
 current_time is now 64 bit on 64 bit platforms, all ready for 2038 now, I think :)
 fixed crasher in ed on big files with long lines (i hope)
 new default arguments for destruct, virtualp, inherits (this_object) and ctime (time())
@@ -476,11 +476,11 @@ made the objects list double linked so destruct doesn't have to walk the whole
 	list to find the previous object in the list.
 fixed compiling without shadows support
 
-FluffOS 2.5:
+MudOS-NG 2.5:
 some pluralize() fixes (woom)
 fixed zonetime() and is_daylight_savings_time()
 
-FluffOS 2.4:
+MudOS-NG 2.4:
 new efuns for sending telnet sequences:
 	void request_term_type();
 	void start_request_term_type();
@@ -491,25 +491,25 @@ restore_object now calls restore_lost_variable() if a variable in the save file
 fixed crasher in event() when one of the earlier objects destructs an object
 	that still would have gotten the event.
 
-FluffOS 2.3:
+MudOS-NG 2.3:
 fixed event efun (from 1.40)
 added MAX_INT and SIZEOFINT predefines (from 1.40)
 fixed leftover PROT1V macro use
 replace is an efun now
 virtual base obs are no longer seen as clones
 
-FluffOS 2.2:
+MudOS-NG 2.2:
 removed some more object swapping code
 fixed memory leak in restoring gzipped save files
 improved LPC function profiling
 fixed ref counts in class/array efuns
 
-FluffOS 2.1:
+MudOS-NG 2.1:
 added str_to_arr, and arr_to_str efuns to convert between strings and UTF-32 arrays
 added strwidth efun
 fixed refs() for strings
 
-FluffOS 2.0:
+MudOS-NG 2.0:
 different from Fluffos 1.36:
 
 changed integer type to 64 bit, and some other 64 bit cleanups, as 64 bit ints

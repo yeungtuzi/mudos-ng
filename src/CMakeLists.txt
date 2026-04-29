@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2026 [大河马/dahema@me.com]
+# SPDX-License-Identifier: MIT
+#
+
 # List of compile options to tweak
 option(MARCH_NATIVE "use march=native for GCC" ON)
 option(STATIC "Build static version of driver" OFF)
@@ -366,6 +371,7 @@ set(SRC
   "base/internal/debugmalloc.cc"
   "base/internal/external_port.cc"
   "base/internal/file.cc"
+  "base/internal/io_thread.cc"
   "base/internal/hash.cc"
   "base/internal/log.cc"
   "base/internal/md.cc"
@@ -428,7 +434,7 @@ add_library(libdriver
   )
 add_dependencies(libdriver autogen)
 
-list(APPEND FLUFFOS_LIBRARIES libdriver)
+list(APPEND MUDOS_NG_LIBRARIES libdriver)
 
 # JEMALLOC must be the first!
 if (CYGWIN)
@@ -453,14 +459,14 @@ endif ()
 target_link_libraries(libdriver PUBLIC ghc_filesystem)
 target_link_libraries(libdriver PUBLIC fmt::fmt)
 
-list(APPEND FLUFFOS_LIBRARIES autogen)
+list(APPEND MUDOS_NG_LIBRARIES autogen)
 
-add_subdirectory(packages) # provides FLUFFOS_PACKAGES
-message(STATUS "ALL PACKAGES: ${FLUFFOS_PACKAGES}")
-foreach (PACKAGE ${FLUFFOS_PACKAGES})
+add_subdirectory(packages) # provides MUDOS_NG_PACKAGES
+message(STATUS "ALL PACKAGES: ${MUDOS_NG_PACKAGES}")
+foreach (PACKAGE ${MUDOS_NG_PACKAGES})
   # TODO: packages files currently depenends on generated headers, so they must be built after driver
   add_dependencies("${PACKAGE}" autogen)
-  list(APPEND FLUFFOS_LIBRARIES "${PACKAGE}")
+  list(APPEND MUDOS_NG_LIBRARIES "${PACKAGE}")
   target_link_libraries(libdriver PUBLIC "${PACKAGE}")
 endforeach ()
 
@@ -505,28 +511,28 @@ if (APPLE)
 endif()
 
 if(APPLE)
-  set(FLUFFOS_LINK ${LINK_WHOLE_ARCHIVE} ${FLUFFOS_LIBRARIES} ${LINK_NO_WHOLE_ARCHIVE})
+  set(MUDOS_NG_LINK ${LINK_WHOLE_ARCHIVE} ${MUDOS_NG_LIBRARIES} ${LINK_NO_WHOLE_ARCHIVE})
 else()
-  set(FLUFFOS_LINK -Wl,--start-group ${FLUFFOS_LIBRARIES} -Wl,--end-group)
+  set(MUDOS_NG_LINK -Wl,--start-group ${MUDOS_NG_LIBRARIES} -Wl,--end-group)
 endif()
 
 add_executable(driver "main.cc")
-target_link_libraries(driver PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(driver PUBLIC ${MUDOS_NG_LINK})
 
 add_executable(lpcc "main_lpcc.cc")
-target_link_libraries(lpcc PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(lpcc PUBLIC ${MUDOS_NG_LINK})
 
 add_executable(symbol "main_symbol.cc")
-target_link_libraries(symbol PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(symbol PUBLIC ${MUDOS_NG_LINK})
 
 add_executable(generate_keywords "main_generate_keywords.cc")
-target_link_libraries(generate_keywords PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(generate_keywords PUBLIC ${MUDOS_NG_LINK})
 
 add_executable(o2json "main_o2json.cc")
-target_link_libraries(o2json PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(o2json PUBLIC ${MUDOS_NG_LINK})
 
 add_executable(json2o "main_json2o.cc")
-target_link_libraries(json2o PUBLIC ${FLUFFOS_LINK})
+target_link_libraries(json2o PUBLIC ${MUDOS_NG_LINK})
 
 include(helper)
 

@@ -14,7 +14,7 @@ title: cli / generate_keywords
 
 ## Description
 
-This tool extracts information about all available efuns from the compiled FluffOS driver and generates a `keywords.json` file containing structured metadata about each function. This file is useful for:
+This tool extracts information about all available efuns from the compiled MudOS-NG driver and generates a `keywords.json` file containing structured metadata about each function. This file is useful for:
 
 - **IDE Integration**: Language servers and code editors can use this file to provide autocomplete and type hints
 - **Documentation Generation**: Automated documentation tools can extract function signatures
@@ -81,7 +81,7 @@ The tool generates a `keywords.json` file in the current directory with the foll
 
 ## Requirements
 
-- Must be run from the FluffOS build directory
+- Must be run from the MudOS-NG build directory
 - Requires write permissions in the current directory
 - The driver must be successfully compiled with all packages
 
@@ -104,7 +104,7 @@ node doc-generator.js keywords.json > efun-reference.md
 
 ## See Also
 
-- [driver](driver.md) - Main FluffOS driver executable
+- [driver](driver.md) - Main MudOS-NG driver executable
 - [lpcc](lpcc.md) - LPC compiler utility
 
 ## Notes

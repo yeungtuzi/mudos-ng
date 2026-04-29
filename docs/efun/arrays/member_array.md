@@ -36,10 +36,10 @@ title: arrays / member_array
     member_array( "purple", ({ "red", "blue", "red", "green", "red", }) ) ;
     // -1
 
-    member_array('F', "Drink the FluffOS Kool-Aid!") ;
+    member_array('F', "Drink the MudOS-NG Kool-Aid!") ;
     // 10
 
-    member_array('Z', "Drink the FluffOS Kool-Aid!") ;
+    member_array('Z', "Drink the MudOS-NG Kool-Aid!") ;
     // -1
 
 

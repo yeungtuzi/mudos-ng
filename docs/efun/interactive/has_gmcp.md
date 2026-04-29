@@ -19,7 +19,7 @@ title: interactive / has_gmcp
     this function will return 1, otherwise 0 will be returned.
 
     Note:
-    FluffOS requires the following option to be set in the runtime config
+    MudOS-NG requires the following option to be set in the runtime config
     in order to support the GMCP protocol.
 
 ```

@@ -4,7 +4,7 @@ title: cli / driver
 ---
 # cli / driver
 
-`driver` is the main binary produced from FluffOS Project.
+`driver` is the main binary produced from MudOS-NG Project.
 
 ## Usage
 

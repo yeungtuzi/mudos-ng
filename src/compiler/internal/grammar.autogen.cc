@@ -1,4 +1,7 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
 
 /* Bison implementation for Yacc-like parsers in C
 
@@ -67,7 +70,7 @@
 
 
 /* First part of user prologue.  */
-#line 11 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 11 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
 
 #include "base/std.h"
 
@@ -104,7 +107,7 @@ int func_present;
 int yyparse (void);
 
 
-#line 108 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 108 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -2365,118 +2368,118 @@ yyreduce:
     switch (yyn)
       {
   case 2: /* all: program  */
-#line 219 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 219 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
           { rule_program((yyval.node)); }
-#line 2371 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2371 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 3: /* program: program def possible_semi_colon  */
-#line 223 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 223 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   { CREATE_TWO_VALUES((yyval.node), 0, (yyvsp[-2].node), (yyvsp[-1].node)); }
-#line 2377 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2377 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 4: /* program: %empty  */
-#line 224 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 224 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                         { (yyval.node) = 0; }
-#line 2383 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2383 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 6: /* possible_semi_colon: ';'  */
-#line 229 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 229 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
         { yywarn("Extra ';'. Ignored."); }
-#line 2389 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2389 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 7: /* inheritance: type_modifier_list L_INHERIT string_con1 ';'  */
-#line 233 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 233 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                                { if (rule_inheritence(&(yyval.node), (yyvsp[-3].number), (yyvsp[-1].string))) { YYACCEPT; } }
-#line 2395 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2395 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 8: /* real: L_REAL  */
-#line 237 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 237 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
          { CREATE_REAL((yyval.node), (yyvsp[0].real)); }
-#line 2401 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2401 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 9: /* number: L_NUMBER  */
-#line 241 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 241 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
            { CREATE_NUMBER((yyval.node), (yyvsp[0].number)); }
-#line 2407 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2407 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 10: /* optional_star: %empty  */
-#line 245 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 245 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                         { (yyval.number) = 0; }
-#line 2413 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2413 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 11: /* optional_star: '*'  */
-#line 246 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 246 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                 { (yyval.number) = TYPE_MOD_ARRAY; }
-#line 2419 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2419 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 12: /* block_or_semi: block  */
-#line 251 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 251 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
           {
             (yyval.node) = (yyvsp[0].decl).node;
             if (!(yyval.node)) {
               CREATE_RETURN((yyval.node), 0);
             }
           }
-#line 2430 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2430 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 13: /* block_or_semi: ';'  */
-#line 257 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 257 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
           { (yyval.node) = 0; }
-#line 2436 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2436 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 14: /* block_or_semi: error  */
-#line 258 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 258 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
           { (yyval.node) = 0; }
-#line 2442 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2442 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 15: /* identifier: L_DEFINED_NAME  */
-#line 262 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 262 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   { (yyval.string) = scratch_copy((yyvsp[0].ihe)->name); }
-#line 2448 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2448 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 17: /* $@1: %empty  */
-#line 267 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 267 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   { (yyvsp[-2].number) = rule_func_type((yyvsp[-2].number), (yyvsp[-1].number), (yyvsp[0].string)); }
-#line 2454 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2454 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 18: /* @2: %empty  */
-#line 268 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 268 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   { (yyval.number) = rule_func_proto((yyvsp[-6].number), (yyvsp[-5].number), &(yyvsp[-4].string), (yyvsp[-1].argument)); }
-#line 2460 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2460 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 19: /* function: type optional_star identifier $@1 '(' argument ')' @2 block_or_semi  */
-#line 269 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 269 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   { rule_func(&(yyval.node), (yyvsp[-8].number), (yyvsp[-7].number), (yyvsp[-6].string), (yyvsp[-3].argument), &(yyvsp[-1].number), &(yyvsp[0].node)); }
-#line 2466 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2466 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 21: /* def: type name_list ';'  */
-#line 275 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 275 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   {
                                     if (!((yyvsp[-2].number) & ~(DECL_MODS)) && (pragmas & PRAGMA_STRICT_TYPES))
                                       yyerror("Missing type for global variable declaration");
                                     (yyval.node) = 0;
                                   }
-#line 2476 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2476 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 25: /* modifier_change: type_modifier_list ':'  */
-#line 287 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 287 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   {
                                     if (!(yyvsp[-1].number))
                                       yyerror("modifier list may not be empty.");
@@ -2490,11 +2493,11 @@ yyreduce:
                                     global_modifiers = (yyvsp[-1].number);
                                     (yyval.node) = 0;
                                   }
-#line 2494 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2494 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 26: /* member_name: optional_star identifier  */
-#line 304 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 304 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                   {
                                     /* At this point, the current_type here is only a basic_type */
                                     /* and cannot be unused yet - Sym */
@@ -2504,40 +2507,40 @@ yyreduce:
                                     add_local_name((yyvsp[0].string), current_type | (yyvsp[-1].number));
                                     scratch_free((yyvsp[0].string));
                                   }
-#line 2508 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2508 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 30: /* $@3: %empty  */
-#line 322 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 322 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                            { current_type = (yyvsp[0].number); }
-#line 2514 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2514 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 32: /* @4: %empty  */
-#line 327 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 327 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                              { (yyvsp[-2].ihe) = rule_define_class(&(yyval.number), (yyvsp[-1].string)); }
-#line 2520 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2520 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 33: /* type_decl: type_modifier_list L_CLASS identifier '{' @4 member_list '}'  */
-#line 328 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 328 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                              { rule_define_class_members((yyvsp[-5].ihe), (yyvsp[-2].number)); (yyval.node) = 0; }
-#line 2526 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2526 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 35: /* new_local_name: L_DEFINED_NAME  */
-#line 334 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 334 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                             {
                                               if ((yyvsp[0].ihe)->dn.local_num != -1) {
                                                 yyerror("Illegal to redeclare local name '%s'", (yyvsp[0].ihe)->name);
                                               }
                                               (yyval.string) = scratch_copy((yyvsp[0].ihe)->name);
                                             }
-#line 2537 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2537 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 37: /* atomic_type: L_CLASS L_DEFINED_NAME  */
-#line 345 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 345 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                             {
                                               if ((yyvsp[0].ihe)->dn.class_num == -1) {
                                                 yyerror("Undefined class '%s'", (yyvsp[0].ihe)->name);
@@ -2546,44 +2549,44 @@ yyreduce:
                                                 (yyval.number) = (yyvsp[0].ihe)->dn.class_num | TYPE_MOD_CLASS;
                                               }
                                             }
-#line 2550 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2550 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 38: /* atomic_type: L_CLASS L_IDENTIFIER  */
-#line 354 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 354 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                             {
                                               yyerror("Undefined class '%s'", (yyvsp[0].string));
                                               (yyval.number) = TYPE_ANY;
                                             }
-#line 2559 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2559 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 40: /* opt_atomic_type: %empty  */
-#line 362 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 362 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                         { (yyval.number) = TYPE_ANY; }
-#line 2565 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2565 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 42: /* basic_type: opt_atomic_type L_ARRAY  */
-#line 367 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 367 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                             { (yyval.number) = (yyvsp[-1].number) | TYPE_MOD_ARRAY; }
-#line 2571 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2571 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 44: /* arg_type: basic_type ref  */
-#line 372 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 372 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                    { (yyval.number) = (yyvsp[-1].number) | LOCAL_MOD_REF; }
-#line 2577 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2577 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 45: /* optional_default_arg_value: %empty  */
-#line 376 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 376 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
          { (yyval.node) = 0; }
-#line 2583 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2583 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 46: /* optional_default_arg_value: ':' L_FUNCTION_OPEN comma_expr ':' ')'  */
-#line 377 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 377 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                           {
     if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != ':') {
@@ -2603,21 +2606,21 @@ yyreduce:
     (yyval.node)->v.number = FP_FUNCTIONAL + 0 /* args */;
     pop_function_context();
 }
-#line 2607 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2607 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 47: /* new_arg: arg_type optional_star  */
-#line 399 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 399 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                               {
                                                 (yyval.number) = (yyvsp[-1].number) | (yyvsp[0].number);
                                                 if ((yyvsp[-1].number) != TYPE_VOID)
                                                   add_local_name("", (yyvsp[-1].number) | (yyvsp[0].number));
                                               }
-#line 2617 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2617 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 48: /* new_arg: arg_type optional_star new_local_name optional_default_arg_value  */
-#line 405 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 405 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                               {
                                                 if ((yyvsp[-3].number) == TYPE_VOID)
                                                   yyerror("Illegal to declare argument of type void.");
@@ -2625,11 +2628,11 @@ yyreduce:
                                                 scratch_free((yyvsp[-1].string));
                                                 (yyval.number) = (yyvsp[-3].number) | (yyvsp[-2].number);
                                               }
-#line 2629 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2629 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 49: /* new_arg: new_local_name  */
-#line 413 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 413 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
                                               {
                                                 if (exact_types) {
                                                   yyerror("Missing type for argument");
@@ -2638,20 +2641,20 @@ yyreduce:
                                                 scratch_free((yyvsp[0].string));
                                                 (yyval.number) = TYPE_ANY;
                                               }
-#line 2642 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2642 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 50: /* argument: %empty  */
-#line 425 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 425 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.argument).num_arg = 0;
       (yyval.argument).flags = 0;
     }
-#line 2651 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2651 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 52: /* argument: argument_list L_DOT_DOT_DOT  */
-#line 431 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 431 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int x = type_of_locals_ptr[max_num_locals-1];
       int lt = x & ~LOCAL_MODS;
@@ -2666,11 +2669,11 @@ yyreduce:
       if (lt != TYPE_ANY && !(lt & TYPE_MOD_ARRAY))
         yywarn("Variable to hold remainder of arguments should be an array.");
     }
-#line 2670 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2670 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 53: /* argument_list: new_arg  */
-#line 449 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 449 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (((yyvsp[0].number) & TYPE_MASK) == TYPE_VOID && !((yyvsp[0].number) & TYPE_MOD_CLASS)) {
         if ((yyvsp[0].number) & ~TYPE_MASK)
@@ -2681,11 +2684,11 @@ yyreduce:
       }
       (yyval.argument).flags = 0;
     }
-#line 2685 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2685 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 54: /* argument_list: argument_list ',' new_arg  */
-#line 460 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 460 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (!(yyval.argument).num_arg)    /* first arg was void w/no name */
         yyerror("argument of type void must be the only argument.");
@@ -2695,19 +2698,19 @@ yyreduce:
       (yyval.argument) = (yyvsp[-2].argument);
       (yyval.argument).num_arg++;
     }
-#line 2699 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2699 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 55: /* type_modifier_list: %empty  */
-#line 473 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 473 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.number) = 0;
     }
-#line 2707 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2707 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 56: /* type_modifier_list: L_TYPE_MODIFIER type_modifier_list  */
-#line 477 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 477 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-1].number) | (yyvsp[0].number);
       int acc_mod = (yyval.number) & DECL_ACCESS;
@@ -2721,36 +2724,36 @@ yyreduce:
       }
 #endif
     }
-#line 2725 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2725 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 57: /* type: type_modifier_list opt_basic_type  */
-#line 494 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 494 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = ((yyvsp[-1].number) << 16) | (yyvsp[0].number);
       current_type = (yyval.number);
     }
-#line 2734 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2734 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 58: /* cast: '(' basic_type optional_star ')'  */
-#line 502 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 502 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) | (yyvsp[-1].number);
     }
-#line 2742 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2742 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 60: /* opt_basic_type: %empty  */
-#line 510 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 510 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.number) = TYPE_UNKNOWN;
     }
-#line 2750 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2750 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 63: /* new_name: optional_star identifier  */
-#line 522 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 522 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (current_type & (FUNC_VARARGS << 16)){
         yyerror("Illegal to declare varargs variable.");
@@ -2775,11 +2778,11 @@ yyreduce:
       define_new_variable((yyvsp[0].string), current_type | (yyvsp[-1].number));
       scratch_free((yyvsp[0].string));
     }
-#line 2779 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2779 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 64: /* new_name: optional_star identifier L_ASSIGN expr0  */
-#line 547 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 547 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *expr, *newnode;
       int type;
@@ -2831,35 +2834,35 @@ yyreduce:
           newnode, expr);
       scratch_free((yyvsp[-2].string));
     }
-#line 2835 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2835 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 65: /* @5: %empty  */
-#line 602 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 602 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     { (yyval.number) = current_number_of_locals; }
-#line 2841 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2841 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 66: /* block: '{' @5 block_statements '}'  */
-#line 604 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 604 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[-1].decl).node;
       (yyval.decl).num = current_number_of_locals - (yyvsp[-2].number);  /* calculate locals declared in this block */
     }
-#line 2850 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2850 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 70: /* local_declarations: %empty  */
-#line 614 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 614 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.decl).node = 0;
       (yyval.decl).num = 0;
     }
-#line 2859 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2859 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 71: /* $@6: %empty  */
-#line 619 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 619 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].number) == TYPE_VOID)
         yyerror("Illegal to declare local variable of type void.");
@@ -2868,22 +2871,22 @@ yyreduce:
        */
       current_type = (yyvsp[0].number);
     }
-#line 2872 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2872 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 72: /* local_declarations: local_declarations basic_type $@6 local_name_list ';'  */
-#line 628 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 628 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-4].decl).node && (yyvsp[-1].decl).node) {
         CREATE_STATEMENTS((yyval.decl).node, (yyvsp[-4].decl).node, (yyvsp[-1].decl).node);
       } else (yyval.decl).node = ((yyvsp[-4].decl).node ? (yyvsp[-4].decl).node : (yyvsp[-1].decl).node);
       (yyval.decl).num = (yyvsp[-4].decl).num + (yyvsp[-1].decl).num;
     }
-#line 2883 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2883 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 73: /* new_local_def: optional_star new_local_name  */
-#line 638 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 638 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (current_type & LOCAL_MOD_REF) {
         yyerror("Illegal to declare local variable as reference");
@@ -2894,11 +2897,11 @@ yyreduce:
       scratch_free((yyvsp[0].string));
       (yyval.node) = 0;
     }
-#line 2898 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2898 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 74: /* new_local_def: optional_star new_local_name L_ASSIGN expr0  */
-#line 649 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 649 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int type = (current_type | (yyvsp[-3].number)) & ~DECL_MODS;
 
@@ -2929,11 +2932,11 @@ yyreduce:
           add_local_name((yyvsp[-2].string), current_type | (yyvsp[-3].number) | LOCAL_MOD_UNUSED));
       scratch_free((yyvsp[-2].string));
     }
-#line 2933 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2933 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 75: /* single_new_local_def: arg_type optional_star new_local_name  */
-#line 683 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 683 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-2].number) == TYPE_VOID)
         yyerror("Illegal to declare local variable of type void.");
@@ -2941,11 +2944,11 @@ yyreduce:
       (yyval.number) = add_local_name((yyvsp[0].string), (yyvsp[-2].number) | (yyvsp[-1].number));
       scratch_free((yyvsp[0].string));
     }
-#line 2945 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2945 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 76: /* single_new_local_def_with_init: single_new_local_def L_ASSIGN expr0  */
-#line 694 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 694 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int type = type_of_locals_ptr[(yyvsp[-2].number)];
 
@@ -2974,90 +2977,90 @@ yyreduce:
       CREATE_BINARY_OP((yyval.node), F_ASSIGN, 0, (yyvsp[0].node), 0);
       CREATE_OPCODE_1((yyval.node)->r.expr, F_LOCAL_LVALUE, 0, (yyvsp[-2].number));
     }
-#line 2978 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2978 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 77: /* local_name_list: new_local_def  */
-#line 726 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 726 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[0].node);
       (yyval.decl).num = 1;
     }
-#line 2987 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2987 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 78: /* local_name_list: new_local_def ',' local_name_list  */
-#line 731 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 731 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-2].node) && (yyvsp[0].decl).node) {
         CREATE_STATEMENTS((yyval.decl).node, (yyvsp[-2].node), (yyvsp[0].decl).node);
       } else (yyval.decl).node = ((yyvsp[-2].node) ? (yyvsp[-2].node) : (yyvsp[0].decl).node);
       (yyval.decl).num = 1 + (yyvsp[0].decl).num;
     }
-#line 2998 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 2998 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 79: /* $@7: %empty  */
-#line 741 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 741 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].number) == TYPE_VOID)
         yyerror("Illegal to declare local variable of type void.");
       current_type = (yyvsp[0].number);
     }
-#line 3008 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3008 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 80: /* local_declaration_statement: basic_type $@7 local_name_list ';'  */
-#line 747 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 747 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[-1].decl).node;
       (yyval.decl).num = (yyvsp[-1].decl).num;
     }
-#line 3017 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3017 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 81: /* block_statements: %empty  */
-#line 755 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 755 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.decl).node = 0;
       (yyval.decl).num = 0;
     }
-#line 3026 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3026 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 82: /* block_statements: statement block_statements  */
-#line 760 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 760 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-1].node) && (yyvsp[0].decl).node) {
         CREATE_STATEMENTS((yyval.decl).node, (yyvsp[-1].node), (yyvsp[0].decl).node);
       } else (yyval.decl).node = ((yyvsp[-1].node) ? (yyvsp[-1].node) : (yyvsp[0].decl).node);
       (yyval.decl).num = (yyvsp[0].decl).num;
     }
-#line 3037 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3037 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 83: /* block_statements: local_declaration_statement block_statements  */
-#line 767 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 767 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-1].decl).node && (yyvsp[0].decl).node) {
         CREATE_STATEMENTS((yyval.decl).node, (yyvsp[-1].decl).node, (yyvsp[0].decl).node);
       } else (yyval.decl).node = ((yyvsp[-1].decl).node ? (yyvsp[-1].decl).node : (yyvsp[0].decl).node);
       (yyval.decl).num = (yyvsp[-1].decl).num + (yyvsp[0].decl).num;
     }
-#line 3048 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3048 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 84: /* block_statements: error ';' block_statements  */
-#line 774 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 774 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[0].decl).node;
       (yyval.decl).num = (yyvsp[0].decl).num;
     }
-#line 3057 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3057 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 85: /* statement: comma_expr ';'  */
-#line 782 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 782 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = pop_value((yyvsp[-1].node));
 #ifdef DEBUG
@@ -3069,28 +3072,28 @@ yyreduce:
       }
 #endif
     }
-#line 3073 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3073 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 91: /* statement: decl_block  */
-#line 799 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 799 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].decl).node;
       pop_n_locals((yyvsp[0].decl).num);
     }
-#line 3082 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3082 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 92: /* statement: ';'  */
-#line 804 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 804 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = 0;
     }
-#line 3090 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3090 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 93: /* statement: L_BREAK ';'  */
-#line 808 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 808 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (context & SPECIAL_CONTEXT) {
         yyerror("Cannot break out of catch { } or time_expression { }");
@@ -3112,11 +3115,11 @@ yyreduce:
             (yyval.node) = 0;
           }
     }
-#line 3116 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3116 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 94: /* statement: L_CONTINUE ';'  */
-#line 830 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 830 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (context & SPECIAL_CONTEXT)
         yyerror("Cannot continue out of catch { } or time_expression { }");
@@ -3125,57 +3128,57 @@ yyreduce:
           yyerror("continue statement outside loop");
       CREATE_CONTROL_JUMP((yyval.node), CJ_CONTINUE);
     }
-#line 3129 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3129 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 95: /* $@8: %empty  */
-#line 842 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 842 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[-3].number) = context;
       context = LOOP_CONTEXT;
     }
-#line 3138 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3138 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 96: /* while: L_WHILE '(' comma_expr ')' $@8 statement  */
-#line 847 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 847 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_LOOP((yyval.node), 1, (yyvsp[0].node), 0, optimize_loop_test((yyvsp[-3].node)));
       context = (yyvsp[-5].number);
     }
-#line 3147 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3147 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 97: /* $@9: %empty  */
-#line 855 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 855 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[0].number) = context;
       context = LOOP_CONTEXT;
     }
-#line 3156 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3156 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 98: /* do: L_DO $@9 statement L_WHILE '(' comma_expr ')' ';'  */
-#line 860 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 860 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_LOOP((yyval.node), 0, (yyvsp[-5].node), 0, optimize_loop_test((yyvsp[-2].node)));
       context = (yyvsp[-7].number);
     }
-#line 3165 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3165 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 99: /* $@10: %empty  */
-#line 868 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 868 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[-5].decl).node = pop_value((yyvsp[-5].decl).node);
       (yyvsp[-7].number) = context;
       context = LOOP_CONTEXT;
     }
-#line 3175 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3175 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 100: /* for: L_FOR '(' first_for_expr ';' for_expr ';' for_expr ')' $@10 statement  */
-#line 874 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 874 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).num = (yyvsp[-7].decl).num; /* number of declarations (0/1) */
 
@@ -3191,11 +3194,11 @@ yyreduce:
 
       context = (yyvsp[-9].number);
     }
-#line 3195 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3195 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 101: /* foreach_var: L_DEFINED_NAME  */
-#line 893 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 893 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].ihe)->dn.local_num != -1) {
         CREATE_OPCODE_1((yyval.decl).node, F_LOCAL_LVALUE, 0, (yyvsp[0].ihe)->dn.local_num);
@@ -3216,11 +3219,11 @@ yyreduce:
         }
       (yyval.decl).num = 0;
     }
-#line 3220 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3220 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 102: /* foreach_var: single_new_local_def  */
-#line 914 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 914 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (type_of_locals_ptr[(yyvsp[0].number)] & LOCAL_MOD_REF) {
         CREATE_OPCODE_1((yyval.decl).node, F_REF_LVALUE, 0, (yyvsp[0].number));
@@ -3230,11 +3233,11 @@ yyreduce:
       }
       (yyval.decl).num = 1;
     }
-#line 3234 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3234 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 103: /* foreach_var: L_IDENTIFIER  */
-#line 924 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 924 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       char buf[256];
       char *end = EndOf(buf);
@@ -3248,41 +3251,41 @@ yyreduce:
       scratch_free((yyvsp[0].string));
       (yyval.decl).num = 0;
     }
-#line 3252 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3252 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 104: /* foreach_vars: foreach_var  */
-#line 941 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 941 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_FOREACH((yyval.decl).node, (yyvsp[0].decl).node, 0);
       (yyval.decl).num = (yyvsp[0].decl).num;
     }
-#line 3261 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3261 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 105: /* foreach_vars: foreach_var ',' foreach_var  */
-#line 946 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 946 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_FOREACH((yyval.decl).node, (yyvsp[-2].decl).node, (yyvsp[0].decl).node);
       (yyval.decl).num = (yyvsp[-2].decl).num + (yyvsp[0].decl).num;
       if ((yyvsp[-2].decl).node->v.number == F_REF_LVALUE)
         yyerror("Mapping key may not be a reference in foreach()");
     }
-#line 3272 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3272 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 106: /* $@11: %empty  */
-#line 956 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 956 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[-3].decl).node->v.expr = (yyvsp[-1].node);
       (yyvsp[-5].number) = context;
       context = LOOP_CONTEXT | LOOP_FOREACH;
     }
-#line 3282 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3282 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 107: /* foreach: L_FOREACH '(' foreach_vars L_IN expr0 ')' $@11 statement  */
-#line 962 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 962 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).num = (yyvsp[-5].decl).num;
 
@@ -3292,48 +3295,48 @@ yyreduce:
 
       context = (yyvsp[-7].number);
     }
-#line 3296 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3296 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 108: /* for_expr: %empty  */
-#line 975 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 975 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.node) = 0;
     }
-#line 3304 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3304 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 110: /* first_for_expr: for_expr  */
-#line 983 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 983 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[0].node);
       (yyval.decl).num = 0;
     }
-#line 3313 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3313 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 111: /* first_for_expr: single_new_local_def_with_init  */
-#line 988 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 988 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.decl).node = (yyvsp[0].node);
       (yyval.decl).num = 1;
     }
-#line 3322 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3322 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 112: /* $@12: %empty  */
-#line 996 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 996 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[-3].number) = context;
       context &= LOOP_CONTEXT;
       context |= SWITCH_CONTEXT;
       (yyvsp[-2].number) = mem_block[A_CASES].current_size;
     }
-#line 3333 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3333 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 113: /* switch: L_SWITCH '(' comma_expr ')' $@12 '{' local_declarations case switch_block '}'  */
-#line 1003 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1003 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
       {
         parse_node_t *node1, *node2;
 
@@ -3362,50 +3365,50 @@ yyreduce:
         (yyval.node) = node2;
         pop_n_locals((yyvsp[-3].decl).num);
       }
-#line 3366 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3366 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 114: /* switch_block: case switch_block  */
-#line 1035 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1035 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].node)){
         CREATE_STATEMENTS((yyval.node), (yyvsp[-1].node), (yyvsp[0].node));
       } else (yyval.node) = (yyvsp[-1].node);
     }
-#line 3376 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3376 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 115: /* switch_block: statement switch_block  */
-#line 1041 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1041 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].node)){
         CREATE_STATEMENTS((yyval.node), (yyvsp[-1].node), (yyvsp[0].node));
       } else (yyval.node) = (yyvsp[-1].node);
     }
-#line 3386 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3386 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 116: /* switch_block: %empty  */
-#line 1047 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1047 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.node) = 0;
     }
-#line 3394 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3394 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 117: /* case: L_CASE case_label ':'  */
-#line 1054 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1054 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[-1].node);
       (yyval.node)->v.expr = 0;
 
       add_to_mem_block(A_CASES, (char *)&((yyvsp[-1].node)), sizeof((yyvsp[-1].node)));
     }
-#line 3405 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3405 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 118: /* case: L_CASE case_label L_RANGE case_label ':'  */
-#line 1061 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1061 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ( (yyvsp[-3].node)->kind != NODE_CASE_NUMBER
           || (yyvsp[-1].node)->kind != NODE_CASE_NUMBER )
@@ -3419,11 +3422,11 @@ yyreduce:
 
       add_to_mem_block(A_CASES, (char *)&((yyvsp[-3].node)), sizeof((yyvsp[-3].node)));
     }
-#line 3423 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3423 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 119: /* case: L_CASE case_label L_RANGE ':'  */
-#line 1075 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1075 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ( (yyvsp[-2].node)->kind != NODE_CASE_NUMBER )
         yyerror("String case labels not allowed as range bounds");
@@ -3437,11 +3440,11 @@ yyreduce:
 
       add_to_mem_block(A_CASES, (char *)&((yyvsp[-2].node)), sizeof((yyvsp[-2].node)));
     }
-#line 3441 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3441 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 120: /* case: L_CASE L_RANGE case_label ':'  */
-#line 1089 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1089 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ( (yyvsp[-1].node)->kind != NODE_CASE_NUMBER )
         yyerror("String case labels not allowed as range bounds");
@@ -3454,11 +3457,11 @@ yyreduce:
 
       add_to_mem_block(A_CASES, (char *)&((yyval.node)), sizeof((yyval.node)));
     }
-#line 3458 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3458 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 121: /* case: L_DEFAULT ':'  */
-#line 1102 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1102 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (context & SWITCH_DEFAULT) {
         yyerror("Duplicate default");
@@ -3471,11 +3474,11 @@ yyreduce:
       add_to_mem_block(A_CASES, (char *)&((yyval.node)), sizeof((yyval.node)));
       context |= SWITCH_DEFAULT;
     }
-#line 3475 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3475 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 122: /* case_label: constant  */
-#line 1118 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1118 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((context & SWITCH_STRINGS) && (yyvsp[0].number))
         yyerror("Mixed case label list not allowed");
@@ -3489,11 +3492,11 @@ yyreduce:
       (yyval.node)->kind = NODE_CASE_NUMBER;
       (yyval.node)->r.number = (LPC_INT)(yyvsp[0].number);
     }
-#line 3493 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3493 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 123: /* case_label: string_con1  */
-#line 1132 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1132 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       POINTER_INT str;
       str = store_prog_string((yyvsp[0].string));
@@ -3505,51 +3508,51 @@ yyreduce:
       (yyval.node)->kind = NODE_CASE_STRING;
       (yyval.node)->r.number = (LPC_INT)str;
     }
-#line 3509 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3509 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 124: /* constant: constant '|' constant  */
-#line 1147 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1147 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) | (yyvsp[0].number);
     }
-#line 3517 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3517 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 125: /* constant: constant '^' constant  */
-#line 1151 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1151 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) ^ (yyvsp[0].number);
     }
-#line 3525 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3525 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 126: /* constant: constant '&' constant  */
-#line 1155 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1155 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) & (yyvsp[0].number);
     }
-#line 3533 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3533 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 127: /* constant: constant L_EQ constant  */
-#line 1159 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1159 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) == (yyvsp[0].number);
     }
-#line 3541 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3541 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 128: /* constant: constant L_NE constant  */
-#line 1163 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1163 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) != (yyvsp[0].number);
     }
-#line 3549 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3549 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 129: /* constant: constant L_ORDER constant  */
-#line 1167 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1167 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       switch((yyvsp[-1].number)){
         case F_GE: (yyval.number) = (yyvsp[-2].number) >= (yyvsp[0].number); break;
@@ -3557,131 +3560,131 @@ yyreduce:
         case F_GT: (yyval.number) = (yyvsp[-2].number) >  (yyvsp[0].number); break;
       }
     }
-#line 3561 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3561 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 130: /* constant: constant '<' constant  */
-#line 1175 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1175 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) < (yyvsp[0].number);
     }
-#line 3569 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3569 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 131: /* constant: constant L_LSH constant  */
-#line 1179 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1179 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) << (yyvsp[0].number);
     }
-#line 3577 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3577 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 132: /* constant: constant L_RSH constant  */
-#line 1183 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1183 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) >> (yyvsp[0].number);
     }
-#line 3585 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3585 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 133: /* constant: constant '+' constant  */
-#line 1187 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1187 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) + (yyvsp[0].number);
     }
-#line 3593 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3593 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 134: /* constant: constant '-' constant  */
-#line 1191 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1191 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) - (yyvsp[0].number);
     }
-#line 3601 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3601 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 135: /* constant: constant '*' constant  */
-#line 1195 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1195 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-2].number) * (yyvsp[0].number);
     }
-#line 3609 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3609 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 136: /* constant: constant '%' constant  */
-#line 1199 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1199 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].number)) (yyval.number) = (yyvsp[-2].number) % (yyvsp[0].number); else yyerror("Modulo by zero");
     }
-#line 3617 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3617 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 137: /* constant: constant '/' constant  */
-#line 1203 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1203 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].number)) (yyval.number) = (yyvsp[-2].number) / (yyvsp[0].number); else yyerror("Division by zero");
     }
-#line 3625 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3625 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 138: /* constant: '(' constant ')'  */
-#line 1207 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1207 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[-1].number);
     }
-#line 3633 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3633 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 139: /* constant: L_NUMBER  */
-#line 1211 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1211 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = (yyvsp[0].number);
     }
-#line 3641 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3641 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 140: /* constant: '-' L_NUMBER  */
-#line 1215 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1215 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = -(yyvsp[0].number);
     }
-#line 3649 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3649 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 141: /* constant: L_NOT L_NUMBER  */
-#line 1219 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1219 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = !(yyvsp[0].number);
     }
-#line 3657 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3657 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 142: /* constant: '~' L_NUMBER  */
-#line 1223 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1223 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = ~(yyvsp[0].number);
     }
-#line 3665 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3665 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 143: /* comma_expr: expr0  */
-#line 1230 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1230 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].node);
     }
-#line 3673 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3673 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 144: /* comma_expr: comma_expr ',' expr0  */
-#line 1234 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1234 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_TWO_VALUES((yyval.node), (yyvsp[0].node)->type, pop_value((yyvsp[-2].node)), (yyvsp[0].node));
     }
-#line 3681 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3681 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 146: /* expr0: ref lvalue  */
-#line 1245 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1245 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int op;
 
@@ -3708,11 +3711,11 @@ yyreduce:
       }
       CREATE_UNARY_OP_1((yyval.node), F_MAKE_REF, TYPE_ANY, (yyvsp[0].node), op);
     }
-#line 3712 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3712 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 147: /* expr0: lvalue L_ASSIGN expr0  */
-#line 1272 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1272 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *l = (yyvsp[-2].node), *r = (yyvsp[0].node);
       int opcode = (yyvsp[-1].number);
@@ -3752,20 +3755,20 @@ yyreduce:
           (yyval.node)->l.expr = do_promotions(r, l->type);
       }
     }
-#line 3756 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3756 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 148: /* expr0: error L_ASSIGN expr0  */
-#line 1312 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1312 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       yyerror("Illegal LHS");
       CREATE_ERROR((yyval.node));
     }
-#line 3765 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3765 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 149: /* expr0: expr0 '?' expr0 ':' expr0  */
-#line 1317 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1317 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *p1 = (yyvsp[-2].node), *p2 = (yyvsp[0].node);
 
@@ -3789,41 +3792,41 @@ yyreduce:
       }
       (yyval.node)->type = ((p1->type == p2->type) ? p1->type : TYPE_ANY);
     }
-#line 3793 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3793 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 150: /* expr0: expr0 L_QUESTION_QUESTION expr0  */
-#line 1341 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1341 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       /* Nullish coalescing: left ?? right
        * Return left if defined, otherwise return right */
       CREATE_NULLISH((yyval.node), (yyvsp[-2].node), (yyvsp[0].node));
     }
-#line 3803 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3803 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 151: /* expr0: expr0 L_LOR expr0  */
-#line 1347 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1347 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_LAND_LOR((yyval.node), F_LOR, (yyvsp[-2].node), (yyvsp[0].node));
       if (IS_NODE((yyvsp[-2].node), NODE_LAND_LOR, F_LOR))
         (yyvsp[-2].node)->kind = NODE_BRANCH_LINK;
     }
-#line 3813 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3813 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 152: /* expr0: expr0 L_LAND expr0  */
-#line 1353 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1353 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_LAND_LOR((yyval.node), F_LAND, (yyvsp[-2].node), (yyvsp[0].node));
       if (IS_NODE((yyvsp[-2].node), NODE_LAND_LOR, F_LAND))
         (yyvsp[-2].node)->kind = NODE_BRANCH_LINK;
     }
-#line 3823 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3823 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 153: /* expr0: expr0 '|' expr0  */
-#line 1359 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1359 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int t1 = (yyvsp[-2].node)->type, t3 = (yyvsp[0].node)->type;
 
@@ -3848,19 +3851,19 @@ yyreduce:
       }
       else (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_OR, "|");
     }
-#line 3852 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3852 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 154: /* expr0: expr0 '^' expr0  */
-#line 1384 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1384 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_XOR, "^");
     }
-#line 3860 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3860 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 155: /* expr0: expr0 '&' expr0  */
-#line 1388 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1388 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int t1 = (yyvsp[-2].node)->type, t3 = (yyvsp[0].node)->type;
       if (is_boolean((yyvsp[-2].node)) && is_boolean((yyvsp[0].node)))
@@ -3883,11 +3886,11 @@ yyreduce:
         CREATE_BINARY_OP((yyval.node), F_AND, t1, (yyvsp[-2].node), (yyvsp[0].node));
       } else (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_AND, "&");
     }
-#line 3887 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3887 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 156: /* expr0: expr0 L_EQ expr0  */
-#line 1411 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1411 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types && !compatible_types2((yyvsp[-2].node)->type, (yyvsp[0].node)->type)){
         char buf[256];
@@ -3909,11 +3912,11 @@ yyreduce:
           CREATE_BINARY_OP((yyval.node), F_EQ, TYPE_NUMBER, (yyvsp[-2].node), (yyvsp[0].node));
         }
     }
-#line 3913 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3913 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 157: /* expr0: expr0 L_NE expr0  */
-#line 1433 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1433 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types && !compatible_types2((yyvsp[-2].node)->type, (yyvsp[0].node)->type)){
         char buf[256];
@@ -3927,11 +3930,11 @@ yyreduce:
       }
       CREATE_BINARY_OP((yyval.node), F_NE, TYPE_NUMBER, (yyvsp[-2].node), (yyvsp[0].node));
     }
-#line 3931 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3931 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 158: /* expr0: expr0 L_ORDER expr0  */
-#line 1447 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1447 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types) {
         int t1 = (yyvsp[-2].node)->type;
@@ -3975,11 +3978,11 @@ yyreduce:
       }
       CREATE_BINARY_OP((yyval.node), (yyvsp[-1].number), TYPE_NUMBER, (yyvsp[-2].node), (yyvsp[0].node));
     }
-#line 3979 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 3979 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 159: /* expr0: expr0 '<' expr0  */
-#line 1491 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1491 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types) {
         int t1 = (yyvsp[-2].node)->type, t3 = (yyvsp[0].node)->type;
@@ -4016,27 +4019,27 @@ yyreduce:
       }
       CREATE_BINARY_OP((yyval.node), F_LT, TYPE_NUMBER, (yyvsp[-2].node), (yyvsp[0].node));
     }
-#line 4020 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4020 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 160: /* expr0: expr0 L_LSH expr0  */
-#line 1528 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1528 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_LSH, "<<");
     }
-#line 4028 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4028 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 161: /* expr0: expr0 L_RSH expr0  */
-#line 1532 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1532 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_RSH, ">>");
     }
-#line 4036 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4036 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 162: /* expr0: expr0 '+' expr0  */
-#line 1536 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1536 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int result_type;
 
@@ -4206,11 +4209,11 @@ yyreduce:
           break;
       }
     }
-#line 4210 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4210 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 163: /* expr0: expr0 '-' expr0  */
-#line 1706 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1706 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int result_type;
 
@@ -4304,11 +4307,11 @@ yyreduce:
           CREATE_BINARY_OP((yyval.node), F_SUBTRACT, result_type, (yyvsp[-2].node), (yyvsp[0].node));
       }
     }
-#line 4308 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4308 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 164: /* expr0: expr0 '*' expr0  */
-#line 1800 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1800 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int result_type;
 
@@ -4388,19 +4391,19 @@ yyreduce:
           CREATE_BINARY_OP((yyval.node), F_MULTIPLY, result_type, (yyvsp[-2].node), (yyvsp[0].node));
       }
     }
-#line 4392 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4392 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 165: /* expr0: expr0 '%' expr0  */
-#line 1880 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1880 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = binary_int_op((yyvsp[-2].node), (yyvsp[0].node), F_MOD, "%");
     }
-#line 4400 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4400 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 166: /* expr0: expr0 '/' expr0  */
-#line 1884 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1884 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int result_type;
 
@@ -4495,11 +4498,11 @@ yyreduce:
           CREATE_BINARY_OP((yyval.node), F_DIVIDE, result_type, (yyvsp[-2].node), (yyvsp[0].node));
       }
     }
-#line 4499 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4499 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 167: /* expr0: cast expr0  */
-#line 1979 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 1979 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].node);
       (yyval.node)->type = (yyvsp[-1].number);
@@ -4520,11 +4523,11 @@ yyreduce:
         yyerror(buf);
       }
     }
-#line 4524 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4524 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 168: /* expr0: L_INC lvalue  */
-#line 2000 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2000 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_UNARY_OP((yyval.node), F_PRE_INC, 0, (yyvsp[0].node));
       if (exact_types){
@@ -4545,11 +4548,11 @@ yyreduce:
         }
       } else (yyval.node)->type = TYPE_ANY;
     }
-#line 4549 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4549 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 169: /* expr0: L_DEC lvalue  */
-#line 2021 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2021 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_UNARY_OP((yyval.node), F_PRE_DEC, 0, (yyvsp[0].node));
       if (exact_types){
@@ -4571,11 +4574,11 @@ yyreduce:
       } else (yyval.node)->type = TYPE_ANY;
 
     }
-#line 4575 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4575 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 170: /* expr0: L_NOT expr0  */
-#line 2043 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2043 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[0].node)->kind == NODE_NUMBER) {
         (yyval.node) = (yyvsp[0].node);
@@ -4584,11 +4587,11 @@ yyreduce:
         CREATE_UNARY_OP((yyval.node), F_NOT, TYPE_NUMBER, (yyvsp[0].node));
       }
     }
-#line 4588 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4588 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 171: /* expr0: '~' expr0  */
-#line 2052 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2052 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types && !IS_TYPE((yyvsp[0].node)->type, TYPE_NUMBER))
         type_error("Bad argument to ~", (yyvsp[0].node)->type);
@@ -4599,11 +4602,11 @@ yyreduce:
         CREATE_UNARY_OP((yyval.node), F_COMPL, TYPE_NUMBER, (yyvsp[0].node));
       }
     }
-#line 4603 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4603 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 172: /* expr0: '-' expr0  */
-#line 2063 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2063 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int result_type;
       if (exact_types){
@@ -4627,11 +4630,11 @@ yyreduce:
           CREATE_UNARY_OP((yyval.node), F_NEGATE, result_type, (yyvsp[0].node));
       }
     }
-#line 4631 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4631 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 173: /* expr0: lvalue L_INC  */
-#line 2087 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2087 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_UNARY_OP((yyval.node), F_POST_INC, 0, (yyvsp[-1].node));
       (yyval.node)->v.number = F_POST_INC;
@@ -4653,11 +4656,11 @@ yyreduce:
         }
       } else (yyval.node)->type = TYPE_ANY;
     }
-#line 4657 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4657 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 174: /* expr0: lvalue L_DEC  */
-#line 2109 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2109 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_UNARY_OP((yyval.node), F_POST_DEC, 0, (yyvsp[-1].node));
       if (exact_types){
@@ -4678,21 +4681,21 @@ yyreduce:
         }
       } else (yyval.node)->type = TYPE_ANY;
     }
-#line 4682 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4682 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 181: /* return: L_RETURN ';'  */
-#line 2139 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2139 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types && !IS_TYPE(exact_types, TYPE_VOID))
         yywarn("Non-void functions must return a value.");
       CREATE_RETURN((yyval.node), 0);
     }
-#line 4692 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4692 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 182: /* return: L_RETURN comma_expr ';'  */
-#line 2145 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2145 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (exact_types && !compatible_types((yyvsp[-1].node)->type, exact_types)) {
         char buf[256];
@@ -4709,60 +4712,60 @@ yyreduce:
         CREATE_RETURN((yyval.node), (yyvsp[-1].node));
       }
     }
-#line 4713 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4713 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 183: /* expr_list: %empty  */
-#line 2165 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2165 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       CREATE_EXPR_LIST((yyval.node), 0);
     }
-#line 4721 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4721 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 184: /* expr_list: expr_list2  */
-#line 2169 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2169 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_LIST((yyval.node), (yyvsp[0].node));
     }
-#line 4729 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4729 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 185: /* expr_list: expr_list2 ','  */
-#line 2173 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2173 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_LIST((yyval.node), (yyvsp[-1].node));
     }
-#line 4737 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4737 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 186: /* expr_list_node: expr0  */
-#line 2180 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2180 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_NODE((yyval.node), (yyvsp[0].node), 0);
     }
-#line 4745 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4745 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 187: /* expr_list_node: expr0 L_DOT_DOT_DOT  */
-#line 2184 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2184 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_NODE((yyval.node), (yyvsp[-1].node), 1);
     }
-#line 4753 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4753 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 188: /* expr_list2: expr_list_node  */
-#line 2191 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2191 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[0].node)->kind = 1;
       (yyval.node) = (yyvsp[0].node);
     }
-#line 4762 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4762 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 189: /* expr_list2: expr_list2 ',' expr_list_node  */
-#line 2196 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2196 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyvsp[0].node)->kind = 0;
 
@@ -4771,36 +4774,36 @@ yyreduce:
       (yyval.node)->l.expr->r.expr = (yyvsp[0].node);
       (yyval.node)->l.expr = (yyvsp[0].node);
     }
-#line 4775 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4775 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 190: /* expr_list3: %empty  */
-#line 2208 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2208 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       /* this is a dummy node */
       CREATE_EXPR_LIST((yyval.node), 0);
     }
-#line 4784 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4784 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 191: /* expr_list3: expr_list4  */
-#line 2213 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2213 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_LIST((yyval.node), (yyvsp[0].node));
     }
-#line 4792 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4792 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 192: /* expr_list3: expr_list4 ','  */
-#line 2217 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2217 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_EXPR_LIST((yyval.node), (yyvsp[-1].node));
     }
-#line 4800 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4800 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 193: /* expr_list4: assoc_pair  */
-#line 2224 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2224 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = new_node_no_line();
       (yyval.node)->kind = 2;
@@ -4810,11 +4813,11 @@ yyreduce:
       /* we keep track of the end of the chain in the left nodes */
       (yyval.node)->l.expr = (yyval.node);
     }
-#line 4814 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4814 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 194: /* expr_list4: expr_list4 ',' assoc_pair  */
-#line 2234 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2234 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *expr;
 
@@ -4829,19 +4832,19 @@ yyreduce:
       (yyvsp[-2].node)->kind += 2;
       (yyval.node) = (yyvsp[-2].node);
     }
-#line 4833 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4833 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 195: /* assoc_pair: expr0 ':' expr0  */
-#line 2252 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2252 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_TWO_VALUES((yyval.node), 0, (yyvsp[-2].node), (yyvsp[0].node));
     }
-#line 4841 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4841 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 196: /* lvalue: expr4  */
-#line 2259 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2259 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
 #define LV_ILLEGAL 1
 #define LV_RANGE 2
@@ -4954,19 +4957,19 @@ yyreduce:
           break;
       }
     }
-#line 4958 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4958 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 198: /* l_new_function_open: L_FUNCTION_OPEN efun_override  */
-#line 2376 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2376 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = ((yyvsp[0].number) << 8) | FP_EFUN;
     }
-#line 4966 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 4966 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 200: /* expr4: L_DEFINED_NAME  */
-#line 2384 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2384 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int i;
       if ((i = (yyvsp[0].ihe)->dn.local_num) != -1) {
@@ -5039,11 +5042,11 @@ yyreduce:
           yyerror(buf);
         }
     }
-#line 5043 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5043 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 201: /* expr4: L_IDENTIFIER  */
-#line 2457 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2457 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       char buf[256];
       char *end = EndOf(buf);
@@ -5061,30 +5064,30 @@ yyreduce:
       if (current_function_context)
         current_function_context->bindable = FP_NOT_BINDABLE;
     }
-#line 5065 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5065 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 202: /* expr4: L_PARAMETER  */
-#line 2475 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2475 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_PARAMETER((yyval.node), TYPE_ANY, (yyvsp[0].number));
     }
-#line 5073 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5073 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 203: /* @13: %empty  */
-#line 2479 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2479 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.contextp) = current_function_context;
       /* already flagged as an error */
       if (current_function_context)
         current_function_context = current_function_context->parent;
     }
-#line 5084 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5084 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 204: /* expr4: '$' '(' @13 comma_expr ')'  */
-#line 2486 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2486 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *node;
 
@@ -5107,11 +5110,11 @@ yyreduce:
         node->v.expr = (yyvsp[-1].node);
       }
     }
-#line 5111 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5111 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 205: /* expr4: expr4 L_ARROW identifier  */
-#line 2509 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2509 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-2].node)->type == TYPE_ANY) {
         int cmi;
@@ -5135,11 +5138,11 @@ yyreduce:
 
       scratch_free((yyvsp[0].string));
     }
-#line 5139 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5139 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 206: /* expr4: expr4 L_DOT identifier  */
-#line 2533 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2533 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-2].node)->type == TYPE_ANY) {
         int cmi;
@@ -5163,11 +5166,11 @@ yyreduce:
 
       scratch_free((yyvsp[0].string));
     }
-#line 5167 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5167 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 207: /* expr4: expr4 '[' comma_expr L_RANGE comma_expr ']'  */
-#line 2557 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2557 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
     if (!CONFIG_INT(__RC_OLD_RANGE_BEHAVIOR__)) {
       if (CONFIG_INT(__RC_WARN_OLD_RANGE_BEHAVIOR__)) {
@@ -5178,57 +5181,57 @@ yyreduce:
     }
       (yyval.node) = make_range_node(F_NN_RANGE, (yyvsp[-5].node), (yyvsp[-3].node), (yyvsp[-1].node));
     }
-#line 5182 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5182 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 208: /* expr4: expr4 '[' '<' comma_expr L_RANGE comma_expr ']'  */
-#line 2568 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2568 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = make_range_node(F_RN_RANGE, (yyvsp[-6].node), (yyvsp[-3].node), (yyvsp[-1].node));
     }
-#line 5190 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5190 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 209: /* expr4: expr4 '[' '<' comma_expr L_RANGE '<' comma_expr ']'  */
-#line 2572 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2572 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-1].node)->kind == NODE_NUMBER && (yyvsp[-1].node)->v.number <= 1)
         (yyval.node) = make_range_node(F_RE_RANGE, (yyvsp[-7].node), (yyvsp[-4].node), 0);
       else
         (yyval.node) = make_range_node(F_RR_RANGE, (yyvsp[-7].node), (yyvsp[-4].node), (yyvsp[-1].node));
     }
-#line 5201 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5201 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 210: /* expr4: expr4 '[' comma_expr L_RANGE '<' comma_expr ']'  */
-#line 2579 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2579 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-1].node)->kind == NODE_NUMBER && (yyvsp[-1].node)->v.number <= 1)
         (yyval.node) = make_range_node(F_NE_RANGE, (yyvsp[-6].node), (yyvsp[-4].node), 0);
       else
         (yyval.node) = make_range_node(F_NR_RANGE, (yyvsp[-6].node), (yyvsp[-4].node), (yyvsp[-1].node));
     }
-#line 5212 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5212 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 211: /* expr4: expr4 '[' comma_expr L_RANGE ']'  */
-#line 2586 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2586 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = make_range_node(F_NE_RANGE, (yyvsp[-4].node), (yyvsp[-2].node), 0);
     }
-#line 5220 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5220 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 212: /* expr4: expr4 '[' '<' comma_expr L_RANGE ']'  */
-#line 2590 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2590 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = make_range_node(F_RE_RANGE, (yyvsp[-5].node), (yyvsp[-2].node), 0);
     }
-#line 5228 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5228 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 213: /* expr4: expr4 '[' '<' comma_expr ']'  */
-#line 2594 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2594 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (IS_NODE((yyvsp[-4].node), NODE_CALL, F_AGGREGATE)
           && (yyvsp[-1].node)->kind == NODE_NUMBER) {
@@ -5273,11 +5276,11 @@ yyreduce:
         }
       } else (yyval.node)->type = TYPE_ANY;
     }
-#line 5277 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5277 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 214: /* expr4: expr4 '[' comma_expr ']'  */
-#line 2639 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2639 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       /* Something stupid like ({ 1, 2, 3 })[1]; we take the
        * time to optimize this because people who don't understand
@@ -5333,19 +5336,19 @@ yyreduce:
         }
       } else (yyval.node)->type = TYPE_ANY;
     }
-#line 5337 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5337 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 216: /* expr4: '(' comma_expr ')'  */
-#line 2696 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2696 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[-1].node);
     }
-#line 5345 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5345 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 219: /* @14: %empty  */
-#line 2702 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2702 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       auto max_local_variables = CFG_INT(__MAX_LOCAL_VARIABLES__);
 
@@ -5366,11 +5369,11 @@ yyreduce:
       exact_types = TYPE_ANY;
       context = 0;
     }
-#line 5370 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5370 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 220: /* expr4: L_BASIC_TYPE @14 '(' argument ')' block  */
-#line 2723 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2723 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if ((yyvsp[-2].argument).flags & ARG_IS_VARARGS) {
         yyerror("Anonymous varargs functions aren't implemented");
@@ -5406,11 +5409,11 @@ yyreduce:
       type_of_locals_ptr -= max_num_locals;
       reactivate_current_locals();
     }
-#line 5410 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5410 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 221: /* expr4: l_new_function_open ':' ')'  */
-#line 2759 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2759 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != ':') {
@@ -5448,11 +5451,11 @@ yyreduce:
           break;
       }
     }
-#line 5452 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5452 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 222: /* expr4: l_new_function_open ',' expr_list2 ':' ')'  */
-#line 2797 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2797 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != ':') {
@@ -5547,11 +5550,11 @@ yyreduce:
                       break;
       }
     }
-#line 5551 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5551 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 223: /* expr4: L_FUNCTION_OPEN comma_expr ':' ')'  */
-#line 2892 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2892 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != ':') {
@@ -5574,11 +5577,11 @@ yyreduce:
         + (current_function_context->num_parameters << 8);
       pop_function_context();
     }
-#line 5578 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5578 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 224: /* expr4: L_MAPPING_OPEN expr_list3 ']' ')'  */
-#line 2915 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2915 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != ']') {
@@ -5587,11 +5590,11 @@ yyreduce:
       }
       CREATE_CALL((yyval.node), F_AGGREGATE_ASSOC, TYPE_MAPPING, (yyvsp[-2].node));
     }
-#line 5591 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5591 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 225: /* expr4: L_ARRAY_OPEN expr_list '}' ')'  */
-#line 2924 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2924 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       if (CONFIG_INT(__RC_WOMBLES__)) {
         if(*(outp-2) != '}') {
@@ -5600,116 +5603,116 @@ yyreduce:
       }
       CREATE_CALL((yyval.node), F_AGGREGATE, TYPE_ANY | TYPE_MOD_ARRAY, (yyvsp[-2].node));
     }
-#line 5604 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5604 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 226: /* expr_or_block: block  */
-#line 2936 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2936 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].decl).node;
     }
-#line 5612 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5612 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 227: /* expr_or_block: '(' comma_expr ')'  */
-#line 2940 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2940 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = insert_pop_value((yyvsp[-1].node));
     }
-#line 5620 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5620 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 228: /* @15: %empty  */
-#line 2947 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2947 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       context = SPECIAL_CONTEXT;
     }
-#line 5629 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5629 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 229: /* catch: L_CATCH @15 expr_or_block  */
-#line 2952 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2952 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_CATCH((yyval.node), (yyvsp[0].node));
       context = (yyvsp[-1].number);
     }
-#line 5638 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5638 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 230: /* tree: L_TREE block  */
-#line 2960 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2960 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
 #ifdef DEBUG
       (yyval.node) = new_node_no_line();
       lpc_tree_form((yyvsp[0].decl).node, (yyval.node));
 #endif
     }
-#line 5649 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5649 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 231: /* tree: L_TREE '(' comma_expr ')'  */
-#line 2967 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2967 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
 #ifdef DEBUG
       (yyval.node) = new_node_no_line();
       lpc_tree_form((yyvsp[-1].node), (yyval.node));
 #endif
     }
-#line 5660 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5660 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 232: /* sscanf: L_SSCANF '(' expr0 ',' expr0 lvalue_list ')'  */
-#line 2977 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2977 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int p = (yyvsp[-1].node)->v.number;
       CREATE_LVALUE_EFUN((yyval.node), TYPE_NUMBER, (yyvsp[-1].node));
       CREATE_BINARY_OP_1((yyval.node)->l.expr, F_SSCANF, 0, (yyvsp[-4].node), (yyvsp[-2].node), p);
     }
-#line 5670 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5670 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 233: /* parse_command: L_PARSE_COMMAND '(' expr0 ',' expr0 ',' expr0 lvalue_list ')'  */
-#line 2986 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2986 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int p = (yyvsp[-1].node)->v.number;
       CREATE_LVALUE_EFUN((yyval.node), TYPE_NUMBER, (yyvsp[-1].node));
       CREATE_TERNARY_OP_1((yyval.node)->l.expr, F_PARSE_COMMAND, 0,
           (yyvsp[-6].node), (yyvsp[-4].node), (yyvsp[-2].node), p);
     }
-#line 5681 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5681 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 234: /* @16: %empty  */
-#line 2996 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 2996 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       context = SPECIAL_CONTEXT;
     }
-#line 5690 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5690 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 235: /* time_expression: L_TIME_EXPRESSION @16 expr_or_block  */
-#line 3001 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3001 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_TIME_EXPRESSION((yyval.node), (yyvsp[0].node));
       context = (yyvsp[-1].number);
     }
-#line 5699 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5699 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 236: /* lvalue_list: %empty  */
-#line 3009 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3009 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.node) = new_node_no_line();
       (yyval.node)->r.expr = 0;
       (yyval.node)->v.number = 0;
     }
-#line 5709 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5709 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 237: /* lvalue_list: ',' lvalue lvalue_list  */
-#line 3015 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3015 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *insert;
 
@@ -5720,103 +5723,103 @@ yyreduce:
       (yyvsp[0].node)->r.expr = insert;
       (yyval.node)->v.number++;
     }
-#line 5724 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5724 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 238: /* string: string_con2  */
-#line 3029 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3029 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       CREATE_STRING((yyval.node), (yyvsp[0].string));
       scratch_free((yyvsp[0].string));
     }
-#line 5733 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5733 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 240: /* string_con1: '(' string_con1 ')'  */
-#line 3038 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3038 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.string) = (yyvsp[-1].string);
     }
-#line 5741 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5741 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 241: /* string_con1: string_con1 '+' string_con1  */
-#line 3042 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3042 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.string) = scratch_join((yyvsp[-2].string), (yyvsp[0].string));
     }
-#line 5749 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5749 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 243: /* string_con2: string_con2 L_STRING  */
-#line 3050 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3050 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.string) = scratch_join((yyvsp[-1].string), (yyvsp[0].string));
     }
-#line 5757 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5757 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 244: /* class_init: identifier ':' expr0  */
-#line 3057 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3057 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = new_node();
       (yyval.node)->l.expr = (parse_node_t *)(yyvsp[-2].string);
       (yyval.node)->v.expr = (yyvsp[0].node);
       (yyval.node)->r.expr = 0;
     }
-#line 5768 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5768 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 245: /* opt_class_init: %empty  */
-#line 3067 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3067 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
             {
       (yyval.node) = 0;
     }
-#line 5776 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5776 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 246: /* opt_class_init: opt_class_init ',' class_init  */
-#line 3071 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3071 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].node);
       (yyval.node)->r.expr = (yyvsp[-2].node);
     }
-#line 5785 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5785 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 247: /* @17: %empty  */
-#line 3079 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3079 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 5795 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5795 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 248: /* function_call: efun_override '(' @17 expr_list ')'  */
-#line 3085 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3085 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       context = (yyvsp[-2].number);
       (yyval.node) = validate_efun_call((yyvsp[-4].number),(yyvsp[-1].node));
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 5806 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5806 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 249: /* @18: %empty  */
-#line 3092 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3092 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 5816 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5816 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 250: /* function_call: L_NEW '(' @18 expr_list ')'  */
-#line 3098 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3098 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       ident_hash_elem_t *ihe;
       int f;
@@ -5841,11 +5844,11 @@ yyreduce:
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 5845 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5845 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 251: /* function_call: L_NEW '(' L_CLASS L_DEFINED_NAME opt_class_init ')'  */
-#line 3123 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3123 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *node;
 
@@ -5880,11 +5883,11 @@ yyreduce:
         }
       }
     }
-#line 5884 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5884 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 252: /* function_call: L_NEW '(' L_CLASS L_IDENTIFIER opt_class_init ')'  */
-#line 3158 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3158 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *node;
       char buf[256];
@@ -5902,21 +5905,21 @@ yyreduce:
         node = node->r.expr;
       }
     }
-#line 5906 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5906 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 253: /* @19: %empty  */
-#line 3176 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3176 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 5916 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 5916 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 254: /* function_call: L_DEFINED_NAME '(' @19 expr_list ')'  */
-#line 3182 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3182 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int f;
       int i;
@@ -6045,21 +6048,21 @@ yyreduce:
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 6049 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6049 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 255: /* @20: %empty  */
-#line 3311 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3311 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 6059 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6059 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 256: /* function_call: function_name '(' @20 expr_list ')'  */
-#line 3317 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3317 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       char *name = (yyvsp[-4].string);
 
@@ -6121,21 +6124,21 @@ yyreduce:
       num_refs = (yyvsp[-3].number);
       scratch_free(name);
     }
-#line 6125 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6125 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 257: /* @21: %empty  */
-#line 3379 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3379 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 6135 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6135 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 258: /* function_call: expr4 '[' comma_expr ']' '(' @21 expr_list ')'  */
-#line 3385 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3385 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *expr;
       parse_node_t *index_expr;
@@ -6180,21 +6183,21 @@ yyreduce:
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 6184 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6184 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 259: /* @22: %empty  */
-#line 3430 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3430 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 6194 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6194 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 260: /* function_call: expr4 L_ARROW identifier '(' @22 expr_list ')'  */
-#line 3436 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3436 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       ident_hash_elem_t *ihe;
       int f;
@@ -6239,21 +6242,21 @@ yyreduce:
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 6243 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6243 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 261: /* @23: %empty  */
-#line 3481 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3481 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.number) = context;
       (yyvsp[0].number) = num_refs;
       context |= ARG_LIST;
     }
-#line 6253 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6253 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 262: /* function_call: '(' '*' comma_expr ')' '(' @23 expr_list ')'  */
-#line 3487 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3487 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       parse_node_t *expr;
 
@@ -6275,11 +6278,11 @@ yyreduce:
       (yyval.node) = check_refs(num_refs - (yyvsp[-3].number), (yyvsp[-1].node), (yyval.node));
       num_refs = (yyvsp[-3].number);
     }
-#line 6279 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6279 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 263: /* efun_override: L_EFUN L_COLON_COLON identifier  */
-#line 3512 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3512 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       svalue_t *res;
       ident_hash_elem_t *ihe;
@@ -6299,11 +6302,11 @@ yyreduce:
       }
       scratch_free((yyvsp[0].string));
     }
-#line 6303 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6303 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 264: /* efun_override: L_EFUN L_COLON_COLON L_NEW  */
-#line 3532 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3532 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       svalue_t *res;
 
@@ -6316,11 +6319,11 @@ yyreduce:
         (yyval.number) = -1;
       } else (yyval.number) = new_efun;
     }
-#line 6320 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6320 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 266: /* function_name: L_COLON_COLON identifier  */
-#line 3549 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3549 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int l = strlen((yyvsp[0].string)) + 1;
       char *p;
@@ -6334,11 +6337,11 @@ yyreduce:
         *(p+3) = *p;
       strncpy((yyval.string), ":::", 3);
     }
-#line 6338 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6338 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 267: /* function_name: L_BASIC_TYPE L_COLON_COLON identifier  */
-#line 3563 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3563 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int z, l = strlen((yyvsp[0].string)) + 1;
       char *p;
@@ -6353,11 +6356,11 @@ yyreduce:
       (yyval.string)[z-2] = ':';
       (yyval.string)[z-1] = ':';
     }
-#line 6357 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6357 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 268: /* function_name: identifier L_COLON_COLON identifier  */
-#line 3578 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3578 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       int l = strlen((yyvsp[-2].string));
       /* "ob" and "name" -> ":ob::name" */
@@ -6369,11 +6372,11 @@ yyreduce:
       scratch_free((yyvsp[-2].string));
       scratch_free((yyvsp[0].string));
     }
-#line 6373 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6373 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 269: /* cond: L_IF '(' comma_expr ')' statement optional_else_part  */
-#line 3593 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3593 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       /* x != 0 -> x */
       if (IS_NODE((yyvsp[-3].node), NODE_BINARY_OP, F_NE)) {
@@ -6404,27 +6407,27 @@ yyreduce:
       }
       CREATE_IF((yyval.node), (yyvsp[-3].node), (yyvsp[-1].node), (yyvsp[0].node));
     }
-#line 6408 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6408 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 270: /* optional_else_part: %empty  */
-#line 3627 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3627 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = 0;
     }
-#line 6416 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6416 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
   case 271: /* optional_else_part: L_ELSE statement  */
-#line 3631 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3631 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
     {
       (yyval.node) = (yyvsp[0].node);
     }
-#line 6424 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6424 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
     break;
 
 
-#line 6428 "/projects/git/fluffos/build/src/grammar.autogen.cc"
+#line 6428 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.cc"
 
         default: break;
       }
@@ -6659,5 +6662,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 3635 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 3635 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
 

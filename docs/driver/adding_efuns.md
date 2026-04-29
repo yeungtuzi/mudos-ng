@@ -4,7 +4,7 @@ title: general / adding_efuns
 ---
 # adding_efuns
 
-This document explains how to add efunctions to FluffOS driver. Here are the
+This document explains how to add efunctions to MudOS-NG driver. Here are the
 steps:
 
 1. Creating a directory under `src/packages/` with name `mypkg`.

@@ -5,8 +5,8 @@ if (POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
 
-project(fluffos
-        DESCRIPTION "FluffOS LPC Driver"
+project(mudos-ng
+        DESCRIPTION "MudOS-NG LPC Driver"
         LANGUAGES C CXX)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -67,7 +67,7 @@ else()
   set(PROJECT_VERSION "unknown")
 endif()
 
-message("FluffOS ${PROJECT_VERSION} (${CMAKE_BUILD_TYPE})")
+message("MudOS-NG ${PROJECT_VERSION} (${CMAKE_BUILD_TYPE})")
 foreach(lang C CXX)
 message("  ${lang}: '${CMAKE_${lang}_COMPILER}' (${CMAKE_${lang}_COMPILER_ID} ${CMAKE_${lang}_COMPILER_VERSION})")
 endforeach()

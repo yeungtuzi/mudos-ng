@@ -4,7 +4,7 @@ title: cli / symbol
 ---
 # cli / symbol
 
-`symbol` is a utility tool for loading and analyzing LPC files using the FluffOS driver infrastructure.
+`symbol` is a utility tool for loading and analyzing LPC files using the MudOS-NG driver infrastructure.
 
 ## Usage
 
@@ -21,7 +21,7 @@ title: cli / symbol
 
 ## Description
 
-The `symbol` tool initializes the FluffOS driver with the specified configuration file and attempts to load the specified LPC file. It enables symbol processing and reports whether the file was successfully loaded.
+The `symbol` tool initializes the MudOS-NG driver with the specified configuration file and attempts to load the specified LPC file. It enables symbol processing and reports whether the file was successfully loaded.
 
 This tool is useful for:
 - Validating LPC file syntax
@@ -43,5 +43,5 @@ This tool is useful for:
 
 ## See Also
 
-- [driver](driver.md) - Main FluffOS driver executable
+- [driver](driver.md) - Main MudOS-NG driver executable
 - [lpcc](lpcc.md) - LPC compiler utility

@@ -4,7 +4,7 @@ title: driver / config
 ---
 # Driver Configuration File
 
-FluffOS uses a runtime configuration file to specify various settings for the MUD server. This file is passed as an argument when starting the driver.
+MudOS-NG uses a runtime configuration file to specify various settings for the MUD server. This file is passed as an argument when starting the driver.
 
 ## Basic Usage
 
@@ -31,7 +31,7 @@ FluffOS uses a runtime configuration file to specify various settings for the MU
 
 ### External Ports
 
-FluffOS supports multiple external ports with different protocols:
+MudOS-NG supports multiple external ports with different protocols:
 
 ```
 # Basic telnet port
@@ -142,7 +142,7 @@ Specifies the directory containing the web client HTML/JS files.
 
 ```
 ###############################################################################
-#                     FluffOS Configuration Example                          #
+#                     MudOS-NG Configuration Example                          #
 ###############################################################################
 
 # MUD Identity

@@ -1,5 +1,5 @@
 ###############################################################################
-#              Customizable runtime config file for FluffOS                   #
+#              Customizable runtime config file for MudOS-NG                   #
 ###############################################################################
 # NOTE: All paths specified here are relative to the mudlib directory except  #
 #       for mudlib directory, and binary directory.                           #
@@ -23,7 +23,7 @@ external_port_2 : binary 4001
 # external_port_3 : websocket 4002
 # external_port_3_tls: cert=etc/cert.pem key=etc/key.pem
 
-# websocket http dir : add relative path to fluffos/src/www
+# websocket http dir : add relative path to mudos-ng/src/www
 
 # absolute pathname of mudlib
 mudlib directory : /home/mmessier/mudos/mudos/beta/testsuite
@@ -275,7 +275,7 @@ has console : 1
 # a feature!" religious war list.
 noninteractive stderr write : 0
 
-# Set this if you want FluffOS to call crash() in master.c and then shutdown
+# Set this if you want MudOS-NG to call crash() in master.c and then shutdown
 # when signals are received that would normally crash the driver.
 trap crashes : 1
 

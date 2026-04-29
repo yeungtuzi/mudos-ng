@@ -18,7 +18,7 @@ Also note that the arguments need not have names:
 
 ### Default Arguments
 
-FluffOS supports default argument values in function prototypes and definitions,
+MudOS-NG supports default argument values in function prototypes and definitions,
 allowing you to specify default values for parameters that can be omitted when
 calling the function.
 
@@ -27,7 +27,7 @@ calling the function.
 return_type function_name(type arg1, type arg2: (: default_value :));
 ```
 
-Default arguments use FluffOS's functional syntax `: (: expression :)` where the
+Default arguments use MudOS-NG's functional syntax `: (: expression :)` where the
 expression is evaluated when the argument is not provided.
 
 **Rules:**
@@ -96,7 +96,7 @@ object create_monster(string name, int level: (: 1 :), int hp: (: 0 :)) {
 ```
 
 **Important Notes:**
-- Default argument feature added in FluffOS v2019+
+- Default argument feature added in MudOS-NG v2019+
 - Default values are evaluated at call time in the **caller's context**, not at compile time
 - The expression in the functional can reference the caller's variables and functions
 - Default arguments work with varargs functions (unlike some other LPC dialects)

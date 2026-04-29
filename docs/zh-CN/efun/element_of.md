@@ -16,7 +16,7 @@ title: contrib / element_of.pre
 
     返回给定数组的随机元素
 
-    本函数是 FLUFFOS 新增，原 MUDOS 不支持
+    本函数是 MUDOS_NG 新增，原 MUDOS 不支持
 
 ### 翻译
 

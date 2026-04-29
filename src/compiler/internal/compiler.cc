@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
+
 #include "base/std.h"
 
 #include "compiler.h"
@@ -1989,11 +1994,8 @@ void yywarn(const char *fmt, ...) {
   va_end(args);
   buf[sizeof(buf) - 1] = '\0';
 
-  if (!(pragmas & PRAGMA_WARNINGS)) {
-    return;
-  }
-
-  smart_log(current_file, current_line, buf, 1);
+  // Warnings are always logged to the debug log but never displayed to users.
+  debug_message("%s line %d: Warning: %s\n", current_file, current_line, buf);
 }
 
 /*

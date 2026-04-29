@@ -246,7 +246,7 @@ retry_for_shadow:
 
       if (!(funflags & FUNC_TRUE_VARARGS) && funcp->min_arg != funcp->num_arg) {
         if (num_arg < funcp->min_arg) {
-          // COMPAT: fluffos allow apply to call functions with fewer arguments than required, so we fix it up here
+          // COMPAT: mudos-ng allow apply to call functions with fewer arguments than required, so we fix it up here
           push_undefineds(funcp->min_arg - num_arg);
           num_arg = funcp->min_arg;
         }

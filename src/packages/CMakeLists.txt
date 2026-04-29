@@ -4,14 +4,14 @@ file(GLOB PACKAGES LIST_DIRECTORIES true
         "*"
         )
 
-set(FLUFFOS_PACKAGES "")
+set(MUDOS_NG_PACKAGES "")
 
 foreach(PACKAGE ${PACKAGES})
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PACKAGE}/CMakeLists.txt")
         add_subdirectory(${PACKAGE})
         if(TARGET "package_${PACKAGE}")
             message(STATUS "PACKAGE: ${PACKAGE} ON")
-            list(APPEND FLUFFOS_PACKAGES "package_${PACKAGE}")
+            list(APPEND MUDOS_NG_PACKAGES "package_${PACKAGE}")
         else()
             message(STATUS "PACKAGE: ${PACKAGE} OFF")
         endif()
@@ -23,7 +23,7 @@ set(PACKAGE_H_SOURCE
         "#define PACKAGES_PACKAGES_H\n"
         "\n"
 )
-foreach(PACKAGE ${FLUFFOS_PACKAGES})
+foreach(PACKAGE ${MUDOS_NG_PACKAGES})
     string(TOUPPER "${PACKAGE}" PACKAGE)
     list(APPEND PACKAGE_H_SOURCE
             "#define ${PACKAGE}\n"
@@ -42,4 +42,4 @@ file(GENERATE OUTPUT "${PACKAGE_H}"
         CONTENT "$<JOIN:${PACKAGE_H_SOURCE},>"
         )
 
-set(FLUFFOS_PACKAGES ${FLUFFOS_PACKAGES} PARENT_SCOPE)
+set(MUDOS_NG_PACKAGES ${MUDOS_NG_PACKAGES} PARENT_SCOPE)

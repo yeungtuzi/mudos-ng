@@ -25,7 +25,7 @@ void do_tests()
     }, 0), 16 );
 
     //Testing using index and array
-    ASSERT_EQ( reduce( explode("FluffOS", ""), function( string total, string current, int idx, string* arr ) {
+    ASSERT_EQ( reduce( explode("MudOS-NG", ""), function( string total, string current, int idx, string* arr ) {
         return total + arr[sizeof(arr) - idx - 1] ;
     }, ""), "SOffulF") ;
 

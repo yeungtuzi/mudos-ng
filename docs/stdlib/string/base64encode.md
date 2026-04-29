@@ -22,7 +22,7 @@ title: stdlib / base64encode
 
 ### EXAMPLES
 
-    printf( "%s", base64encode( "FluffOS is great!! :)" ) ) ;
+    printf( "%s", base64encode( "MudOS-NG is great!! :)" ) ) ;
     // Result: Rmx1ZmZPUyBpcyBncmVhdCEhIDop
 
     Compare your results with: https://www.base64encode.org/

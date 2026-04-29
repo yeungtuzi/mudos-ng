@@ -4,11 +4,11 @@ title: TLS/SSL Support
 ---
 # TLS/SSL Support
 
-FluffOS provides comprehensive TLS (Transport Layer Security) support for secure network communications. TLS encrypts data between clients and the server, protecting against eavesdropping and tampering.
+MudOS-NG provides comprehensive TLS (Transport Layer Security) support for secure network communications. TLS encrypts data between clients and the server, protecting against eavesdropping and tampering.
 
 ## Overview
 
-FluffOS TLS support includes:
+MudOS-NG TLS support includes:
 - **Secure telnet connections** - Encrypted telnet over TLS
 - **Secure WebSocket connections** - WSS (WebSocket Secure) protocol
 - **Client-side TLS sockets** - Connect to external HTTPS/TLS servers
@@ -119,7 +119,7 @@ sudo certbot certonly --standalone \
 /etc/letsencrypt/live/mud.yourdomain.com/privkey.pem    # Private key
 ```
 
-**FluffOS configuration:**
+**MudOS-NG configuration:**
 ```
 external_port_1: telnet 4443
 external_port_1_tls: cert=/etc/letsencrypt/live/mud.yourdomain.com/fullchain.pem \
@@ -133,7 +133,7 @@ sudo certbot renew --dry-run
 
 # Set up auto-renewal (cron)
 sudo crontab -e
-# Add: 0 3 * * * certbot renew --post-hook "systemctl reload fluffos"
+# Add: 0 3 * * * certbot renew --post-hook "systemctl reload mudos-ng"
 ```
 
 **Certificate renewal without downtime:**
@@ -148,7 +148,7 @@ sys_reload_tls(1);  // Reload TLS for port 1
 
 ### Socket TLS Modes
 
-FluffOS supports TLS for outbound socket connections:
+MudOS-NG supports TLS for outbound socket connections:
 
 ```c
 // Available socket modes
@@ -180,7 +180,7 @@ void connected_callback(int sock) {
     socket_write(sock,
         "GET /api/data HTTP/1.1\r\n"
         "Host: api.example.com\r\n"
-        "User-Agent: FluffOS-MUD\r\n"
+        "User-Agent: MudOS-NG-MUD\r\n"
         "Connection: close\r\n\r\n"
     );
 }
@@ -273,7 +273,7 @@ socket_set_option(sock, SO_TLS_SNI_HOSTNAME, "api.example.com");
 
 ### Supported TLS Versions
 
-FluffOS uses OpenSSL and supports:
+MudOS-NG uses OpenSSL and supports:
 - **TLS 1.2** - Widely supported, secure
 - **TLS 1.3** - Modern, faster, more secure
 - **SSL 3.0, TLS 1.0, TLS 1.1** - Disabled by default (insecure)
@@ -282,7 +282,7 @@ The driver automatically negotiates the best available version.
 
 ### Cipher Suites
 
-FluffOS uses OpenSSL's default secure cipher suites, which include:
+MudOS-NG uses OpenSSL's default secure cipher suites, which include:
 - **ECDHE-RSA-AES256-GCM-SHA384** - Strong, modern
 - **ECDHE-RSA-AES128-GCM-SHA256** - Fast, secure
 - **DHE-RSA-AES256-GCM-SHA384** - Strong forward secrecy

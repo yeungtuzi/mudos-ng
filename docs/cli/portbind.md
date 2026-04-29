@@ -4,7 +4,7 @@ title: cli / portbind
 ---
 # cli / portbind
 
-`portbind` is a privilege-separated port binding utility for FluffOS. It allows the driver to bind to privileged ports (< 1024) and then drop privileges before execution.
+`portbind` is a privilege-separated port binding utility for MudOS-NG. It allows the driver to bind to privileged ports (< 1024) and then drop privileges before execution.
 
 ## Usage
 
@@ -59,7 +59,7 @@ sudo ./portbind -p 80 -i 192.168.1.100 -u www-data -g www-data ./driver etc/conf
 
 ## See Also
 
-- [driver](driver.md) - Main FluffOS driver executable
+- [driver](driver.md) - Main MudOS-NG driver executable
 
 ## Notes
 

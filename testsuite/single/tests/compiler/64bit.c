@@ -105,7 +105,7 @@ mixed* func_constant_overflow1() {
   ASSERT_EQ("-9223372036854775808", sprintf("%d", MAX_INT + 1));
   ASSERT_EQ("-9223372036854775807", sprintf("%d", -0x7fffffffffffffff));
 
-  // FluffOS use strtoll to parse constant,
+  // MudOS-NG use strtoll to parse constant,
   // which always returns MAX_INT / MIN_INT when that happens.
   ASSERT_EQ(-0x7fffffffffffffff1234, MIN_INT);
   ASSERT_EQ(0x7fffffffffffffff1234, MAX_INT);

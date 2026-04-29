@@ -2,7 +2,7 @@ void do_tests()
 {
     string tmp;
 
-    tmp = "FluffOS is great!! :)";
+    tmp = "MudOS-NG is great!! :)";
     ASSERT_EQ("Rmx1ZmZPUyBpcyBncmVhdCEhIDop", base64encode(tmp));
     ASSERT_EQ(tmp, base64decode(base64encode(tmp)));
 

@@ -23,6 +23,6 @@ title: stdlib / base64decode
 ### EXAMPLES
 
     printf( "%s", base64decode( "Rmx1ZmZPUyBpcyBncmVhdCEhIDop" ) ) ;
-    // Result: FluffOS is great!! :)
+    // Result: MudOS-NG is great!! :)
 
     Compare your results with: https://www.base64decode.org/

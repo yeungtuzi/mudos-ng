@@ -1,6 +1,6 @@
 #include "base/internal/rusage.h"
 
-#ifdef _FLUFFOS_RUSAGE_REPLACEMENT
+#ifdef _MUDOS_NG_RUSAGE_REPLACEMENT
 
 /* Get uint64_t.  */
 #include <stdint.h>
@@ -108,4 +108,4 @@ int getrusage(int who, struct rusage *usage_p) {
   }
 }
 
-#endif  // _FLUFFOS_RUSAGE_REPLACEMENT
+#endif  // _MUDOS_NG_RUSAGE_REPLACEMENT

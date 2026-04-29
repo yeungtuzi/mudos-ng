@@ -5,5 +5,5 @@
     ],
     "coc-lpcd.include": "include",
     "coc-lpcd.workspace": "testsuite",
-    "coc-lpcd.complie": "/home/panzhihao/fluffos/build/src/symbol etc/config.test "
+    "coc-lpcd.complie": "/home/panzhihao/mudos-ng/build/src/symbol etc/config.test "
 }

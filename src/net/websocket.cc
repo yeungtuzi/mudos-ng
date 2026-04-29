@@ -19,7 +19,7 @@ static struct lws_protocols protocols[] = {
     {"http", lws_callback_http_dummy, 0, 0, WS_HTTP},
     {"ascii", ws_ascii_callback, sizeof(struct ws_ascii_session), 4096, WS_ASCII},
     {"telnet", ws_telnet_callback, sizeof(struct ws_telnet_session), 4096, WS_TELNET},
-    //for backward compatiblity with fluffos 2.x
+    //for backward compatiblity with mudos-ng 2.x
     {"binary", ws_telnet_callback, sizeof(struct ws_telnet_session), 4096, WS_TELNET},
     {NULL, NULL, 0, 0} /* terminator */
 };

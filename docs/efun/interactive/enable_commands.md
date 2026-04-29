@@ -13,7 +13,7 @@ title: interactive / enable_commands
     Deprecated:
       void enable_commands( void );
 
-    Since FluffOS 3.0-alpha7.1:
+    Since MudOS-NG 3.0-alpha7.1:
       void enable_commands( int setup_actions = 0 );
 
 ### DESCRIPTION
@@ -24,7 +24,7 @@ title: interactive / enable_commands
     tion catch_tell(), and if found, it will call it every time  a  message
     (via say() for example) is given to the object.
 
-    Since  FluffOS  3.0-alpha7: This function now accept int, default to 0.
+    Since  MudOS-NG  3.0-alpha7: This function now accept int, default to 0.
     which has same meaning of old form.  which merely re-enables  commands,
     but  don't  setup actions. (it should have been cleared when previously
     called disable_commands())

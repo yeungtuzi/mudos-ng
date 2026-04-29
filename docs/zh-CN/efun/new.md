@@ -35,10 +35,10 @@ title: objects / new
         class example instance = new(class example);
         // 赋值
         instance->age = 18;
-        instance->name = "fluffos";
+        instance->name = "mudos-ng";
 
         // 或直接在声明时初始化
-        instance = new(class example, name:"fluffos", age:18);
+        instance = new(class example, name:"mudos-ng", age:18);
     }
 
 ### 参考 ###

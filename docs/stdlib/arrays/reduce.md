@@ -53,7 +53,7 @@ reduce( ({ 1, 2, 3, 4 }), function( int total, int current ) {
 ```
 
 ```c
-result7 = reduce( explode("FluffOS", ""), function( int total, int current, int idx, int* arr ) {
+result7 = reduce( explode("MudOS-NG", ""), function( int total, int current, int idx, int* arr ) {
     return total + arr[sizeof(arr) - idx - 1] ;
 }, "") ;
 //Result: "SOffulF"

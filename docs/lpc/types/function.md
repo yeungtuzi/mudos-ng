@@ -6,7 +6,7 @@ title: types / function
 
 ## General Concept
 
-FluffOS has a variable type named `function`. Variables of this type may be
+MudOS-NG has a variable type named `function`. Variables of this type may be
 used to point to a wide variety of functions. You are probably already familiar
 with the idea of passing a function to certain efuns. Take, for example, the
 filter efun. It takes an array, and returns an array containing the elements
@@ -61,7 +61,7 @@ that want their shorts to change can do: `set_short( (: short_func :) )`;
 
 ## Syntax Sugar (Simplified Syntax)
 
-FluffOS supports a simplified syntax for working with function pointers that makes
+MudOS-NG supports a simplified syntax for working with function pointers that makes
 code more readable and closer to other modern languages:
 
 ### Creating Function Pointers

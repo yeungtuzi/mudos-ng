@@ -90,7 +90,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: version,
-              name: `FluffOS ${version}`,
+              name: `MudOS-NG ${version}`,
               generate_release_notes: true,
               prerelease: ${{ inputs.prerelease }},
               draft: false
@@ -172,7 +172,7 @@ jobs:
             cd jemalloc-5.3.0
             ./configure --prefix=/usr && make -j$(nproc) && make install
 
-            # Build FluffOS
+            # Build MudOS-NG
             cd /workspace
             mkdir -p build && cd build
             cmake .. ${{ env.CMAKE_COMMON_FLAGS }} -DSTATIC=ON
@@ -194,13 +194,13 @@ jobs:
       - name: Package (Windows)
         if: matrix.platform == 'windows'
         run: |
-          ASSET_NAME="fluffos-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}"
+          ASSET_NAME="mudos-ng-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}"
           cd build/bin && zip -r "../../${ASSET_NAME}" .
 
       - name: Package (Linux)
         if: matrix.platform == 'linux'
         run: |
-          ASSET_NAME="fluffos-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}"
+          ASSET_NAME="mudos-ng-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}"
           cd build/bin && tar czf "../../${ASSET_NAME}" .
 
       - name: Upload Release Asset
@@ -209,8 +209,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./fluffos-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}
-          asset_name: fluffos-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}
+          asset_path: ./mudos-ng-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}
+          asset_name: mudos-ng-${{ needs.create-release.outputs.version }}-${{ matrix.asset_suffix }}
           asset_content_type: ${{ matrix.asset_type }}
 
   build-docker:
@@ -274,12 +274,12 @@ jobs:
           This release includes the following pre-built distributions:
 
           ### Binary Distributions
-          - **Windows x86_64**: \`fluffos-${VERSION}-windows-x86_64.zip\`
+          - **Windows x86_64**: \`mudos-ng-${VERSION}-windows-x86_64.zip\`
             - Built with MSYS2/MinGW64
             - Complete distribution with all tools and libraries
             - SQLite support enabled
 
-          - **Linux x86_64 (Static)**: \`fluffos-${VERSION}-linux-x86_64-static.tar.gz\`
+          - **Linux x86_64 (Static)**: \`mudos-ng-${VERSION}-linux-x86_64-static.tar.gz\`
             - Statically linked binaries (no external dependencies)
             - Built on Alpine Linux
             - Complete distribution with all tools and libraries
@@ -287,7 +287,7 @@ jobs:
 
           ### What's Included
           Each distribution contains:
-          - **driver** - Main FluffOS driver executable
+          - **driver** - Main MudOS-NG driver executable
           - **lpcc** - LPC compiler
           - **symbol** - Symbol table utility
           - **o2json/json2o** - Object file converters
@@ -312,8 +312,8 @@ jobs:
           ### Windows
           \`\`\`bash
           # Extract distribution
-          unzip fluffos-${VERSION}-windows-x86_64.zip -d fluffos
-          cd fluffos
+          unzip mudos-ng-${VERSION}-windows-x86_64.zip -d mudos-ng
+          cd mudos-ng
 
           # Run driver with your config
           ./driver.exe /path/to/mudlib/config.cfg
@@ -322,8 +322,8 @@ jobs:
           ### Linux
           \`\`\`bash
           # Extract distribution
-          mkdir fluffos && cd fluffos
-          tar xzf ../fluffos-${VERSION}-linux-x86_64-static.tar.gz
+          mkdir mudos-ng && cd mudos-ng
+          tar xzf ../mudos-ng-${VERSION}-linux-x86_64-static.tar.gz
 
           # Run driver with your config
           ./driver /path/to/mudlib/config.cfg
@@ -366,8 +366,8 @@ jobs:
           VERSION="${{ needs.create-release.outputs.version }}"
           cat << EOF
           ✅ Release ${VERSION} created successfully!
-          📦 Windows binary: fluffos-${VERSION}-windows-x86_64.zip
-          📦 Linux static binary: fluffos-${VERSION}-linux-x86_64-static.tar.gz
+          📦 Windows binary: mudos-ng-${VERSION}-windows-x86_64.zip
+          📦 Linux static binary: mudos-ng-${VERSION}-linux-x86_64-static.tar.gz
           🐳 Docker image: ghcr.io/${{ github.repository }}:${VERSION}
           🔗 View release: https://github.com/${{ github.repository }}/releases/tag/${VERSION}
           EOF

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FluffOS is an LPMUD driver based on the last release of MudOS (v22.2b14) with 10+ years of bug fixes and performance enhancements. It supports all LPC-based MUDs with minimal code changes and includes modern features like UTF-8 support, TLS, WebSocket protocol, async IO, and database integration.
+MudOS-NG is an LPMUD driver based on the last release of MudOS (v22.2b14) with 10+ years of bug fixes and performance enhancements. It supports all LPC-based MUDs with minimal code changes and includes modern features like UTF-8 support, TLS, WebSocket protocol, async IO, and database integration.
 
 ## Architecture
 
@@ -128,7 +128,7 @@ cd testsuite
 
 ## Continuous Integration
 
-FluffOS uses GitHub Actions for comprehensive CI/CD across multiple platforms and configurations.
+MudOS-NG uses GitHub Actions for comprehensive CI/CD across multiple platforms and configurations.
 
 ### CI Matrix
 
@@ -233,7 +233,7 @@ make -j$(nproc) install
 **Docker Build (Static)**
 
 ```bash
-docker build -t fluffos:local .
+docker build -t mudos-ng:local .
 # Or build manually in Alpine container
 cmake .. -DMARCH_NATIVE=OFF -DSTATIC=ON
 make install

@@ -16,10 +16,10 @@ RUN ./configure --prefix=/usr \
     && make \
     && make install
 
-COPY . /build/fluffos
-RUN mkdir /build/fluffos/build
+COPY . /build/mudos-ng
+RUN mkdir /build/mudos-ng/build
 
-WORKDIR /build/fluffos/build
+WORKDIR /build/mudos-ng/build
 RUN cmake .. -DMARCH_NATIVE=OFF -DSTATIC=ON \
     && make install
 
@@ -28,8 +28,8 @@ FROM alpine:3.18
 RUN apk add --no-progress --no-cache \
     icu-data-full
 
-WORKDIR /fluffos
+WORKDIR /mudos-ng
 
-COPY --from=builder /build/fluffos/build/bin ./bin
+COPY --from=builder /build/mudos-ng/build/bin ./bin
 
-ENTRYPOINT ["/fluffos/bin/driver"]
+ENTRYPOINT ["/mudos-ng/bin/driver"]

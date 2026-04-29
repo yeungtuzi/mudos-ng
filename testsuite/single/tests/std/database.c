@@ -17,7 +17,7 @@ void do_tests()
     ASSERT_EQ(0, res);
     res = db->table("users")->insert((["name":"mudos"]));
     ASSERT_EQ(1, res);
-    res = db->table("users")->insert((["name":"fluffos","bio":"Actively maintained LPMUD driver (LPC interpreter, MudOS fork)"]));
+    res = db->table("users")->insert((["name":"mudos-ng","bio":"Actively maintained LPMUD driver (LPC interpreter, MudOS fork)"]));
     ASSERT_EQ(1, res);
     res = db->table("users")->insert((["name":"小泥巴","bio":"大家好才是真的好~","activated_at":"2021-05-01 11:11:11"]));
     ASSERT_EQ(1, res);
@@ -30,11 +30,11 @@ void do_tests()
     res = db->table("users")->find(4);
     ASSERT_EQ(({4,"mud.ren",0,0}), res);
     res = db->table("users")->pluck("name");
-    ASSERT_EQ(({"mudos","fluffos","小泥巴","mud.ren"}), res);
+    ASSERT_EQ(({"mudos","mudos-ng","小泥巴","mud.ren"}), res);
     res = db->table("users")->where("id",2)->value("name");
-    ASSERT_EQ("fluffos", res);
+    ASSERT_EQ("mudos-ng", res);
     res = db->table("users")->whereBetween("id",({2,3}))->pluck("name");
-    ASSERT_EQ(({"fluffos","小泥巴"}), res);
+    ASSERT_EQ(({"mudos-ng","小泥巴"}), res);
     res = db->table("users")->count();
     ASSERT_EQ(4, res);
     res = db->table("users")->where("name","mudos")->update((["bio":"LPMUD驱动"]));

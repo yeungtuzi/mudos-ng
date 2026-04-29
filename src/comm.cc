@@ -1,6 +1,9 @@
 /*
  *  comm.c -- communications functions and more.
  *            Dwayne Fontenot (Jacques@TMI)
+ 
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
  */
 
 #include "base/std.h"
@@ -18,6 +21,8 @@
 #include <cstring>            // for NULL, memcpy, strlen, etc
 #include <unistd.h>           // for gethostname
 #include <memory>             // for unique_ptr
+#include <future>             // for promise, future
+#include <vector>             // for vector
 // Network stuff
 #ifndef _WIN32
 #include <netdb.h>        // for addrinfo, freeaddrinfo, etc
@@ -36,6 +41,7 @@
 #include "net/tls.h"
 #include "user.h"
 #include "vm/vm.h"
+#include "base/internal/io_thread.h"
 
 #include "ghc/filesystem.hpp"
 namespace fs = ghc::filesystem;
@@ -90,21 +96,27 @@ void on_user_command(evutil_socket_t fd, short what, void *arg) {
     return;
   }
 
+  // Phase 1: If we're on an IO thread, bounce command processing
+  // (which calls LPC code) to the VM thread.
+  if (user->io_thread) {
+    event_base_once(g_event_base, -1, EV_TIMEOUT,
+                    [](evutil_socket_t, short, void *arg) {
+                      auto *user = reinterpret_cast<interactive_t *>(arg);
+                      set_eval(max_eval_cost);
+                      process_user_command(user);
+                      /* Has to be cleared if we jumped out */
+                      current_interactive = nullptr;
+                    },
+                    user, nullptr);
+    return;
+  }
+
+  // Legacy path: command processing on the VM thread directly
   set_eval(max_eval_cost);
   process_user_command(user);
 
   /* Has to be cleared if we jumped out of process_user_command() */
   current_interactive = nullptr;
-
-  // if user still have pending command, continue to schedule it.
-  //
-  // NOTE: It is important to only execute one command here, then schedule next
-  // command at the tail, This ensure users have a fair chance that no one can
-  // keep running commands.
-  //
-  // currently command scehduling is done inside process_user_command().
-  //
-  // maybe_schedule_user_command(user);
 }
 
 void on_user_read(bufferevent * /*bev*/, void *arg) {
@@ -141,7 +153,17 @@ void on_user_events(bufferevent * /*bev*/, short events, void *arg) {
 
   if (events & (BEV_EVENT_ERROR | BEV_EVENT_EOF)) {
     user->iflags |= NET_DEAD;
-    remove_interactive(user->ob, 0);
+    // Phase 1: remove_interactive calls LPC code, must run on VM thread
+    if (user->io_thread) {
+      event_base_once(g_event_base, -1, EV_TIMEOUT,
+                      [](evutil_socket_t, short, void *arg) {
+                        auto *user = reinterpret_cast<interactive_t *>(arg);
+                        remove_interactive(user->ob, 0);
+                      },
+                      user, nullptr);
+    } else {
+      remove_interactive(user->ob, 0);
+    }
   } else {
     debug(event, "on_user_events: ignored unknown events: %d\n", events);
   }
@@ -194,23 +216,44 @@ void new_conn_handler(evconnlistener *listener, evutil_socket_t fd, struct socka
     return;
   } else {
     // For other connections go straight to no handshake necessary, schedule to logon.
-    auto *base = evconnlistener_get_base(listener);
-
     auto *user = new_user(port, fd, addr, addrlen);
-    new_user_event_listener(base, user);
 
-    if (user->connection_type == PORT_TYPE_TELNET) {
-      user->telnet = net_telnet_init(user);
-      send_initial_telnet_negotiations(user);
+    if (g_io_thread_pool) {
+      // Phase 1: Route this connection's I/O to an IO thread.
+      auto *io = g_io_thread_pool->next_thread();
+      user->io_thread = io;
+
+      io->post([user, io]() {
+        // Create the command timer and bufferevent on the IO thread's event_base.
+        user->ev_command = evtimer_new(io->base(), on_user_command, user);
+        new_user_event_listener(io->base(), user);
+
+        if (user->connection_type == PORT_TYPE_TELNET) {
+          user->telnet = net_telnet_init(user);
+          send_initial_telnet_negotiations(user);
+        }
+
+        // Schedule logon on the VM thread (logon calls LPC code).
+        event_base_once(
+            g_event_base, -1, EV_TIMEOUT,
+            [](evutil_socket_t /*fd*/, short /*what*/, void *arg) {
+              auto *user = reinterpret_cast<interactive_t *>(arg);
+              on_user_logon(user);
+            },
+            (void *)user, nullptr);
+      });
+    } else {
+      // Legacy path: all I/O on the VM thread.
+      user->ev_command = evtimer_new(g_event_base, on_user_command, user);
+      new_user_event_listener(g_event_base, user);
+
+      if (user->connection_type == PORT_TYPE_TELNET) {
+        user->telnet = net_telnet_init(user);
+        send_initial_telnet_negotiations(user);
+      }
+
+      on_user_logon(user);
     }
-
-    event_base_once(
-        base, -1, EV_TIMEOUT,
-        [](evutil_socket_t /*fd*/, short /*what*/, void *arg) {
-          auto *user = reinterpret_cast<interactive_t *>(arg);
-          on_user_logon(user);
-        },
-        (void *)user, nullptr);
   }
   debug(connections, ("new_conn_handler: end\n"));
 } /* new_conn_handler() */
@@ -238,9 +281,7 @@ interactive_t *new_user(port_def_t *port, evutil_socket_t fd, sockaddr *addr,
     user->ssl = tls_get_client_ctx(port->ssl);
   }
 
-  // Command handler
-  auto *base = evconnlistener_get_base(port->ev_conn);
-  user->ev_command = evtimer_new(base, on_user_command, user);
+  // Note: ev_command is now created on the IO thread in new_conn_handler().
 
   return user;
 }
@@ -540,27 +581,8 @@ static int shadow_catch_message(object_t *ob, const char *str) {
 }
 #endif
 
-/*
- * Send a message to an interactive object. If that object is shadowed,
- * special handling is done.
- */
-void add_message(object_t *who, const char *data, int len) {
-  /*
-   * if who->interactive is not valid, write message on stderr.
-   * (maybe)
-   */
-  if (!who || (who->flags & O_DESTRUCTED) || !who->interactive ||
-      (who->interactive->iflags & (NET_DEAD | CLOSING))) {
-    if (CONFIG_INT(__RC_NONINTERACTIVE_STDERR_WRITE__)) {
-      putc(']', stderr);
-      fwrite(data, len, 1, stderr);
-    }
-    return;
-  }
-
-  inet_packets++;
-
-  auto *ip = who->interactive;
+// Pure I/O output, must be called on the thread that owns the bufferevent.
+static void output_to_user(interactive_t *ip, const char *data, int len) {
   switch (ip->connection_type) {
     case PORT_TYPE_ASCII:
     case PORT_TYPE_TELNET: {
@@ -587,6 +609,29 @@ void add_message(object_t *who, const char *data, int len) {
       break;
     }
   }
+}
+
+/*
+ * Send a message to an interactive object. If that object is shadowed,
+ * special handling is done.
+ */
+void add_message(object_t *who, const char *data, int len) {
+  /*
+   * if who->interactive is not valid, write message on stderr.
+   * (maybe)
+   */
+  if (!who || (who->flags & O_DESTRUCTED) || !who->interactive ||
+      (who->interactive->iflags & (NET_DEAD | CLOSING))) {
+    if (CONFIG_INT(__RC_NONINTERACTIVE_STDERR_WRITE__)) {
+      putc(']', stderr);
+      fwrite(data, len, 1, stderr);
+    }
+    return;
+  }
+
+  inet_packets++;
+
+  auto *ip = who->interactive;
 
 #ifdef SHADOW_CATCH_MESSAGE
   /*
@@ -600,6 +645,18 @@ void add_message(object_t *who, const char *data, int len) {
   }
 #endif /* NO_SHADOWS */
   handle_snoop(data, len, ip);
+
+  // Phase 1: Bounce actual I/O to the IO thread that owns this user's bufferevent.
+  if (ip->io_thread) {
+    char *buf = new char[len];
+    memcpy(buf, data, len);
+    ip->io_thread->post([ip, buf, len]() {
+      output_to_user(ip, buf, len);
+      delete[] buf;
+    });
+  } else {
+    output_to_user(ip, data, len);
+  }
 
   add_message_calls++;
 } /* add_message() */
@@ -637,6 +694,13 @@ int flush_message(interactive_t *ip) {
    */
   if (!ip) {
     debug(connections, ("flush_message: invalid target!\n"));
+    return 0;
+  }
+
+  // Must only touch the evbuffer from the IO thread that owns this user's
+  // bufferevent. Direct evbuffer access from the VM thread races with the
+  // IO thread's bufferevent_writecb reading/writing the same evbuffer chain.
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
     return 0;
   }
 
@@ -693,9 +757,13 @@ void flush_message_all() {
  */
 void get_user_data(interactive_t *ip) {
   int num_bytes, text_space;
-  unsigned char buf[MAX_TEXT];
 
-  text_space = sizeof(buf);
+  // Use a heap-allocated buffer to avoid 1MB stack allocation.
+  // IO thread stacks (std::thread) may be significantly smaller than
+  // the main thread stack, causing stack overflow with a stack-local MAX_TEXT buffer.
+  std::vector<unsigned char> buf(MAX_TEXT);
+
+  text_space = MAX_TEXT;
 
   debug(connections, "get_user_data: USER %d\n", ip->fd);
 
@@ -739,7 +807,7 @@ void get_user_data(interactive_t *ip) {
   /* read the data from the socket */
   debug(connections, "get_user_data: read on fd %d\n", ip->fd);
 
-  num_bytes = bufferevent_read(ip->ev_buffer, buf, text_space);
+  num_bytes = bufferevent_read(ip->ev_buffer, buf.data(), text_space);
 
   if (num_bytes == -1) {
     debug(connections, "get_user_data: fd %d, read error: %s.\n", ip->fd,
@@ -787,7 +855,7 @@ void get_user_data(interactive_t *ip) {
       break;
     }
     case PORT_TYPE_MUD:
-      memcpy(ip->text + ip->text_end, buf, num_bytes);
+      memcpy(ip->text + ip->text_end, buf.data(), num_bytes);
       ip->text_end += num_bytes;
 
       if (num_bytes == text_space) {
@@ -816,7 +884,7 @@ void get_user_data(interactive_t *ip) {
     case PORT_TYPE_ASCII: {
       char *nl, *p;
 
-      memcpy(ip->text + ip->text_end, buf, num_bytes);
+      memcpy(ip->text + ip->text_end, buf.data(), num_bytes);
       ip->text_end += num_bytes;
 
       p = ip->text + ip->text_start;
@@ -851,7 +919,7 @@ void get_user_data(interactive_t *ip) {
       buffer_t *buffer;
 
       buffer = allocate_buffer(num_bytes);
-      memcpy(buffer->item, buf, num_bytes);
+      memcpy(buffer->item, buf.data(), num_bytes);
 
       push_refed_buffer(buffer);
       set_eval(max_eval_cost);
@@ -1299,14 +1367,37 @@ void remove_interactive(object_t *ob, int dested) {
 #endif
   // Cleanup events, must happen after ssl.
   if (ip->ev_buffer != nullptr) {
-    // see http://www.wangafu.net/~nickm/libevent-book/Ref6a_advanced_bufferevents.html
-    if (ip->ssl) {
-      SSL_set_shutdown(ip->ssl, SSL_RECEIVED_SHUTDOWN);
-      SSL_shutdown(ip->ssl);
-      ip->ssl = nullptr;
+    // Must free the bufferevent on its owning IO thread to avoid racing with
+    // the IO thread's bufferevent_writecb still processing write events for
+    // this bufferevent.
+    if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+      std::promise<void> promise;
+      auto future = promise.get_future();
+      ip->io_thread->post([ip, &promise]() {
+        // see http://www.wangafu.net/~nickm/libevent-book/Ref6a_advanced_bufferevents.html
+        if (ip->ssl) {
+          SSL_set_shutdown(ip->ssl, SSL_RECEIVED_SHUTDOWN);
+          SSL_shutdown(ip->ssl);
+        }
+        if (ip->ev_buffer) {
+          bufferevent_free(ip->ev_buffer);
+          ip->ev_buffer = nullptr;
+        }
+        ip->ssl = nullptr;
+        promise.set_value();
+      });
+      future.wait();
+    } else {
+      // Already on IO thread (or no IO thread), free directly.
+      // see http://www.wangafu.net/~nickm/libevent-book/Ref6a_advanced_bufferevents.html
+      if (ip->ssl) {
+        SSL_set_shutdown(ip->ssl, SSL_RECEIVED_SHUTDOWN);
+        SSL_shutdown(ip->ssl);
+        ip->ssl = nullptr;
+      }
+      bufferevent_free(ip->ev_buffer);
+      ip->ev_buffer = nullptr;
     }
-    bufferevent_free(ip->ev_buffer);
-    ip->ev_buffer = nullptr;
   }
   if (ip->ev_command != nullptr) {
     evtimer_del(ip->ev_command);

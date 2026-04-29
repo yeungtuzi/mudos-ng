@@ -23,7 +23,7 @@ title: strings / oldcrypt
 
 ### NOTE
 
-    The encryption methods of FluffOS and MudOS are different. For MudOS
+    The encryption methods of MudOS-NG and MudOS are different. For MudOS
     compatibity you should use oldcrypt().
 
 ### EXAMPLE

@@ -1,9 +1,9 @@
-[![CI 状态](https://github.com/fluffos/fluffos/actions/workflows/ci.yml/badge.svg)](https://github.com/fluffos/fluffos/actions)
-[![CI 状态](https://github.com/fluffos/fluffos/actions/workflows/ci-osx.yml/badge.svg)](https://github.com/fluffos/fluffos/actions)
-[![CI 状态](https://github.com/fluffos/fluffos/actions/workflows/ci-windows.yml/badge.svg)](https://github.com/fluffos/fluffos/actions)
+[![CI 状态](https://github.com/mudos-ng/mudos-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/mudos-ng/mudos-ng/actions)
+[![CI 状态](https://github.com/mudos-ng/mudos-ng/actions/workflows/ci-osx.yml/badge.svg)](https://github.com/mudos-ng/mudos-ng/actions)
+[![CI 状态](https://github.com/mudos-ng/mudos-ng/actions/workflows/ci-windows.yml/badge.svg)](https://github.com/mudos-ng/mudos-ng/actions)
 
-[![Open Collective 支持者](https://opencollective.com/fluffos-579/backers/badge.svg)](#支持者)
-[![Open Collective 赞助商](https://opencollective.com/fluffos-579/sponsors/badge.svg)](#赞助商)
+[![Open Collective 支持者](https://opencollective.com/mudos-ng-579/backers/badge.svg)](#支持者)
+[![Open Collective 赞助商](https://opencollective.com/mudos-ng-579/sponsors/badge.svg)](#赞助商)
 
 欢迎使用
 =======
@@ -57,14 +57,14 @@ v2017 是旧版，使用 autoconf 构建系统，支持在 CentOS/Ubuntu 和 Win
 
 支持
 -------
-- 网站/文档：https://www.fluffos.info
-- Discord 支持：LPC 的 #fluffos 频道 https://discord.gg/2a6qqG6Cdj
-- 论坛：https://forum.fluffos.info
+- 网站/文档：https://www.mudos-ng.info
+- Discord 支持：LPC 的 #mudos-ng 频道 https://discord.gg/2a6qqG6Cdj
+- 论坛：https://forum.mudos-ng.info
 - QQ 支持群：451819151 [![451819151](https://pub.idqqimg.com/wpa/images/group.png)](https://shang.qq.com/wpa/qunwpa?idkey=3fd552adb8ace1a8e3ae3a712e5d314c7caf49af8b87449473c595b7e1f1ddf9)
 
 如何构建
 ------------
-参见 <https://www.fluffos.info/build.html>
+参见 <https://www.mudos-ng.info/build.html>
 
 捆绑的第三方依赖
 ----------------------
@@ -83,7 +83,7 @@ v2017 是旧版，使用 autoconf 构建系统，支持在 CentOS/Ubuntu 和 Win
 
 使用 FluffOS 的项目
 ----------------------
-[添加您自己的项目](https://github.com/fluffos/fluffos/edit/master/README.md)
+[添加您自己的项目](https://github.com/mudos-ng/mudos-ng/edit/master/README.md)
 
 - 几乎所有中文 MUD
 - [ThresholdRPG](https://wiki.thresholdrpg.com/)
@@ -118,25 +118,25 @@ v2017 是旧版，使用 autoconf 构建系统，支持在 CentOS/Ubuntu 和 Win
 ## 贡献者
 
 这个项目得以存在要感谢所有贡献者。
-<a href="https://github.com/fluffos/fluffos/graphs/contributors"><img src="https://opencollective.com/fluffos-579/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/mudos-ng/mudos-ng/graphs/contributors"><img src="https://opencollective.com/mudos-ng-579/contributors.svg?width=890&button=false" /></a>
 
 ## 支持者
 
-感谢所有的支持者！🙏 [成为支持者](https://opencollective.com/fluffos-579#backer)
+感谢所有的支持者！🙏 [成为支持者](https://opencollective.com/mudos-ng-579#backer)
 
-<a href="https://opencollective.com/fluffos-579#backers" target="_blank"><img src="https://opencollective.com/fluffos-579/backers.svg?width=890"></a>
+<a href="https://opencollective.com/mudos-ng-579#backers" target="_blank"><img src="https://opencollective.com/mudos-ng-579/backers.svg?width=890"></a>
 
 ## 赞助商
 
-通过成为赞助商来支持这个项目。您的标志将显示在这里并链接到您的网站。[成为赞助商](https://opencollective.com/fluffos-579#sponsor)
+通过成为赞助商来支持这个项目。您的标志将显示在这里并链接到您的网站。[成为赞助商](https://opencollective.com/mudos-ng-579#sponsor)
 
-<a href="https://opencollective.com/fluffos-579/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/3/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/4/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/5/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/6/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/fluffos-579/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fluffos-579/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/0/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/1/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/2/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/3/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/4/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/5/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/6/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/7/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/8/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/mudos-ng-579/sponsor/9/website" target="_blank"><img src="https://opencollective.com/mudos-ng-579/sponsor/9/avatar.svg"></a>

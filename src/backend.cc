@@ -1,4 +1,7 @@
-/* 92/04/18 - cleaned up stylistically by Sulam@TMI */
+/* 92/04/18 - cleaned up stylistically by Sulam@TMI 
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
 #include "base/std.h"
 
 #include "backend.h"
@@ -71,6 +74,11 @@ event_base *init_backend() {
 #endif
   g_event_base = event_base_new();
   debug_message("Event backend in use: %s\n", event_base_get_method(g_event_base));
+
+  // Enable cross-thread event injection so other threads can call
+  // event_base_once() / event_active() on this event_base.
+  evthread_make_base_notifiable(g_event_base);
+
   return g_event_base;
 }
 

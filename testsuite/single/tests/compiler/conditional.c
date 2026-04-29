@@ -60,7 +60,7 @@ void do_tests() {
   ASSERT_NE(0.0, 0);
   ASSERT_NE(0.00000000000000, 0);
 
-  // https://github.com/fluffos/fluffos/issues/889
+  // https://github.com/mudos-ng/mudos-ng/issues/889
   // 0.0 should be considered falsy in logical operations
   ASSERT_EQ(1, 0.0 || 1);
   ASSERT_EQ(1, 1 || 0.0);

@@ -66,7 +66,7 @@ void startshutdownMudOS(int sig) { MudOS_is_being_shut_down = 1; }
  * in an interrupt.
  */
 void shutdownMudOS(int exit_code) {
-  shout_string("FluffOS driver shouts: shutting down immediately.\n");
+  shout_string("MudOS-NG driver shouts: shutting down immediately.\n");
 
 #ifdef PACKAGE_MUDLIB_STATS
   save_stat_files();
@@ -1683,7 +1683,7 @@ void free_sentence(sentence_t *p) {
       // it will catch the problem and allow debugging.
       break;
 #endif
-      debug_message("FluffOS driver attempting to exit gracefully.\n");
+      debug_message("MudOS-NG driver attempting to exit gracefully.\n");
 #ifdef PACKAGE_MUDLIB_STATS
       save_stat_files();
 #endif
@@ -1831,7 +1831,7 @@ void _error_handler(char *err) {
 #endif
   }
   if (g_current_heartbeat_obj) {
-    static char hb_message[] = "FluffOS driver tells you: You have no heart beat!\n";
+    static char hb_message[] = "MudOS-NG driver tells you: You have no heart beat!\n";
     set_heart_beat(g_current_heartbeat_obj, 0);
     debug_message("Heart beat in /%s turned off.\n", g_current_heartbeat_obj->obname);
     if (g_current_heartbeat_obj->interactive) {

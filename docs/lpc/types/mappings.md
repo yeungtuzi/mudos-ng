@@ -107,7 +107,7 @@ while ((pair = each(x)) != ({})) {
 }
 ```
 
-`Warning: each is not a efun in fluffos, you can simul it.`
+`Warning: each is not a efun in mudos-ng, you can simul it.`
 
 ---
 

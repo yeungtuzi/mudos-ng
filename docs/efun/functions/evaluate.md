@@ -19,7 +19,7 @@ title: functions / evaluate
 
 ### SYNTAX SUGAR
 
-    FluffOS supports simplified syntax for invoking function pointers:
+    MudOS-NG supports simplified syntax for invoking function pointers:
 
     ```c
     function f = (: add :);

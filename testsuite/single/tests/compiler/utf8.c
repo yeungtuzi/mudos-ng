@@ -1310,7 +1310,7 @@ void do_tests() {
 
   ASSERT_EQ("欲穷千里目", sprintf("%1.10s", tmp));
 
-  // https://github.com/fluffos/fluffos/issues/590
+  // https://github.com/mudos-ng/mudos-ng/issues/590
   ASSERT_EQ("测试ab", sprintf("%.6s","测试abcd 啊看 is abc sentence 好 不好\n"));
 
   // left, center, and right adjustment,
@@ -1345,11 +1345,11 @@ void do_tests() {
   ASSERT_EQ("欲穷千里目\n🍆🍠🧮\n😊👌💩\n更上一层楼欲\n穷千里目🍆🍠\n🧮😊👌💩更上\n一层楼", sprintf("%-=12s", tmp));
 
   // column mode with truncation
-  // https://github.com/fluffos/fluffos/issues/597
+  // https://github.com/mudos-ng/mudos-ng/issues/597
   tmp = "欲穷千里目";
   ASSERT_EQ("欲穷\n千里\n  目", sprintf("%1.4=s", tmp));
 
-  // https://github.com/fluffos/fluffos/issues/590
+  // https://github.com/mudos-ng/mudos-ng/issues/590
   ASSERT_EQ("测试看\n啊看\nis abc\ns\nsentence\n好不好", sprintf("%=-6s", "测试看 啊看 is abc s sentence 好不好"));
 
   // table mode

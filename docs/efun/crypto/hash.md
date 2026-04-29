@@ -61,7 +61,7 @@ Returns a hexadecimal string representation of the computed hash.
 ### ERRORS
 
 Generates an error if the specified algorithm is unknown or not supported
-by the OpenSSL version linked with FluffOS.
+by the OpenSSL version linked with MudOS-NG.
 
 ### EXAMPLES
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
+
 #include "base/std.h"
 
 #include "mainlib.h"
@@ -30,6 +35,7 @@
 #include <unicode/uversion.h>
 
 #include "base/internal/tracing.h"
+#include "base/internal/io_thread.h"
 #include "thirdparty/scope_guard/scope_guard.hpp"
 #include "packages/core/dns.h"                   // for init_dns_event_base.
 #include "vm/vm.h"                               // for push_constant_string, etc
@@ -100,7 +106,7 @@ void print_version_and_time() {
     debug_message("Boot Time: %s", ctime_r(&tm, buf));
   }
 
-  /* Print FluffOS version */
+  /* Print MudOS-NG version */
   debug_message("Version: %s (%s)\n", PROJECT_VERSION, ARCH);
 
 #ifdef HAVE_JEMALLOC
@@ -351,7 +357,7 @@ int driver_main(int argc, char **argv) {
     Tracer::start(trace_log.c_str());
   }
 
-  Tracer::setThreadName("FluffOS Main");
+  Tracer::setThreadName("MudOS-NG Main");
   ScopedTracer const main_tracer(__PRETTY_FUNCTION__);
 
   // Set debug log level first.
@@ -436,9 +442,24 @@ int driver_main(int argc, char **argv) {
     exit(1);
   }
 
+  // Phase 1: Start IO thread pool for handling network I/O.
+  // Default to 2 IO threads, matching the plan's recommendation.
+  g_io_thread_pool = new IOThreadPool(2);
+  g_io_thread_pool->start();
+  debug_message("IO thread pool started with %zu threads.\n", g_io_thread_pool->size());
+
   debug_message("Initializations complete.\n\n");
   setup_signal_handlers();
   backend(base);
+
+  // Shutdown IO thread pool after backend returns.
+  if (g_io_thread_pool) {
+    g_io_thread_pool->stop();
+    delete g_io_thread_pool;
+    g_io_thread_pool = nullptr;
+  }
+
+  return 0;
 
   return 0;
 }

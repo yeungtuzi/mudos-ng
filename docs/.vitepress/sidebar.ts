@@ -1,10 +1,14 @@
+// Copyright (c) 2026 [大河马/dahema@me.com]
+// SPDX-License-Identifier: MIT
+
 const SIDEBAR = [
     {
         text: 'Introduction',
         collapsed: false,
         items: [
-            {text: 'FluffOS', link: '/'},
+            {text: 'MudOS-NG', link: '/'},
             {text: 'Getting Started', link: '/build.html'},
+            {text: 'MudOS Migration', link: '/old-mudlib-6688-fix.html'},
             {text: 'Troubleshooting', link: '/bug.html'}
         ]
     },

@@ -4,11 +4,11 @@ title: WebSocket Support
 ---
 # WebSocket Support
 
-FluffOS provides comprehensive WebSocket support, enabling modern web browsers to connect directly to your MUD without requiring a telnet client. This enables players to access your game through a web page, making it more accessible and convenient.
+MudOS-NG provides comprehensive WebSocket support, enabling modern web browsers to connect directly to your MUD without requiring a telnet client. This enables players to access your game through a web page, making it more accessible and convenient.
 
 ## Overview
 
-FluffOS WebSocket support includes:
+MudOS-NG WebSocket support includes:
 - **Multiple WebSocket protocols** - ASCII, Telnet, Binary, HTTP
 - **Secure WebSocket (WSS)** - TLS-encrypted connections
 - **Built-in web client** - Modern, full-featured MUD client
@@ -80,11 +80,11 @@ This directory should contain:
 - `index.html` - Web client page
 - CSS, JavaScript, images, etc.
 
-FluffOS includes a full-featured web client at `src/www/index.html`.
+MudOS-NG includes a full-featured web client at `src/www/index.html`.
 
 ## WebSocket Protocols
 
-FluffOS supports multiple WebSocket subprotocols:
+MudOS-NG supports multiple WebSocket subprotocols:
 
 ### 1. Telnet Protocol
 
@@ -123,7 +123,7 @@ const ws = new WebSocket('ws://mud.example.com:8080', ['ascii']);
 
 ### 3. Binary Protocol
 
-Legacy protocol for backward compatibility with FluffOS 2.x:
+Legacy protocol for backward compatibility with MudOS-NG 2.x:
 
 ```javascript
 // Client-side JavaScript
@@ -154,7 +154,7 @@ http://mud.example.com:8080/
 
 ## Built-in Web Client
 
-FluffOS includes a modern, full-featured web client at `src/www/index.html`.
+MudOS-NG includes a modern, full-featured web client at `src/www/index.html`.
 
 ### Features
 
@@ -193,7 +193,7 @@ FluffOS includes a modern, full-featured web client at `src/www/index.html`.
 cp -r src/www /path/to/mudlib/www
 
 # Or create symlink
-ln -s /path/to/fluffos/src/www /path/to/mudlib/www
+ln -s /path/to/mudos-ng/src/www /path/to/mudlib/www
 ```
 
 **Configure driver:**
@@ -368,7 +368,7 @@ void receive_message(string msg) {
 
 ### Compression
 
-FluffOS automatically negotiates compression (permessage-deflate) with clients that support it. This reduces bandwidth usage significantly.
+MudOS-NG automatically negotiates compression (permessage-deflate) with clients that support it. This reduces bandwidth usage significantly.
 
 ### Message Buffering
 
@@ -503,7 +503,7 @@ server {
 
     # WebSocket for MUD
     location /ws {
-        proxy_pass http://fluffos:8080;
+        proxy_pass http://mudos-ng:8080;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -543,7 +543,7 @@ The built-in client is mobile-friendly and responsive. For better mobile experie
 ## References
 
 - [RFC 6455](https://tools.ietf.org/html/rfc6455) - WebSocket Protocol
-- [libwebsockets](https://libwebsockets.org/) - WebSocket library used by FluffOS
+- [libwebsockets](https://libwebsockets.org/) - WebSocket library used by MudOS-NG
 - [GMCP Specification](https://www.gammon.com.au/gmcp) - Generic Mud Communication Protocol
 - [Telnet Protocol](https://tools.ietf.org/html/rfc854) - Telnet specification
 - [Telnet Options](https://www.iana.org/assignments/telnet-options/telnet-options.xhtml) - IANA registry

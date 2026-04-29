@@ -1,15 +1,15 @@
 ---
 layout: doc
-title: FluffOS
+title: MudOS-NG
 ---
 
-# FluffOS
+# MudOS-NG
 
-FluffOS is a game engine, commonly used for building Muds, see [LPMud](https://en.wikipedia.org/wiki/LPMud). 
-Started as a collection of patches to the last release of MudOS, FluffOS has gone through major rewrites and bugfixes
+MudOS-NG is a game engine, commonly used for building Muds, see [LPMud](https://en.wikipedia.org/wiki/LPMud). 
+Started as a collection of patches to the last release of MudOS, MudOS-NG has gone through major rewrites and bugfixes
 to support new features and also maintain backward compatibility with existing mudlibs.
 
-FluffOS codebase contains three parts:
+MudOS-NG codebase contains three parts:
 
 * LPC Interpreter: Parse/Execute LPC based program.
 * Network server: Manage client connections and expose to LPC program. Supports TELNET, TLS and websocket protocol.
@@ -19,7 +19,7 @@ FluffOS codebase contains three parts:
 
 ## Current Release
 
-[ALL RELEASES](https://github.com/fluffos/fluffos/releases)
+[ALL RELEASES](https://github.com/mudos-ng/mudos-ng/releases)
 
 * Current Release: (branch master), cmake build system, supports ubuntu, OSX, and Windows(MSYS2/mingw64).
 
@@ -67,8 +67,8 @@ FluffOS codebase contains three parts:
 
 ### License & Copyright
 
-please see <https://github.com/fluffos/fluffos/blob/master/Copyright>
+please see <https://github.com/mudos-ng/mudos-ng/blob/master/Copyright>
 
 ### ChangeLog
 
-[ChangeLog.fluffos-3.x](https://github.com/fluffos/fluffos/blob/next-3.0/ChangeLog.fluffos-3.x) for details.
+[ChangeLog.mudos-ng-3.x](https://github.com/mudos-ng/mudos-ng/blob/next-3.0/ChangeLog.mudos-ng-3.x) for details.

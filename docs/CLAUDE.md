@@ -1,10 +1,10 @@
-# CLAUDE.md - Documentation Guide for FluffOS
+# CLAUDE.md - Documentation Guide for MudOS-NG
 
-This file provides guidance to Claude Code (claude.ai/code) and other AI assistants when working with FluffOS documentation.
+This file provides guidance to Claude Code (claude.ai/code) and other AI assistants when working with MudOS-NG documentation.
 
 ## Documentation Structure
 
-The FluffOS documentation is organized into several categories:
+The MudOS-NG documentation is organized into several categories:
 
 ### 1. Apply Documentation (`/docs/apply/`)
 
@@ -170,7 +170,7 @@ title: category / efun_name
 
 ### 3. CLI Documentation (`/docs/cli/`)
 
-Command-line tools included with FluffOS.
+Command-line tools included with MudOS-NG.
 
 **Tools to Document:**
 - `driver` - Main server executable
@@ -225,7 +225,7 @@ Documentation about driver internals, architecture, and configuration.
 
 ### 5. Build Documentation (`/docs/`)
 
-Root-level documentation about building and deploying FluffOS.
+Root-level documentation about building and deploying MudOS-NG.
 
 **Key Files:**
 - `build.md` - Comprehensive build guide for all platforms
@@ -535,4 +535,4 @@ cat keywords.json
 
 ---
 
-This guide should help maintain accurate, complete, and consistent documentation for FluffOS. When in doubt, always verify against the source code!
+This guide should help maintain accurate, complete, and consistent documentation for MudOS-NG. When in doubt, always verify against the source code!

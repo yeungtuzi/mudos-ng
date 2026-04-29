@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
+
 #include "base/std.h"
 
 #include "net/telnet.h"
@@ -10,6 +15,7 @@
 #include <unicode/ucnv.h>
 
 #include "comm.h"
+#include "base/internal/io_thread.h"
 #include "interactive.h"
 #include "packages/core/mssp.h"
 #include "thirdparty/libtelnet/libtelnet.h"  // for telnet_t, telnet_event_t*
@@ -433,7 +439,28 @@ void telnet_event_handler(telnet_t *telnet, telnet_event_t *ev, void *user_data)
       break;
     }
     case TELNET_EV_SEND: {
-      on_telnet_send(ev->data.buffer, ev->data.size, ip);
+      // When called from a non-IO thread (e.g. VM thread via telnet_negotiate),
+      // copy the data and post the bufferevent_write to the owning IO thread.
+      // Direct evbuffer access from the VM thread races with the IO thread's
+      // bufferevent_writecb reading the same evbuffer chain.
+      if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+        auto *copy = new std::pair<std::string, bool>(
+            std::string(ev->data.buffer, ev->data.size),
+            ip->connection_type == PORT_TYPE_WEBSOCKET);
+        ip->io_thread->post([ip, copy]() {
+          if (copy->second) {
+            // websocket path
+            auto transdata = u8_convert_encoding(ip->trans, copy->first.data(), copy->first.size());
+            auto result = transdata.empty() ? std::string_view(copy->first) : transdata;
+            websocket_send_text(ip->lws, result.data(), result.size());
+          } else {
+            bufferevent_write(ip->ev_buffer, copy->first.data(), copy->first.size());
+          }
+          delete copy;
+        });
+      } else {
+        on_telnet_send(ev->data.buffer, ev->data.size, ip);
+      }
       break;
     }
     case TELNET_EV_IAC: {

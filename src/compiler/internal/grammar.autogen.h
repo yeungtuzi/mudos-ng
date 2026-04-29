@@ -1,4 +1,7 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -35,8 +38,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PROJECTS_GIT_FLUFFOS_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED
-# define YY_YY_PROJECTS_GIT_FLUFFOS_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED
+#ifndef YY_YY_USERS_LF_VSCODE_MUDOS_NG_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED
+# define YY_YY_USERS_LF_VSCODE_MUDOS_NG_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -117,7 +120,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 131 "/projects/git/fluffos/src/compiler/internal/grammar.y"
+#line 131 "/Users/lf/vscode/mudos-ng/src/compiler/internal/grammar.y"
 
   LPC_INT number; /* 8 */
   LPC_FLOAT real; /* 8 */
@@ -138,7 +141,7 @@ union YYSTYPE
     uint16_t save_exact_types;
   } func_block; /* 8 */
 
-#line 142 "/projects/git/fluffos/build/src/grammar.autogen.h"
+#line 142 "/Users/lf/vscode/mudos-ng/build/src/grammar.autogen.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -153,4 +156,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_PROJECTS_GIT_FLUFFOS_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED  */
+#endif /* !YY_YY_USERS_LF_VSCODE_MUDOS_NG_BUILD_SRC_GRAMMAR_AUTOGEN_H_INCLUDED  */

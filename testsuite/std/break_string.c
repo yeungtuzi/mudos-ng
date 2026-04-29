@@ -1,5 +1,5 @@
 // From MorgenGrauen MUDlib
-// Rewirtten by lonely for driver of fluffos v2019
+// Rewirtten by lonely for driver of mudos-ng v2019
 #include "break_string.h"
 
 private string stretch(string str, int width)

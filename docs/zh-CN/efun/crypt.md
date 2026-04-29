@@ -18,7 +18,7 @@ title: strings / crypt
 
     如果以字符串 `str` 加密后的字符串做为种子继续对字符串 `str` 加密，返回字符串还是这个种子。
 
-    请注意，fluffos 和 mudos 的加密方式不同，如果要兼容，只能使用 oldcrypt() 外部函数加密。
+    请注意，mudos-ng 和 mudos 的加密方式不同，如果要兼容，只能使用 oldcrypt() 外部函数加密。
 
 ### 示例
 

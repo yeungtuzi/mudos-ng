@@ -36,7 +36,7 @@ title: string / hash
     **其他算法：**
     sm3
 
-    这是 FLUFFOS 新增的外部函数，需要在编译驱动时启用 PACKAGE_CRYPTO 。
+    这是 MUDOS_NG 新增的外部函数，需要在编译驱动时启用 PACKAGE_CRYPTO 。
     
     **兼容性说明：**
     - MD2 和 MDC2 仅在 OpenSSL 1.x - 2.x 中可用（在 OpenSSL 3.x 中已移除）

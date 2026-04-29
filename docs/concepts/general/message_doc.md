@@ -6,7 +6,7 @@ title: general / message_doc
 
 ## the message() client protocol
 
-`message` is the efun in MudOS/FluffOS designed to make communication efuns more
+`message` is the efun in MudOS/MudOS-NG designed to make communication efuns more
 generic and to provide a standard way of talking to clients intelligently.
 
 Here is the manual page for message:

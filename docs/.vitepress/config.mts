@@ -4,16 +4,16 @@ import SIDEBAR from "./sidebar";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'en-US',
-  title: "FluffOS Docs",
-  description: "Docs for FluffOS Project",
+  title: "MudOS-NG Docs",
+  description: "Docs for MudOS-NG Project",
   lastUpdated: true,
   sitemap: {
-    hostname: 'https://www.fluffos.info'
+    hostname: 'https://www.mudos-ng.info'
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Github', link: 'https://github.com/fluffos/fluffos' }
+      { text: 'Github', link: 'https://github.com/mudos-ng/mudos-ng' }
     ],
     sidebar: SIDEBAR,
     search: {
@@ -44,10 +44,10 @@ export default defineConfig({
       }
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/fluffos/fluffos' }
+      { icon: 'github', link: 'https://github.com/mudos-ng/mudos-ng' }
     ],
     editLink: {
-      pattern: 'https://github.com/fluffos/fluffos/edit/master/docs/:path'
+      pattern: 'https://github.com/mudos-ng/mudos-ng/edit/master/docs/:path'
     },
   }
 })

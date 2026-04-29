@@ -17,7 +17,7 @@ title: contrib / abs
 
     返回参数的绝对值。
 
-    这是 FLUFFOS 新增的外部函数，在 MUDOS 中请用模拟外部函数实现。
+    这是 MUDOS_NG 新增的外部函数，在 MUDOS 中请用模拟外部函数实现。
 
 ### 翻译 ###
 

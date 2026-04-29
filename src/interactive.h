@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 [大河马/dahema@me.com]
+ * SPDX-License-Identifier: MIT
+ */
+
 #ifndef INTERACITVE_H
 #define INTERACITVE_H
 
@@ -37,8 +42,9 @@
 #define USING_MSP 0x80000          /* we've negotiated msp */
 #define USING_MSDP 0x100000 /* we've negotiated msdp */
 
-// from ICU
+// Forward declarations
 struct UConverter;
+class IOThread;
 
 struct interactive_t {
   struct object_t *ob; /* points to the associated object         */
@@ -87,6 +93,10 @@ struct interactive_t {
 
   // TLS context
   SSL *ssl;
+
+  // Phase 1: IO thread handling this user's network I/O.
+  // nullptr if user is handled on the VM thread directly.
+  IOThread *io_thread{nullptr};
 };
 
 #endif /* INTERACTIVE_H */

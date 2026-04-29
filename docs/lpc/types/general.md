@@ -11,7 +11,7 @@ Types can be used in four places:
     Declaring type of arguments to functions.
     Declaring type of local variables in functions.
 
-In modern FluffOS versions, local variable declarations can appear anywhere
+In modern MudOS-NG versions, local variable declarations can appear anywhere
 within a function block, not just at the beginning (C99-style). This allows
 for more flexible code organization while maintaining proper scoping rules.
 

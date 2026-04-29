@@ -4,11 +4,11 @@ title: Tracing and Performance Profiling
 ---
 # Tracing and Performance Profiling
 
-FluffOS includes a comprehensive tracing system for profiling LPC code execution and analyzing performance bottlenecks. The tracing system generates detailed timeline data compatible with Chrome DevTools and Firefox Developer Tools.
+MudOS-NG includes a comprehensive tracing system for profiling LPC code execution and analyzing performance bottlenecks. The tracing system generates detailed timeline data compatible with Chrome DevTools and Firefox Developer Tools.
 
 ## Overview
 
-The FluffOS tracing system allows you to:
+The MudOS-NG tracing system allows you to:
 - **Profile LPC function execution** - See exactly which functions are called and how long they take
 - **Identify performance bottlenecks** - Find slow code paths and optimization opportunities
 - **Analyze call patterns** - Understand execution flow and call hierarchies
@@ -17,7 +17,7 @@ The FluffOS tracing system allows you to:
 
 ## How Tracing Works
 
-When tracing is enabled, FluffOS records:
+When tracing is enabled, MudOS-NG records:
 - Every LPC function call with timestamp
 - Function execution duration
 - Call stack relationships (caller/callee)

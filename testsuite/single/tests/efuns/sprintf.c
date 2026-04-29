@@ -235,7 +235,7 @@ void do_tests() {
     // string truncation
     ASSERT_EQ("very l", sprintf("%.6s", "very long string"));
 
-    // https://github.com/fluffos/fluffos/issues/580
+    // https://github.com/mudos-ng/mudos-ng/issues/580
     ASSERT_EQ("\x1B", sprintf("%c", 27));
 
 #define ANSI_RED "\x1B[31m"
@@ -254,10 +254,10 @@ void do_tests() {
 
     ASSERT_EQ("      ", sprintf("%6-|s", ""));
     ASSERT_EQ("         a b c d e f g        ", sprintf("%30|s", "a b c d e f g"));
-    // https://github.com/fluffos/fluffos/issues/595
+    // https://github.com/mudos-ng/mudos-ng/issues/595
     ASSERT_EQ("   Mit indent sieht das so aus", sprintf("%30=s","Mit indent sieht das so aus"));
 
-    // https://github.com/fluffos/fluffos/issues/696
+    // https://github.com/mudos-ng/mudos-ng/issues/696
   shouldbe = @TEXT
 one        line1
 two        line2
