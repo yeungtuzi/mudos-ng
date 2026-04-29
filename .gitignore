@@ -15,3 +15,5 @@
 /venv/
 /testsuite/trace_lpcc.json
 **/Testing/Temporary
+.DS_Store
+**/.DS_Store
