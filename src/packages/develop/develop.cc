@@ -3,6 +3,8 @@
 #include "packages/core/file.h"
 #include "packages/core/sprintf.h"
 #include "packages/core/outbuf.h"
+#include "vm/internal/simulate.h"
+#include "base/internal/stats.h"
 
 static object_t *ob;
 

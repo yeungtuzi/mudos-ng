@@ -8,6 +8,7 @@
 #include "packages/core/file.h"
 
 #include <iostream>
+#include <cstring>
 #include <cerrno>
 #if HAVE_DIRENT_H
 #include <dirent.h>
@@ -80,6 +81,7 @@ static int do_move(const char *from, const char *to, int flag);
 static int pstrcmp(const void * /*p1*/, const void * /*p2*/);
 static int parrcmp(const void * /*p1*/, const void * /*p2*/);
 static void encode_stat(svalue_t * /*vp*/, int /*flags*/, char * /*str*/, struct stat * /*st*/);
+static void ensure_dirs_exist(const char *filepath);
 
 enum { MAX_LINES = 50 };
 
@@ -281,6 +283,32 @@ int remove_file(const char *path) {
 }
 
 /*
+ * Create all parent directories for a file path (like mkdir -p).
+ */
+static void ensure_dirs_exist(const char *filepath) {
+  if (!filepath || !*filepath) {
+    return;
+  }
+  // Duplicate the path since we'll modify it
+  char *tmppath = strdup(filepath);
+  if (!tmppath) {
+    return;
+  }
+  // Walk through the path creating directories
+  for (char *p = tmppath + 1; *p; p++) {
+    if (*p == '/') {
+      *p = '\0';
+      struct stat st;
+      if (stat(tmppath, &st) == -1) {
+        OS_mkdir(tmppath, 0770);
+      }
+      *p = '/';
+    }
+  }
+  free(tmppath);
+}
+
+/*
  * Append string to file. Return 0 for failure, otherwise 1.
  */
 int write_file(const char *file, const char *str, int flags) {
@@ -292,12 +320,14 @@ int write_file(const char *file, const char *str, int flags) {
     return 0;
   }
   if (flags & 2) {
+    ensure_dirs_exist(file);
     gf = gzopen(file, (flags & 1) ? "wb" : "ab");
     if (!gf) {
       error("Wrong permissions for opening file /%s for %s.\n\"%s\"\n", file,
             (flags & 1) ? "overwrite" : "append", strerror(errno));
     }
   } else {
+    ensure_dirs_exist(file);
     f = fopen(file, (flags & 1) ? "wb" : "ab");
     if (f == nullptr) {
       error("Wrong permissions for opening file /%s for %s.\n\"%s\"\n", file,
@@ -544,6 +574,7 @@ int write_bytes(const char *file, int start, const char *str, int theLength) {
    * opening for w or w+ will truncate it if it does exist.  So we
    * have to check if it exists first.
    */
+  ensure_dirs_exist(file);
   if (stat(file, &st) == -1) {
     fptr = fopen(file, "wb");
   } else {

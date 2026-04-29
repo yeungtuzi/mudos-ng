@@ -25,6 +25,10 @@ This project is released under the **MIT License** (consistent with FluffOS). Se
 - The original MudOS team for creating the driver that powered countless MUDs.
 - The FluffOS contributors for keeping the codebase alive and modernising it.
 
+## Related Projects
+
+- [纵横天下MUD](https://github.com/yeungtuzi/zhtx) — 基于 MudOS-NG 驱动的 MUD 游戏世界
+
 ## Build & Usage
 
 *(You can add your own build instructions here, e.g.:)*
