@@ -1010,6 +1010,53 @@ public:
       }
       _stacktrace[index] = reinterpret_cast<void *>(ctx.data[16]);
       ++index;
+#elif defined(__APPLE__) && defined(__aarch64__)
+      unw_getcontext(&ctx);
+      // Apple Silicon: copy register state from ucontext_t to
+      // libunwind's unw_context_t
+      ctx.data[0]  = uctx->uc_mcontext->__ss.__x[0];
+      ctx.data[1]  = uctx->uc_mcontext->__ss.__x[1];
+      ctx.data[2]  = uctx->uc_mcontext->__ss.__x[2];
+      ctx.data[3]  = uctx->uc_mcontext->__ss.__x[3];
+      ctx.data[4]  = uctx->uc_mcontext->__ss.__x[4];
+      ctx.data[5]  = uctx->uc_mcontext->__ss.__x[5];
+      ctx.data[6]  = uctx->uc_mcontext->__ss.__x[6];
+      ctx.data[7]  = uctx->uc_mcontext->__ss.__x[7];
+      ctx.data[8]  = uctx->uc_mcontext->__ss.__x[8];
+      ctx.data[9]  = uctx->uc_mcontext->__ss.__x[9];
+      ctx.data[10] = uctx->uc_mcontext->__ss.__x[10];
+      ctx.data[11] = uctx->uc_mcontext->__ss.__x[11];
+      ctx.data[12] = uctx->uc_mcontext->__ss.__x[12];
+      ctx.data[13] = uctx->uc_mcontext->__ss.__x[13];
+      ctx.data[14] = uctx->uc_mcontext->__ss.__x[14];
+      ctx.data[15] = uctx->uc_mcontext->__ss.__x[15];
+      ctx.data[16] = uctx->uc_mcontext->__ss.__x[16];
+      ctx.data[17] = uctx->uc_mcontext->__ss.__x[17];
+      ctx.data[18] = uctx->uc_mcontext->__ss.__x[18];
+      ctx.data[19] = uctx->uc_mcontext->__ss.__x[19];
+      ctx.data[20] = uctx->uc_mcontext->__ss.__x[20];
+      ctx.data[21] = uctx->uc_mcontext->__ss.__x[21];
+      ctx.data[22] = uctx->uc_mcontext->__ss.__x[22];
+      ctx.data[23] = uctx->uc_mcontext->__ss.__x[23];
+      ctx.data[24] = uctx->uc_mcontext->__ss.__x[24];
+      ctx.data[25] = uctx->uc_mcontext->__ss.__x[25];
+      ctx.data[26] = uctx->uc_mcontext->__ss.__x[26];
+      ctx.data[27] = uctx->uc_mcontext->__ss.__x[27];
+      ctx.data[28] = uctx->uc_mcontext->__ss.__x[28];
+      ctx.data[29] = uctx->uc_mcontext->__ss.__fp;
+      ctx.data[30] = uctx->uc_mcontext->__ss.__lr;
+      ctx.data[31] = uctx->uc_mcontext->__ss.__sp;
+      ctx.data[32] = uctx->uc_mcontext->__ss.__pc;
+
+      // If the PC is the crash address we have a bad function
+      // dereference. On ARM64 the return address is in LR (x30),
+      // so use that as the next frame's IP.
+      if (uctx->uc_mcontext->__ss.__pc ==
+          reinterpret_cast<__uint64_t>(error_addr())) {
+        ctx.data[32] = uctx->uc_mcontext->__ss.__lr;
+      }
+      _stacktrace[index] = reinterpret_cast<void *>(ctx.data[32]);
+      ++index;
 #elif defined(__APPLE__)
       unw_getcontext(&ctx)
           // TODO: Convert the ucontext_t to libunwind's unw_context_t like

@@ -31,9 +31,102 @@ This project is released under the **MIT License** (consistent with FluffOS). Se
 
 ## Build & Usage
 
-*(You can add your own build instructions here, e.g.:)*
+### Prerequisites
+
+CMake 3.22+, C++17 compiler, and platform-specific dependencies:
+
+**Ubuntu/Debian**
 
 ```bash
-make
-./driver config.cfg
+sudo apt install build-essential bison libmysqlclient-dev libpcre3-dev \
+  libpq-dev libsqlite3-dev libssl-dev libz-dev libjemalloc-dev libicu-dev \
+  libgtest-dev
+```
+
+**macOS (Homebrew)**
+
+```bash
+brew install cmake pkg-config mysql pcre libgcrypt openssl jemalloc icu4c \
+  sqlite3 googletest
+```
+
+**Windows (MSYS2/MINGW64)**
+
+```bash
+pacman --noconfirm -S --needed \
+  mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake \
+  mingw-w64-x86_64-zlib mingw-w64-x86_64-pcre \
+  mingw-w64-x86_64-icu mingw-w64-x86_64-sqlite3 \
+  mingw-w64-x86_64-jemalloc mingw-w64-x86_64-gtest bison make
+```
+
+**Alpine (Docker/Static)**
+
+```bash
+apk add --no-cache linux-headers gcc g++ clang-dev make cmake bash \
+  mariadb-dev mariadb-static postgresql-dev sqlite-dev sqlite-static \
+  openssl-dev openssl-libs-static zlib-dev zlib-static icu-dev icu-static \
+  pcre-dev bison git musl-dev libelf-static elfutils-dev \
+  zstd-static bzip2-static xz-static
+```
+
+### Build
+
+```bash
+mkdir build && cd build
+cmake ..
+make -j$(nproc) install
+```
+
+Key build options:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `CMAKE_BUILD_TYPE` | — | `Debug`, `Release`, or `RelWithDebInfo` |
+| `MARCH_NATIVE` | `ON` | Optimize for current CPU |
+| `STATIC` | `OFF` | Static linking (required for Docker) |
+| `USE_JEMALLOC` | `ON` | Use jemalloc allocator |
+| `PACKAGE_DB_SQLITE` | — | Enable SQLite (`2` = built-in) |
+| `PACKAGE_DB_MYSQL` | — | Set to `""` to disable MySQL |
+| `PACKAGE_CRYPTO` | `ON` | Enable crypto package |
+| `ENABLE_SANITIZER` | `OFF` | Enable address sanitizer (Debug, Clang) |
+
+**macOS (Apple Silicon)** — set environment variables for Homebrew paths:
+
+```bash
+OPENSSL_ROOT_DIR="/opt/homebrew/opt/openssl@3" \
+ICU_ROOT="/opt/homebrew/opt/icu4c" \
+cmake .. -DCMAKE_BUILD_TYPE=Release
+```
+
+**Windows (MSYS2/MINGW64 shell)** — disable crypto and MySQL:
+
+```bash
+cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug \
+  -DMARCH_NATIVE=OFF -DPACKAGE_CRYPTO=OFF \
+  -DPACKAGE_DB_MYSQL="" -DPACKAGE_DB_SQLITE=1 ..
+```
+
+**Static build (Docker/Alpine)**:
+
+```bash
+cmake .. -DMARCH_NATIVE=OFF -DSTATIC=ON
+make install
+ldd bin/driver  # Should show "not a dynamic executable"
+```
+
+### Run
+
+```bash
+./build/bin/driver etc/config.cfg
+```
+
+### Test
+
+```bash
+# Unit tests
+cd build && make test
+
+# LPC test suite
+cd testsuite && ../build/bin/driver etc/config.test -ftest
 ```

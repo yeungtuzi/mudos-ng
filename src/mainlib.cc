@@ -127,6 +127,8 @@ void print_version_and_time() {
   debug_message("Backtrace support: libdw.\n");
 #elif BACKWARD_HAS_BFD == 1
   debug_message("Backtrace support: libbfd.\n");
+#elif BACKWARD_HAS_LIBUNWIND == 1
+  debug_message("Backtrace support: libunwind.\n");
 #else
   debug_message("libdw or libbfd is not found, you will only get very limited crash stacktrace.\n");
 #endif
