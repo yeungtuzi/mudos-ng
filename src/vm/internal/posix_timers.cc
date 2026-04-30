@@ -1,5 +1,6 @@
-// Timer implementation with POSIX timer, only works on linux
-#ifdef __linux__
+// Timer implementation for eval limit.
+// Linux: POSIX per-process timers (timer_create/timer_settime)
+// macOS/other POSIX: setitimer/getitimer fallback
 
 #include "base/std.h"
 
@@ -8,20 +9,24 @@
 #include <cstdio>   // for perror()
 #include <cstdlib>  // for exit()
 #include <sys/signal.h>
-#include <time.h>
 
 #include "vm/internal/eval_limit.h"
 
+#ifdef __linux__
+
+#include <time.h>
+
 static timer_t eval_timer_id;
+
 /*
- * SIGALRM handler.
+ * SIGVTALRM handler.
  */
-void sigalrm_handler(int sig, siginfo_t *si, void *uc) {
+static void sigalrm_handler(int sig, siginfo_t *si, void *uc) {
   if (!si->si_value.sival_ptr) {
     outoftime = 1;
   }
-} /* sigalrm_handler() */
-/* Called by main() to initialize all timers (currently only eval_cost) */
+}
+
 void init_posix_timers(void) {
   struct sigevent sev;
   struct sigaction sa;
@@ -32,7 +37,7 @@ void init_posix_timers(void) {
   sev.sigev_value.sival_ptr = NULL;
 
   int i = -1;
-// Only CLOCK_REALTIME is standard.
+  // Only CLOCK_REALTIME is standard.
 #if defined(CLOCK_MONOTONIC_COARSE)
   i = timer_create(CLOCK_MONOTONIC_COARSE, &sev, &eval_timer_id);
 #endif
@@ -60,7 +65,6 @@ void init_posix_timers(void) {
   }
 }
 
-/* Set the eval_timer to the given number of microseconds */
 void posix_eval_timer_set(uint64_t micros) {
   struct itimerspec it;
 
@@ -73,7 +77,6 @@ void posix_eval_timer_set(uint64_t micros) {
   timer_settime(eval_timer_id, 0, &it, NULL);
 }
 
-/* Return the number of microseconds remaining on the eval_timer */
 uint64_t posix_eval_timer_get(void) {
   struct itimerspec it;
 
@@ -82,6 +85,49 @@ uint64_t posix_eval_timer_get(void) {
   }
 
   return it.it_value.tv_sec * static_cast<uint64_t>(1000000) + it.it_value.tv_nsec / 1000;
+}
+
+#else  // !__linux__ : use setitimer / getitimer (macOS, BSD, etc.)
+
+#include <signal.h>
+#include <sys/time.h>
+
+static void sigprof_handler(int) {
+  outoftime = 1;
+}
+
+void init_posix_timers(void) {
+  struct sigaction sa {};
+  sa.sa_handler = sigprof_handler;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+
+  if (sigaction(SIGPROF, &sa, nullptr) < 0) {
+    perror("init_posix_timers: sigaction");
+    exit(-1);
+  }
+}
+
+void posix_eval_timer_set(uint64_t micros) {
+  struct itimerval it;
+
+  it.it_interval.tv_sec = 0;
+  it.it_interval.tv_usec = 0;
+
+  it.it_value.tv_sec = micros / 1000000;
+  it.it_value.tv_usec = micros % 1000000;
+
+  setitimer(ITIMER_PROF, &it, NULL);
+}
+
+uint64_t posix_eval_timer_get(void) {
+  struct itimerval it;
+
+  if (getitimer(ITIMER_PROF, &it) < 0) {
+    return 100;
+  }
+
+  return it.it_value.tv_sec * static_cast<uint64_t>(1000000) + it.it_value.tv_usec;
 }
 
 #endif  // __linux__
