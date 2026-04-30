@@ -29,10 +29,6 @@ This project is released under the **MIT License** (consistent with FluffOS). Se
 
 - [纵横天下MUD](https://github.com/yeungtuzi/zhtx) — 基于 MudOS-NG 驱动的 MUD 游戏世界
 
-## Known Issues
-
-A previous automated cleanup pass commented out unused local variable declarations across the codebase. This may inadvertently cause bugs where a variable was actually needed. If you encounter unexpected behavior, search for comments with specific dates and function descriptions (e.g., `// 2026-xx-xx unused`) and try uncommenting the variable declaration.
-
 ## Build & Usage
 
 ### Prerequisites
