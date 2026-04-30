@@ -341,17 +341,19 @@ static inline void on_telnet_subnegotiation(unsigned char cmd, const char *buf, 
            * we just ignore it. */
           break;
         }
-        /* refuse FORWARDMASK */
+        /* accept FORWARDMASK — clients need this to know they can
+           forward CR/LF as line terminators in MODE_EDIT. Without it,
+           Mudlet and other modern clients won't send complete lines. */
         case TELNET_DO: {
-          const unsigned char sb_wont[] = {WONT, static_cast<unsigned char>(buf[1])};
+          const unsigned char sb_will[] = {WILL, static_cast<unsigned char>(buf[1])};
           telnet_subnegotiation(ip->telnet, TELNET_TELOPT_LINEMODE,
-                                reinterpret_cast<const char *>(sb_wont), sizeof(sb_wont));
+                                reinterpret_cast<const char *>(sb_will), sizeof(sb_will));
           break;
         }
         case TELNET_WILL: {
-          const unsigned char sb_dont[] = {DONT, static_cast<unsigned char>(buf[1])};
+          const unsigned char sb_do[] = {DO, static_cast<unsigned char>(buf[1])};
           telnet_subnegotiation(ip->telnet, TELNET_TELOPT_LINEMODE,
-                                reinterpret_cast<const char *>(sb_dont), sizeof(sb_dont));
+                                reinterpret_cast<const char *>(sb_do), sizeof(sb_do));
           break;
         }
         default:

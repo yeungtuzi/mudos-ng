@@ -838,6 +838,15 @@ void get_user_data(interactive_t *ip) {
 
       // If we read something
       if (ip->text_end > start) {
+        // In telnet linemode, libtelnet strips the line terminator (CR LF or
+        // CR NUL) before passing text to the event handler. Append '\n' so
+        // that cmd_in_buf can detect a complete command.
+        if ((ip->iflags & USING_LINEMODE) && ip->text_end < (int)sizeof(ip->text) - 1) {
+          if (ip->text[ip->text_end - 1] != '\r' && ip->text[ip->text_end - 1] != '\n') {
+            ip->text[ip->text_end++] = '\n';
+          }
+        }
+
         /* handle snooping - snooper does not see type-ahead due to
          telnet being in linemode */
         if (!(ip->iflags & NOECHO)) {
@@ -997,6 +1006,14 @@ void on_user_websocket_telnet_received(interactive_t *ip, const char *data, size
   telnet_recv(ip->telnet, data, len);
   // If we read something
   if (ip->text_end > start) {
+    // In telnet linemode, libtelnet strips the line terminator.
+    // Append '\n' so cmd_in_buf can detect a complete command.
+    if ((ip->iflags & USING_LINEMODE) && ip->text_end < (int)sizeof(ip->text) - 1) {
+      if (ip->text[ip->text_end - 1] != '\r' && ip->text[ip->text_end - 1] != '\n') {
+        ip->text[ip->text_end++] = '\n';
+      }
+    }
+
     /* handle snooping - snooper does not see type-ahead due to
       telnet being in linemode */
     if (!(ip->iflags & NOECHO)) {
@@ -1300,7 +1317,11 @@ exit:
       print_prompt(ip);
     }
     if (ip->telnet && (ip->iflags & USING_TELNET) && !(ip->iflags & SUPPRESS_GA)) {
-      telnet_send_ga(ip->telnet);
+      if (ip->io_thread) {
+        ip->io_thread->post([telnet = ip->telnet]() { telnet_send_ga(telnet); });
+      } else {
+        telnet_send_ga(ip->telnet);
+      }
     }
     // FIXME: this doesn't belong here, should be moved to event.cc
     maybe_schedule_user_command(ip);
