@@ -593,6 +593,15 @@ void set_linemode(interactive_t *ip, bool flush) {
       const unsigned char sb_mode[] = {LM_MODE, MODE_EDIT | MODE_TRAPSIG};
       telnet_subnegotiation(ip->telnet, TELNET_TELOPT_LINEMODE,
                             reinterpret_cast<const char *>(sb_mode), sizeof(sb_mode));
+
+      // In linemode, GA (Go Ahead) should be suppressed; the client signals
+      // end-of-input via the telnet linemode protocol, not via GA handshake.
+      // If SGA was rejected earlier (before linemode was activated), re-offer
+      // it now so the client knows to suppress GA display.
+      if (!(ip->iflags & SUPPRESS_GA)) {
+        ip->iflags |= SUPPRESS_GA;
+        telnet_negotiate(ip->telnet, TELNET_WILL, TELNET_TELOPT_SGA);
+      }
     } else {
       telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_SGA);
     }
