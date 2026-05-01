@@ -396,6 +396,16 @@ extern telnet_t* telnet_init(const telnet_telopt_t *telopts,
 extern void telnet_free(telnet_t *telnet);
 
 /*!
+ * \brief Get the user data pointer associated with a telnet state tracker.
+ *
+ * Returns the user_data pointer that was passed to telnet_init().
+ *
+ * \param telnet Telnet state tracker object.
+ * \return User data pointer.
+ */
+extern void *telnet_get_userdata(telnet_t *telnet);
+
+/*!
  * \brief Push a byte buffer into the state tracker.
  *
  * Passes one or more bytes to the telnet state tracker for

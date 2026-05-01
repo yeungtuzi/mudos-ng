@@ -1317,11 +1317,7 @@ exit:
       print_prompt(ip);
     }
     if (ip->telnet && (ip->iflags & USING_TELNET) && !(ip->iflags & SUPPRESS_GA)) {
-      if (ip->io_thread) {
-        ip->io_thread->post([telnet = ip->telnet]() { telnet_send_ga(telnet); });
-      } else {
-        telnet_send_ga(ip->telnet);
-      }
+      telnet_send_ga(ip->telnet);
     }
     // FIXME: this doesn't belong here, should be moved to event.cc
     maybe_schedule_user_command(ip);

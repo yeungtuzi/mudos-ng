@@ -586,73 +586,141 @@ void send_initial_telnet_negotiations(struct interactive_t *user) {
 }
 
 void set_linemode(interactive_t *ip, bool flush) {
-  if (ip->telnet) {
-    if (ip->iflags & USING_LINEMODE) {
-      telnet_negotiate(ip->telnet, TELNET_DO, TELNET_TELOPT_LINEMODE);
+  if (!ip->telnet) return;
 
+  if (ip->iflags & USING_LINEMODE) {
+    // Must set SUPPRESS_GA flag on the calling thread (VM thread checks it
+    // after set_linemode returns). The SGA negotiation itself is deferred
+    // to the IO thread to serialize access to telnet->z (MCCP compression).
+    bool need_sga = !(ip->iflags & SUPPRESS_GA);
+    if (need_sga) {
+      ip->iflags |= SUPPRESS_GA;
+    }
+
+    if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+      ip->io_thread->post([ip, flush, need_sga]() {
+        telnet_negotiate(ip->telnet, TELNET_DO, TELNET_TELOPT_LINEMODE);
+        const unsigned char sb_mode[] = {LM_MODE, MODE_EDIT | MODE_TRAPSIG};
+        telnet_subnegotiation(ip->telnet, TELNET_TELOPT_LINEMODE,
+                              reinterpret_cast<const char *>(sb_mode), sizeof(sb_mode));
+        if (need_sga) {
+          telnet_negotiate(ip->telnet, TELNET_WILL, TELNET_TELOPT_SGA);
+        }
+        if (flush) flush_message(ip);
+      });
+    } else {
+      telnet_negotiate(ip->telnet, TELNET_DO, TELNET_TELOPT_LINEMODE);
       const unsigned char sb_mode[] = {LM_MODE, MODE_EDIT | MODE_TRAPSIG};
       telnet_subnegotiation(ip->telnet, TELNET_TELOPT_LINEMODE,
                             reinterpret_cast<const char *>(sb_mode), sizeof(sb_mode));
-
-      // In linemode, GA (Go Ahead) should be suppressed; the client signals
-      // end-of-input via the telnet linemode protocol, not via GA handshake.
-      // If SGA was rejected earlier (before linemode was activated), re-offer
-      // it now so the client knows to suppress GA display.
-      if (!(ip->iflags & SUPPRESS_GA)) {
-        ip->iflags |= SUPPRESS_GA;
+      if (need_sga) {
         telnet_negotiate(ip->telnet, TELNET_WILL, TELNET_TELOPT_SGA);
       }
+      if (flush) flush_message(ip);
+    }
+  } else {
+    if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+      ip->io_thread->post([ip, flush]() {
+        telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_SGA);
+        if (flush) flush_message(ip);
+      });
     } else {
       telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_SGA);
-    }
-    if (flush) {
-      flush_message(ip);
+      if (flush) flush_message(ip);
     }
   }
 }
 
 void set_charmode(interactive_t *ip, bool flush) {
-  if (ip->telnet) {
+  if (!ip->telnet) return;
+
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([ip, flush]() {
+      if (ip->iflags & USING_LINEMODE) {
+        telnet_negotiate(ip->telnet, TELNET_DONT, TELNET_TELOPT_LINEMODE);
+      } else {
+        telnet_negotiate(ip->telnet, TELNET_WILL, TELNET_TELOPT_SGA);
+      }
+      if (flush) flush_message(ip);
+    });
+  } else {
     if (ip->iflags & USING_LINEMODE) {
       telnet_negotiate(ip->telnet, TELNET_DONT, TELNET_TELOPT_LINEMODE);
     } else {
       telnet_negotiate(ip->telnet, TELNET_WILL, TELNET_TELOPT_SGA);
     }
-    if (flush) {
-      flush_message(ip);
-    }
+    if (flush) flush_message(ip);
   }
 }
 
 void set_localecho(interactive_t *ip, bool enable, bool flush) {
-  if (ip->telnet) {
+  if (!ip->telnet) return;
+
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([ip, enable, flush]() {
+      telnet_negotiate(ip->telnet, enable ? TELNET_WONT : TELNET_WILL, TELNET_TELOPT_ECHO);
+      if (flush) flush_message(ip);
+    });
+  } else {
     telnet_negotiate(ip->telnet, enable ? TELNET_WONT : TELNET_WILL, TELNET_TELOPT_ECHO);
-    if (flush) {
-      flush_message(ip);
-    }
+    if (flush) flush_message(ip);
   }
 }
 
 void telnet_do_naws(struct telnet_t *telnet) {
-  telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_NAWS);
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() { telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_NAWS); });
+  } else {
+    telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_NAWS);
+  }
 }
 
 void telnet_dont_naws(struct telnet_t *telnet) {
-  telnet_negotiate(telnet, TELNET_DONT, TELNET_TELOPT_NAWS);
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() { telnet_negotiate(telnet, TELNET_DONT, TELNET_TELOPT_NAWS); });
+  } else {
+    telnet_negotiate(telnet, TELNET_DONT, TELNET_TELOPT_NAWS);
+  }
 }
 void telnet_start_request_ttype(struct telnet_t *telnet) {
-  telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_TTYPE);
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() { telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_TTYPE); });
+  } else {
+    telnet_negotiate(telnet, TELNET_DO, TELNET_TELOPT_TTYPE);
+  }
 }
-void telnet_request_ttype(struct telnet_t *telnet) { telnet_begin_sb(telnet, TELNET_TTYPE_SEND); }
+void telnet_request_ttype(struct telnet_t *telnet) {
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() { telnet_begin_sb(telnet, TELNET_TTYPE_SEND); });
+  } else {
+    telnet_begin_sb(telnet, TELNET_TTYPE_SEND);
+  }
+}
 
 void telnet_send_nop(struct telnet_t *telnet) {
-  if (telnet) {
+  if (!telnet) return;
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() {
+      telnet_iac(telnet, TELNET_NOP);
+    });
+  } else {
     telnet_iac(telnet, TELNET_NOP);
   }
 }
 
 void telnet_send_ga(struct telnet_t *telnet) {
-  if (telnet) {
+  if (!telnet) return;
+  auto *ip = static_cast<interactive_t *>(telnet_get_userdata(telnet));
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([telnet]() {
+      telnet_iac(telnet, TELNET_GA);
+    });
+  } else {
     telnet_iac(telnet, TELNET_GA);
   }
 }

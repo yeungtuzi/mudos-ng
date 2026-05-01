@@ -2,6 +2,7 @@
 
 #include <unicode/stringpiece.h>
 
+#include "base/internal/io_thread.h"
 #include "comm.h"
 #include "interactive.h"
 #include "net/msp.h"
@@ -23,12 +24,25 @@ void on_telnet_do_msp(interactive_t *ip) {
 }
 
 void on_telnet_dont_msp(interactive_t *ip) {
-  telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_MSP);
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    ip->io_thread->post([ip]() {
+      telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_MSP);
+    });
+  } else {
+    telnet_negotiate(ip->telnet, TELNET_WONT, TELNET_TELOPT_MSP);
+  }
   ip->iflags &= ~USING_MSP;
 }
 
 void telnet_send_msp_oob(interactive_t *ip, const char *msg, size_t len) {
-  if (ip->iflags & USING_MSP) {
+  if (!(ip->iflags & USING_MSP)) return;
+
+  if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+    std::string copy(msg, len);
+    ip->io_thread->post([ip, copy = std::move(copy)]() {
+      telnet_subnegotiation(ip->telnet, TELNET_TELOPT_MSP, copy.data(), copy.size());
+    });
+  } else {
     telnet_subnegotiation(ip->telnet, TELNET_TELOPT_MSP, msg, len);
   }
 }

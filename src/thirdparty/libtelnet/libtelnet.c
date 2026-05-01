@@ -929,6 +929,11 @@ void telnet_free(telnet_t *telnet) {
 	free(telnet);
 }
 
+/* get the user data pointer */
+void *telnet_get_userdata(telnet_t *telnet) {
+	return telnet->ud;
+}
+
 /* push a byte into the telnet buffer */
 static telnet_error_t _buffer_byte(telnet_t *telnet,
 		unsigned char byte) {
