@@ -295,7 +295,7 @@ void read_config(const char *filename) {
             port, port, tmp);
       }
     }
-    for (i = port_start; i < 5; i++) {
+    for (i = port_start; i < 6; i++) {
       external_port[i].kind = PORT_TYPE_UNDEFINED;
       external_port[i].fd = -1;
 
@@ -318,6 +318,8 @@ void read_config(const char *filename) {
               scan_config_line("websocket http dir : %[^\n]", tmp, kMustHave);
               CONFIG_STR(__RC_WEBSOCKET_HTTP_DIR__) = alloc_cstring(tmp, "config file: whd");
             }
+          } else if (!strcmp(kind, "ssh")) {
+            external_port[i].kind = PORT_TYPE_SSH;
           } else {
             debug_message("Unknown kind of external port: %s\n", kind);
             exit(-1);
@@ -329,7 +331,7 @@ void read_config(const char *filename) {
       }
     }
     // TLS support status
-    for (i = port_start; i < 5; i++) {
+    for (i = port_start; i < 6; i++) {
       if (external_port[i].kind != PORT_TYPE_UNDEFINED) {
         char kind[K_MAX_CONFIG_LINE_LENGTH];
         sprintf(kind, "external_port_%i_tls : %%[^\n]", i + 1);
@@ -344,6 +346,30 @@ void read_config(const char *filename) {
             external_port[i].tls_key = key;
           }
         }
+      }
+    }
+    // SSH port — standalone config option, defaults to port_number - 1
+    {
+      int ssh_port_val = 0;
+      if (scan_config_line("ssh port : %d\n", &ssh_port_val, 0)) {
+        if (ssh_port_val > 0) {
+          external_port[5].port = ssh_port_val;
+          external_port[5].kind = PORT_TYPE_SSH;
+        }
+      } else if (CONFIG_INT(__MUD_PORT__) > 0) {
+        // Default: one less than the legacy telnet port (致敬 telnet 23 / ssh 22)
+        external_port[5].port = CONFIG_INT(__MUD_PORT__) - 1;
+        external_port[5].kind = PORT_TYPE_SSH;
+      }
+    }
+    // Store config directory for SSH host key lookup
+    {
+      std::string fname(filename);
+      auto pos = fname.find_last_of("/\\");
+      if (pos != std::string::npos) {
+        external_port[5].ssh_config_dir = fname.substr(0, pos);
+      } else {
+        external_port[5].ssh_config_dir = ".";
       }
     }
   }

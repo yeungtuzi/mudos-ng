@@ -97,6 +97,9 @@ struct interactive_t {
   // Phase 1: IO thread handling this user's network I/O.
   // nullptr if user is handled on the VM thread directly.
   IOThread *io_thread{nullptr};
+
+  // SSH connection handle (only valid for PORT_TYPE_SSH)
+  struct ssh_conn *ssh_conn{nullptr};
 };
 
 #endif /* INTERACTIVE_H */

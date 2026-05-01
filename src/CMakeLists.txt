@@ -208,6 +208,22 @@ endif ()
 find_package(OpenSSL 1.0.1 COMPONENTS SSL REQUIRED)
 include_directories(AFTER SYSTEM ${OPENSSL_INCLUDE_DIR})
 
+# SSH support
+find_package(PkgConfig QUIET)
+if(PKG_CONFIG_FOUND)
+  pkg_check_modules(LIBSSH libssh IMPORTED_TARGET)
+endif()
+if(NOT LIBSSH_FOUND)
+  find_library(LIBSSH_LIBRARY ssh)
+  find_path(LIBSSH_INCLUDE_DIR libssh/libssh.h)
+  if(LIBSSH_LIBRARY AND LIBSSH_INCLUDE_DIR)
+    set(LIBSSH_FOUND TRUE)
+  endif()
+endif()
+if(NOT LIBSSH_FOUND)
+  message(FATAL_ERROR "libssh not found. Install libssh-dev / libssh-devel (macOS: brew install libssh).")
+endif()
+
 set(ICU_DEBUG ON)
 find_package(ICU REQUIRED COMPONENTS uc dt)
 # Make ICU use utf-8 internally
@@ -368,6 +384,7 @@ set(SRC
   "net/websocket.cc"
   "net/ws_ascii.cc"
   "net/ws_telnet.cc"
+  "net/ssh.cc"
   "base/internal/debugmalloc.cc"
   "base/internal/external_port.cc"
   "base/internal/file.cc"
@@ -483,6 +500,11 @@ add_backward(libdriver)
 
 # System libraries
 target_link_libraries(libdriver PUBLIC OpenSSL::SSL)
+if(LIBSSH_FOUND AND PkgConfig_FOUND)
+  target_link_libraries(libdriver PUBLIC PkgConfig::LIBSSH)
+elseif(LIBSSH_FOUND)
+  target_link_libraries(libdriver PUBLIC ${LIBSSH_LIBRARY})
+endif()
 target_link_libraries(libdriver PUBLIC ${ICU_LIBRARIES})
 
 # Platform Libraries

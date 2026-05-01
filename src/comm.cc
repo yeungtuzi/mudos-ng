@@ -39,6 +39,7 @@
 #include "net/telnet.h"
 #include "net/websocket.h"
 #include "net/tls.h"
+#include "net/ssh.h"
 #include "user.h"
 #include "vm/vm.h"
 #include "base/internal/io_thread.h"
@@ -214,7 +215,35 @@ void new_conn_handler(evconnlistener *listener, evutil_socket_t fd, struct socka
     // For websocket connections, wait until they are handshake finished.
     init_user_websocket(port->lws_context, fd);
     return;
-  } else {
+  }
+
+  if (port->kind == PORT_TYPE_SSH) {
+    // SSH connections: handshake + auth on IO thread, logon on VM thread.
+    auto *user = new_user(port, fd, addr, addrlen);
+    user->connection_type = PORT_TYPE_SSH;
+
+    if (g_io_thread_pool) {
+      auto *io = g_io_thread_pool->next_thread();
+      user->io_thread = io;
+      io->post([user, io, port]() {
+        user->ev_command = evtimer_new(io->base(), on_user_command, user);
+        user->ssh_conn = ssh_conn_accept(port->ssh_bind, user->fd, io->base(), user);
+        if (!user->ssh_conn) {
+          remove_interactive(user->ob, 0);
+        }
+        // on_user_logon is called from ssh_event_cb when SSH handshake completes
+      });
+    } else {
+      user->ev_command = evtimer_new(g_event_base, on_user_command, user);
+      user->ssh_conn = ssh_conn_accept(port->ssh_bind, user->fd, g_event_base, user);
+      if (!user->ssh_conn) {
+        remove_interactive(user->ob, 0);
+      }
+    }
+    return;
+  }
+
+  {
     // For other connections go straight to no handshake necessary, schedule to logon.
     auto *user = new_user(port, fd, addr, addrlen);
 
@@ -520,6 +549,13 @@ bool init_user_conn() {
     if (port.kind == PORT_TYPE_WEBSOCKET) {
       port.lws_context = init_websocket_context(g_event_base, &port);
     }
+    if (port.kind == PORT_TYPE_SSH) {
+      port.ssh_bind = ssh_server_init(port.ssh_config_dir.c_str());
+      if (!port.ssh_bind) {
+        debug_message("Failed to initialize SSH server on port %d.\n", port.port);
+        return false;
+      }
+    }
   }
   return true;
 }
@@ -536,6 +572,10 @@ void shutdown_external_ports() {
     // will also close the FD.
     if (port.ev_conn) evconnlistener_free(port.ev_conn);
     if (port.lws_context) close_websocket_context(port.lws_context);
+    if (port.ssh_bind) {
+      ssh_server_close(port.ssh_bind);
+      port.ssh_bind = nullptr;
+    }
   }
 
   debug_message("closed external ports\n");
@@ -600,6 +640,15 @@ static void output_to_user(interactive_t *ip, const char *data, int len) {
         websocket_send_text(ip->lws, data, len);
       } else {
         debug_message("User hasn't completed websocket upgrade! can't send message.\n");
+      }
+      break;
+    }
+    case PORT_TYPE_SSH: {
+      auto transdata = u8_convert_encoding(ip->trans, data, len);
+      auto result = transdata.empty() ? std::string_view(data, len) : transdata;
+      inet_volume += result.size();
+      if (ip->ssh_conn) {
+        ssh_conn_write(ip->ssh_conn, result.data(), result.size());
       }
       break;
     }
@@ -829,6 +878,9 @@ void get_user_data(interactive_t *ip) {
   switch (ip->connection_type) {
     case PORT_TYPE_WEBSOCKET:
       // Impossible, we don't handle it here
+      break;
+    case PORT_TYPE_SSH:
+      // SSH reads are handled by ssh_event_cb, not bufferevent
       break;
     case PORT_TYPE_TELNET: {
       int const start = ip->text_end;
@@ -1426,6 +1478,18 @@ void remove_interactive(object_t *ob, int dested) {
   if (ip->telnet != nullptr) {
     telnet_free(ip->telnet);
     ip->telnet = nullptr;
+  }
+
+  // Free SSH connection
+  if (ip->ssh_conn != nullptr) {
+    if (ip->io_thread && !ip->io_thread->is_current_thread()) {
+      auto *c = ip->ssh_conn;
+      ip->ssh_conn = nullptr;
+      ip->io_thread->post([c]() { ssh_conn_free(c); });
+    } else {
+      ssh_conn_free(ip->ssh_conn);
+      ip->ssh_conn = nullptr;
+    }
   }
 
   // Free LWS handle

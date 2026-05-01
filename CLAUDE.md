@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MudOS-NG is an LPMUD driver based on the last release of MudOS (v22.2b14) with 10+ years of bug fixes and performance enhancements. It supports all LPC-based MUDs with minimal code changes and includes modern features like UTF-8 support, TLS, WebSocket protocol, async IO, and database integration.
+MudOS-NG is an LPMUD driver based on the last release of MudOS (v22.2b14) with 10+ years of bug fixes and performance enhancements. It supports all LPC-based MUDs with minimal code changes and includes modern features like UTF-8 support, TLS, WebSocket protocol, SSH protocol, async IO, and database integration.
 
 ## Architecture
 
@@ -45,6 +45,7 @@ MudOS-NG is an LPMUD driver based on the last release of MudOS (v22.2b14) with 1
 - `telnet.cc` - Telnet protocol implementation
 - `websocket.cc` - WebSocket support for web clients
 - `tls.cc` - SSL/TLS encryption support
+- `ssh.cc` / `ssh.h` - SSH server protocol (libssh-based, password auth)
 - `msp.cc` - MUD Sound Protocol support
 
 ### Build System
@@ -249,14 +250,14 @@ sudo apt update
 sudo apt install -y build-essential autoconf automake bison expect \
   libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev \
   libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev \
-  libdw-dev libbz2-dev  # For sanitizer builds
+  libssh-dev libdw-dev libbz2-dev  # For sanitizer builds
 ```
 
 **macOS (Homebrew)**
 
 ```bash
 brew install cmake pkg-config pcre libgcrypt openssl jemalloc icu4c \
-  mysql sqlite3 googletest
+  mysql sqlite3 googletest libssh
 ```
 
 **Windows (MSYS2 - MINGW64 shell)**
@@ -277,7 +278,7 @@ apk add --no-cache linux-headers gcc g++ clang-dev make cmake bash \
   mariadb-dev mariadb-static postgresql-dev sqlite-dev sqlite-static \
   openssl-dev openssl-libs-static zlib-dev zlib-static icu-dev icu-static \
   pcre-dev bison git musl-dev libelf-static elfutils-dev \
-  zstd-static bzip2-static xz-static
+  libssh-dev zstd-static bzip2-static xz-static
 ```
 
 ## Development Workflow
@@ -319,7 +320,7 @@ valgrind --leak-check=full ./build/bin/driver config.test
 # Install dependencies
 sudo apt install build-essential bison libmysqlclient-dev libpcre3-dev \
   libpq-dev libsqlite3-dev libssl-dev libz-dev libjemalloc-dev libicu-dev \
-  libgtest-dev  # For testing
+  libssh-dev libgtest-dev  # For testing
 ```
 
 ### macOS
@@ -327,7 +328,7 @@ sudo apt install build-essential bison libmysqlclient-dev libpcre3-dev \
 ```bash
 # Install dependencies
 brew install cmake pkg-config mysql pcre libgcrypt openssl jemalloc icu4c \
-  sqlite3 googletest  # Added sqlite3 and googletest for testing
+  sqlite3 googletest libssh  # Added sqlite3 and googletest for testing
 
 # Build with environment variables (for Apple Silicon)
 OPENSSL_ROOT_DIR="/usr/local/opt/openssl" ICU_ROOT="/opt/homebrew/opt/icu4c" cmake ..
