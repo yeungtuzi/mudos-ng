@@ -19,24 +19,28 @@ struct event_base;
 struct event;
 struct object_t;
 
+struct heart_beat_t {
+  object_t *ob;
+  short heart_beat_ticks;
+  short time_to_heart_beat;
+};
+
 class HeartbeatThread {
  public:
   explicit HeartbeatThread(int id);
   ~HeartbeatThread();
 
-  HeartbeatThread(const HeartbeatThread &) = delete;
-  HeartbeatThread &operator=(const HeartbeatThread &) = delete;
-  HeartbeatThread(HeartbeatThread &&) = delete;
-  HeartbeatThread &operator=(HeartbeatThread &&) = delete;
-
   void start();
   void stop();
-
-  // Post a task to this thread's event loop (thread-safe).
   void post(std::function<void()> task);
 
-  // Execute one object's heartbeat LPC on this thread.
-  void execute_heartbeat(object_t *ob);
+  // Queue operations — called via post() from main thread.
+  void add_heartbeat(object_t *ob, int interval);
+  void remove_heartbeat(object_t *ob);
+  void modify_heartbeat(object_t *ob, int interval);
+
+  // Process one heartbeat cycle on this thread.
+  void process_heartbeats();
 
   event_base *base() const { return base_; }
   int id() const { return id_; }
@@ -47,7 +51,6 @@ class HeartbeatThread {
   void process_pending_tasks();
   void init_vm_state();
   void cleanup_vm_state();
-
   static void wakeup_cb(evutil_socket_t fd, short what, void *arg);
 
   int id_;
@@ -61,6 +64,10 @@ class HeartbeatThread {
   std::mutex mutex_;
   std::deque<std::function<void()>> tasks_;
 
+  // Per-thread heartbeat queues (only accessed from this thread's event loop).
+  std::deque<heart_beat_t> heartbeats_;
+  std::deque<heart_beat_t> heartbeats_next_;
+
   struct PerThreadTimer *eval_timer_{nullptr};
 };
 
@@ -68,14 +75,11 @@ class HeartbeatThreadPool {
  public:
   explicit HeartbeatThreadPool(size_t num_threads);
   ~HeartbeatThreadPool();
-
   void start();
   void stop();
-
   HeartbeatThread *thread_for_object(object_t *ob);
   HeartbeatThread *thread(int idx) { return threads_[idx].get(); }
   size_t size() const { return threads_.size(); }
-
  private:
   std::vector<std::unique_ptr<HeartbeatThread>> threads_;
 };

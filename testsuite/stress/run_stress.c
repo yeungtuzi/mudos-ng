@@ -49,23 +49,28 @@ void begin_monitor() {
     start_time = time();
     log(sprintf("HB-MONITOR start 30s, mem=%dKB total_objs=%d",
                 memory_info()/1024, sizeof(objects())));
-    log("  Watch Activity Monitor for P/E core and thread distribution");
-    call_out("mid_report", 10);
-    call_out("mid_report", 20);
-    call_out("report", 30);
+    log("  Using heart_beat for reports (call_out unreliable under load)");
+    set_heart_beat(1);  // fire every tick for reports
+    call_out("finish_report", 30);
 }
 
-void mid_report() {
-    int sum = 0, minv = 999999, maxv = 0;
-    for (int i = 0; i < 50; i++) {
-        int c = workers[i]->query_counter();
-        if (c < minv) minv = c; if (c > maxv) maxv = c; sum += c;
+int hb_ticks = 0;
+void heart_beat() {
+    hb_ticks++;
+    // Log every tick for first 5, then every 100
+    if (hb_ticks <= 5 || hb_ticks % 100 == 0) {
+        int sum = 0, minv = 999999, maxv = 0;
+        for (int i = 0; i < 50; i++) {
+            int c = workers[i]->query_counter();
+            if (c < minv) minv = c; if (c > maxv) maxv = c; sum += c;
+        }
+        log(sprintf("HB +%ds (tick %d): avg=%d min=%d max=%d mem=%dKB",
+                    time()-start_time, hb_ticks, sum/50, minv, maxv, memory_info()/1024));
     }
-    log(sprintf("HB +%ds: avg=%d min=%d max=%d mem=%dKB",
-                time()-start_time, sum/50, minv, maxv, memory_info()/1024));
 }
 
-void report() {
+void finish_report() {
+    set_heart_beat(0);  // stop reporting
     int elap = time() - start_time;
     int total = sizeof(workers);
     int min_hb = 999999, max_hb = 0, sum_hb = 0;

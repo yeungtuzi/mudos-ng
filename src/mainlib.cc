@@ -37,6 +37,7 @@
 
 #include "base/internal/tracing.h"
 #include "base/internal/io_thread.h"
+#include "packages/core/heartbeat.h"
 #include "base/internal/heartbeat_thread.h"
 #include "thirdparty/scope_guard/scope_guard.hpp"
 #include "packages/core/dns.h"                   // for init_dns_event_base.
@@ -400,6 +401,14 @@ int driver_main(int argc, char **argv) {
   print_all_predefines();
   debug_message("========================\n");
 
+  // Start heartbeat thread pool BEFORE vm_start so set_heart_beat()
+  // during object creation can post to worker threads.
+  g_heartbeat_thread_pool = new HeartbeatThreadPool(8);
+  g_heartbeat_thread_pool->start();
+  debug_message("Heartbeat thread pool started with 8 threads.\n");
+  // Keep gate closed during object loading; opened after backend starts.
+  g_heartbeat_gate.store(false, std::memory_order_relaxed);
+
   // Start running.
   vm_start();
 
@@ -452,10 +461,8 @@ int driver_main(int argc, char **argv) {
   g_io_thread_pool->start();
   debug_message("IO thread pool started with %zu threads.\n", g_io_thread_pool->size());
 
-  // Phase 2: Start heartbeat thread pool — hard-coded 8 threads.
-  g_heartbeat_thread_pool = new HeartbeatThreadPool(8);
-  g_heartbeat_thread_pool->start();
-  debug_message("Heartbeat thread pool started with 8 threads.\n");
+  // Open the heartbeat gate — heartbeats can now execute LPC.
+  g_heartbeat_gate.store(true, std::memory_order_relaxed);
 
   debug_message("Initializations complete.\n\n");
   setup_signal_handlers();
