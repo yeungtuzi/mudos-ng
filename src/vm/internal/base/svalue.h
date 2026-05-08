@@ -8,7 +8,7 @@
 using json = nlohmann::json;
 
 typedef struct {
-  uint32_t ref;
+  std::atomic<uint32_t> ref;
 } refed_t;
 
 typedef const char *LPC_STRING;

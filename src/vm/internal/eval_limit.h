@@ -5,7 +5,7 @@
 
 // Use to indicate VM execution limits are met. this variable is accessed through signal handler, so
 // it must be volatile.
-extern volatile int outoftime;
+extern thread_local volatile int outoftime;
 
 // TODO: we should simply remove this variable and directly read from RC.
 // Stores the current maximum eval cost, this is only changed through set_eval_limit efun and
@@ -14,6 +14,10 @@ extern uint64_t max_eval_cost;
 
 // Initialization for eval limit
 void init_eval();
+
+// Per-thread eval timer lifecycle (for worker threads).
+void init_thread_eval();
+void cleanup_thread_eval();
 
 // Set evaluation deadline to given microseconds.
 void set_eval(uint64_t time);

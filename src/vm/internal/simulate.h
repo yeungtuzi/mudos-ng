@@ -12,6 +12,7 @@
  */
 struct object_t;
 
+extern std::mutex g_object_list_mutex;
 extern object_t *obj_list;
 extern object_t *obj_list_destruct;
 extern uint64_t tot_alloc_sentence;

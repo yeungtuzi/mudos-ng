@@ -9,7 +9,7 @@
 #define HEARTBEAT_H_
 
 // FIXME: remove this usage
-extern struct object_t *g_current_heartbeat_obj;
+extern thread_local struct object_t *g_current_heartbeat_obj;
 
 int set_heart_beat(struct object_t *, int);
 int query_heart_beat(struct object_t *);

@@ -85,6 +85,7 @@ static block_t *sfindblock(const char * /*s*/, int /*h*/);
  * 1000 and 5000.
  */
 
+static std::mutex g_string_table_mutex;
 static block_t **base_table = (block_t **)nullptr;
 static int htable_size;
 static int htable_size_minus_one;
@@ -142,6 +143,7 @@ static block_t *sfindblock(const char *s, int h) {
 }
 
 const char *findstring(const char *s) {
+  std::lock_guard<std::mutex> lock(g_string_table_mutex);
   block_t *b;
 
   if ((b = findblock(s))) {
@@ -184,6 +186,7 @@ static block_t *alloc_new_shared_string(const char *string, int h, const char *w
 }
 
 const char *int_make_shared_string(const char *str, const char *desc) {
+  std::lock_guard<std::mutex> lock(g_string_table_mutex);
   block_t *b;
   int h;
 
@@ -206,6 +209,7 @@ const char *int_make_shared_string(const char *str, const char *desc) {
 */
 
 const char *int_ref_string(const char *str, const char *desc) {
+  std::lock_guard<std::mutex> lock(g_string_table_mutex);
   block_t *b;
 
   b = BLOCK(str);
@@ -227,6 +231,7 @@ const char *int_ref_string(const char *str, const char *desc) {
  */
 
 void int_free_string(const char *str, const char *desc) {
+  std::lock_guard<std::mutex> lock(g_string_table_mutex);
   block_t **prev, *b;
   int h;
 

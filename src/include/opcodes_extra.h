@@ -20,3 +20,7 @@
 #ifndef F_ASSIGN_VALUE
 #define F_ASSIGN_VALUE 234  // Assign with (value, lvalue) stack order
 #endif
+
+#ifndef F_BREAK_POINT
+#define F_BREAK_POINT 235  // Debug breakpoint
+#endif

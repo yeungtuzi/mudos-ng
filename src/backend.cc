@@ -269,100 +269,92 @@ namespace {
  * special care has to be taken of how the linked list is used.
  */
 void look_for_objects_to_swap() {
-  auto time_to_clean_up = CONFIG_INT(__TIME_TO_CLEAN_UP__);
+  int const batch = CONFIG_INT(__RC_SWAP_BATCH_SIZE__);
+  static object_t *cursor = nullptr;
+  static bool round_complete = false;
 
-  /* Next time is in 5 minutes */
-  add_gametick_event(time_to_next_gametick(std::chrono::seconds(5 * 60)),
-                     TickEvent::callback_type(look_for_objects_to_swap));
-
-  object_t *ob, *next_ob, *last_good_ob;
-  /*
-   * Objects object can be destructed, which means that next object to
-   * investigate is saved in next_ob. If very unlucky, that object can be
-   * destructed too. In that case, the loop is simply restarted.
-   */
-  next_ob = obj_list;
-  last_good_ob = obj_list;
-  while (true) {
-    while ((ob = (object_t *)next_ob)) {
-      int ready_for_clean_up = 0;
-
-      if (ob->flags & O_DESTRUCTED) {
-        if (last_good_ob->flags & O_DESTRUCTED) {
-          ob = obj_list; /* restart */
-        } else {
-          ob = (object_t *)last_good_ob;
-        }
-      }
-      next_ob = ob->next_all;
-
-      /*
-       * Check reference time before reset() is called.
-       */
-      if (gametick_to_time(g_current_gametick - ob->time_of_ref) >=
-          std::chrono::seconds(time_to_clean_up)) {
-        ready_for_clean_up = 1;
-      }
-      if (!CONFIG_INT(__RC_NO_RESETS__) && !CONFIG_INT(__RC_LAZY_RESETS__)) {
-        /*
-         * Should this object have reset(1) called ?
-         */
-        if ((ob->flags & O_WILL_RESET) && (g_current_gametick >= ob->next_reset) &&
-            !(ob->flags & O_RESET_STATE)) {
-          debug(d_flag, "RESET /%s\n", ob->obname);
-          reset_object(ob);
-          if (ob->flags & O_DESTRUCTED) {
-            continue;
-          }
-        }
-      }
-      if (time_to_clean_up > 0) {
-        /*
-         * Has enough time passed, to give the object a chance to
-         * self-destruct ? Save the O_RESET_STATE, which will be cleared.
-         *
-         * Only call clean_up in objects that has defined such a function.
-         *
-         * Only if the clean_up returns a non-zero value, will it be called
-         * again.
-         */
-
-        if (ready_for_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
-          int const save_reset_state = ob->flags & O_RESET_STATE;
-
-          debug(d_flag, "clean up /%s\n", ob->obname);
-
-          /*
-           * Supply a flag to the object that says if this program is
-           * inherited by other objects. Cloned objects might as well
-           * believe they are not inherited. Swapped objects will not
-           * have a ref count > 1 (and will have an invalid ob->prog
-           * pointer).
-           *
-           * Note that if it is in the apply_low cache, it will also
-           * get a flag of 1, which may cause the mudlib not to clean
-           * up the object.  This isn't bad because:
-           * (1) one expects it is rare for objects that have untouched
-           * long enough to clean_up to still be in the cache, especially
-           * on busy MUDs.
-           * (2) the ones that are are the more heavily used ones, so
-           * keeping them around seems justified.
-           */
-
-          push_number(ob->flags & (O_CLONE) ? 0 : ob->prog->ref);
-          set_eval(max_eval_cost);
-          auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
-          if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
-            ob->flags &= ~O_WILL_CLEAN_UP;
-          }
-          ob->flags |= save_reset_state;
-        }
-      }
-      last_good_ob = ob;
-    }
-    break;
+  // Round finished last call: wait 5 minutes before starting the next round.
+  if (round_complete) {
+    round_complete = false;
+    cursor = nullptr;
+    add_gametick_event(time_to_next_gametick(std::chrono::minutes(5)),
+                       TickEvent::callback_type(look_for_objects_to_swap));
+    return;
   }
-} /* look_for_objects_to_swap() */
+
+  auto const time_to_clean_up = CONFIG_INT(__TIME_TO_CLEAN_UP__);
+  int processed = 0;
+  object_t *ob = cursor ? cursor : obj_list;
+
+  // Fault-tolerant traversal: save next_all pointer BEFORE processing the
+  // current object.  If the object self-destructs during reset() or clean_up,
+  // we already have the next pointer and never need to restart from obj_list.
+  //
+  // When batch == 0, process the entire list in one call (legacy behavior).
+  while (ob && (batch == 0 || processed < batch)) {
+    object_t *next = ob->next_all;
+
+    if (ob->flags & O_DESTRUCTED) {
+      ob = next;
+      continue;
+    }
+
+    int ready_for_clean_up = 0;
+    if (gametick_to_time(g_current_gametick - ob->time_of_ref) >=
+        std::chrono::seconds(time_to_clean_up)) {
+      ready_for_clean_up = 1;
+    }
+
+    if (!CONFIG_INT(__RC_NO_RESETS__) && !CONFIG_INT(__RC_LAZY_RESETS__)) {
+      if ((ob->flags & O_WILL_RESET) && (g_current_gametick >= ob->next_reset) &&
+          !(ob->flags & O_RESET_STATE)) {
+        debug(d_flag, "RESET /%s\n", ob->obname);
+        reset_object(ob);
+        if (ob->flags & O_DESTRUCTED) {
+          ob = next;
+          continue;
+        }
+      }
+    }
+
+    if (time_to_clean_up > 0) {
+      if (ready_for_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
+        int const save_reset_state = ob->flags & O_RESET_STATE;
+        debug(d_flag, "clean up /%s\n", ob->obname);
+
+        push_number(ob->flags & (O_CLONE) ? 0 : ob->prog->ref.load());
+        set_eval(max_eval_cost);
+        auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
+        if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
+          ob->flags &= ~O_WILL_CLEAN_UP;
+        }
+        ob->flags |= save_reset_state;
+      }
+    }
+    ob = next;
+    processed++;
+  }
+  cursor = ob;
+
+  if (cursor) {
+    // Still scanning: re-register for the next tick to continue the batch.
+    add_gametick_event(
+        time_to_next_gametick(std::chrono::milliseconds(CONFIG_INT(__RC_GAMETICK_MSEC__))),
+        TickEvent::callback_type(look_for_objects_to_swap));
+  } else {
+    // Full pass complete.  Next call will start the 5-minute cooldown.
+    round_complete = true;
+    if (batch == 0) {
+      // Legacy mode: full scan done, wait 5 minutes.
+      add_gametick_event(time_to_next_gametick(std::chrono::minutes(5)),
+                         TickEvent::callback_type(look_for_objects_to_swap));
+    } else {
+      // Next tick the cooldown branch will set the 5-minute timer.
+      add_gametick_event(
+          time_to_next_gametick(std::chrono::milliseconds(CONFIG_INT(__RC_GAMETICK_MSEC__))),
+          TickEvent::callback_type(look_for_objects_to_swap));
+    }
+  }} /* look_for_objects_to_swap() */
 
 }  // namespace
 

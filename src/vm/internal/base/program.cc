@@ -3,8 +3,8 @@
 #include "vm/internal/base/machine.h"
 
 void reference_prog(program_t *progp, const char *from) {
-  progp->ref++;
-  debug(d_flag, "reference_prog: /%s ref %d (%s)\n", progp->filename, progp->ref, from);
+  progp->ref.fetch_add(1, std::memory_order_relaxed);
+  debug(d_flag, "reference_prog: /%s ref %u (%s)\n", progp->filename, progp->ref.load(), from);
 }
 
 void deallocate_program(program_t *progp) {

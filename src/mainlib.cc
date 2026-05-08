@@ -36,6 +36,7 @@
 
 #include "base/internal/tracing.h"
 #include "base/internal/io_thread.h"
+#include "base/internal/heartbeat_thread.h"
 #include "thirdparty/scope_guard/scope_guard.hpp"
 #include "packages/core/dns.h"                   // for init_dns_event_base.
 #include "vm/vm.h"                               // for push_constant_string, etc
@@ -450,9 +451,27 @@ int driver_main(int argc, char **argv) {
   g_io_thread_pool->start();
   debug_message("IO thread pool started with %zu threads.\n", g_io_thread_pool->size());
 
+  // Phase 2: Start heartbeat thread pool (default 0 = disabled).
+  {
+    int num_hb = CONFIG_INT(__RC_HEARTBEAT_THREADS__);
+    if (num_hb > 0) {
+      g_heartbeat_thread_pool = new HeartbeatThreadPool(static_cast<size_t>(num_hb));
+      g_heartbeat_thread_pool->start();
+      debug_message("Heartbeat thread pool started with %zu threads.\n",
+                    g_heartbeat_thread_pool->size());
+    }
+  }
+
   debug_message("Initializations complete.\n\n");
   setup_signal_handlers();
   backend(base);
+
+  // Shutdown heartbeat thread pool before IO thread pool.
+  if (g_heartbeat_thread_pool) {
+    g_heartbeat_thread_pool->stop();
+    delete g_heartbeat_thread_pool;
+    g_heartbeat_thread_pool = nullptr;
+  }
 
   // Shutdown IO thread pool after backend returns.
   if (g_io_thread_pool) {

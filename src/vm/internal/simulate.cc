@@ -110,13 +110,14 @@ static int num_objects_this_thread = 0;
 static object_t *restrict_destruct;
 #endif
 
+std::mutex g_object_list_mutex;
 object_t *obj_list, *obj_list_destruct;
 #ifdef DEBUG
 object_t *obj_list_dangling = 0;
 #endif
-object_t *current_object;      /* The object interpreting a function. */
-object_t *command_giver;       /* Where the current command came from. */
-object_t *current_interactive; /* The user who caused this execution */
+thread_local object_t *current_object;      /* The object interpreting a function. */
+thread_local object_t *command_giver;       /* Where the current command came from. */
+thread_local object_t *current_interactive; /* The user who caused this execution */
 
 #ifdef PRIVS
 static void init_privs_for_object(object_t *);
@@ -550,12 +551,15 @@ object_t *load_object(const char *lname, int callcreate) {
   SET_TAG(ob->obname, TAG_OBJ_NAME);
   ob->prog = prog;
   ob->flags |= O_WILL_RESET; /* must be before reset is first called */
-  ob->next_all = obj_list;
-  ob->prev_all = nullptr;
-  if (obj_list) {
-    obj_list->prev_all = ob;
+  {
+    std::lock_guard<std::mutex> lock(g_object_list_mutex);
+    ob->next_all = obj_list;
+    ob->prev_all = nullptr;
+    if (obj_list) {
+      obj_list->prev_all = ob;
+    }
+    obj_list = ob;
   }
-  obj_list = ob;
   ObjectTable::instance().insert(ob->obname, ob); /* add name to fast object lookup table */
   save_command_giver(command_giver);
   push_object(ob);
@@ -648,10 +652,13 @@ object_t *clone_object(const char *str1, int num_arg) {
   reference_prog(ob->prog, "clone_object");
   DEBUG_CHECK(!current_object, "clone_object() from no current_object !\n");
 
-  new_ob->next_all = obj_list;
-  obj_list->prev_all = new_ob;
-  new_ob->prev_all = nullptr;
-  obj_list = new_ob;
+  {
+    std::lock_guard<std::mutex> lock(g_object_list_mutex);
+    new_ob->next_all = obj_list;
+    obj_list->prev_all = new_ob;
+    new_ob->prev_all = nullptr;
+    obj_list = new_ob;
+  }
   ObjectTable::instance().insert(new_ob->obname, new_ob); /* Add name to fast object lookup table */
   init_object(new_ob);
 
@@ -895,7 +902,7 @@ void destruct_object(object_t *ob) {
   ob->shadowed = nullptr;
 #endif
 
-  debug(d_flag, "Deobject_t /%s (ref %d)\n", ob->obname, ob->ref);
+  debug(d_flag, "Deobject_t /%s (ref %u)\n", ob->obname, ob->ref.load());
 
 #ifndef NO_ENVIRONMENT
   /* try to move our contents somewhere */
@@ -1025,14 +1032,17 @@ void destruct_object(object_t *ob) {
    * because an error in the above code would halt execution.
    */
   // removed = 0;
-  if (ob->prev_all) {
-    ob->prev_all->next_all = ob->next_all;
-    if (ob->next_all) {
-      ob->next_all->prev_all = ob->prev_all;
+  {
+    std::lock_guard<std::mutex> lock(g_object_list_mutex);
+    if (ob->prev_all) {
+      ob->prev_all->next_all = ob->next_all;
+      if (ob->next_all) {
+        ob->next_all->prev_all = ob->prev_all;
+      }
+    } else {
+      obj_list = ob->next_all;
+      obj_list->prev_all = nullptr;
     }
-  } else {
-    obj_list = ob->next_all;
-    obj_list->prev_all = nullptr;
   }
   /*
    for (pp = &obj_list; *pp; pp = &(*pp)->next_all) {
@@ -1050,12 +1060,15 @@ void destruct_object(object_t *ob) {
   ob->next_inv = nullptr;
   ob->contains = nullptr;
 #endif
-  ob->next_all = obj_list_destruct;
-  if (obj_list_destruct) {
-    obj_list_destruct->prev_all = ob;
+  {
+    std::lock_guard<std::mutex> lock(g_object_list_mutex);
+    ob->next_all = obj_list_destruct;
+    if (obj_list_destruct) {
+      obj_list_destruct->prev_all = ob;
+    }
+    ob->prev_all = nullptr;
+    obj_list_destruct = ob;
   }
-  ob->prev_all = nullptr;
-  obj_list_destruct = ob;
   set_heart_beat(ob, 0);
   ob->flags |= O_DESTRUCTED;
   /* moved this here from destruct2() -- see comments in destruct2() */
@@ -1087,7 +1100,7 @@ void destruct2(object_t *ob) {
   sentence_t *s;
 #endif
 
-  debug(d_flag, "Destruct-2 object /%s (ref %d)", ob->obname, ob->ref);
+  debug(d_flag, "Destruct-2 object /%s (ref %u)", ob->obname, ob->ref.load());
 
   /*
    * We must deallocate variables here, not in 'free_object()'. That is

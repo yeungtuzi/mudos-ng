@@ -39,7 +39,7 @@ namespace fs = ghc::filesystem;
 #define too_deep_save_error() \
   error("Mappings and/or arrays nested too deep (%d) for save_object\n", MAX_SAVE_SVALUE_DEPTH);
 
-object_t *previous_ob;
+thread_local object_t *previous_ob;
 
 static int restore_array(char **str, svalue_t * /*ret*/);
 static int restore_class(char **str, svalue_t * /*ret*/);
@@ -2091,8 +2091,8 @@ void get_objects(object_t ***list, int *size, get_objectsfn_t callback, void *da
   }
 }
 
-static object_t *command_giver_stack[CFG_MAX_CALL_DEPTH];
-object_t **cgsp = command_giver_stack;
+static thread_local object_t *command_giver_stack[CFG_MAX_CALL_DEPTH];
+thread_local object_t **cgsp = command_giver_stack;
 
 #ifdef DEBUGMALLOC_EXTENSIONS
 void mark_command_giver_stack(void) {

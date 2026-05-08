@@ -858,9 +858,9 @@ void check_all_blocks(int flag) {
             break;
           case TAG_PROGRAM:
             prog = NODET_TO_PTR(entry, program_t *);
-            if (prog->ref != prog->extra_ref) {
-              outbuf_addv(&out, "Bad ref count for program %s, is %d - should be %d\n",
-                          prog->filename, prog->ref, prog->extra_ref);
+            if (prog->ref.load() != prog->extra_ref) {
+              outbuf_addv(&out, "Bad ref count for program %s, is %u - should be %d\n",
+                          prog->filename, prog->ref.load(), prog->extra_ref);
             }
             if (prog->func_ref != prog->extra_func_ref) {
               outbuf_addv(&out,
@@ -871,15 +871,15 @@ void check_all_blocks(int flag) {
             break;
           case TAG_OBJECT:
             ob = NODET_TO_PTR(entry, object_t *);
-            if (ob->ref != ob->extra_ref) {
-              outbuf_addv(&out, "Bad ref count for object %s, is %d - should be %d\n", ob->obname,
-                          ob->ref, ob->extra_ref);
+            if (ob->ref.load() != ob->extra_ref) {
+              outbuf_addv(&out, "Bad ref count for object %s, is %u - should be %d\n", ob->obname,
+                          ob->ref.load(), ob->extra_ref);
             }
             break;
           case TAG_ARRAY:
             vec = NODET_TO_PTR(entry, array_t *);
-            if (vec->ref != vec->extra_ref) {
-              outbuf_addv(&out, "Bad ref count for array, is %d - should be %d\n", vec->ref,
+            if (vec->ref.load() != vec->extra_ref) {
+              outbuf_addv(&out, "Bad ref count for array, is %u - should be %d\n", vec->ref.load(),
                           vec->extra_ref);
               print_depth = 0;
               md_print_array(vec);
@@ -887,15 +887,15 @@ void check_all_blocks(int flag) {
             break;
           case TAG_CLASS:
             vec = NODET_TO_PTR(entry, array_t *);
-            if (vec->ref != vec->extra_ref) {
-              outbuf_addv(&out, "Bad ref count for class, is %d - should be %d\n", vec->ref,
+            if (vec->ref.load() != vec->extra_ref) {
+              outbuf_addv(&out, "Bad ref count for class, is %u - should be %d\n", vec->ref.load(),
                           vec->extra_ref);
             }
             break;
           case TAG_MAPPING:
             map = NODET_TO_PTR(entry, mapping_t *);
-            if (map->ref != map->extra_ref) {
-              outbuf_addv(&out, "Bad ref count for mapping, is %d - should be %d\n", map->ref,
+            if (map->ref.load() != map->extra_ref) {
+              outbuf_addv(&out, "Bad ref count for mapping, is %u - should be %d\n", map->ref.load(),
                           map->extra_ref);
             }
             break;

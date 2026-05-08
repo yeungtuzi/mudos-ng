@@ -204,7 +204,7 @@ struct program_t {
   const char *filename; /* Name of file that defined prog */
   unsigned short flags;
   unsigned short last_inherited;
-  unsigned int ref; /* Reference count */
+  std::atomic<unsigned int> ref; /* Reference count */
   unsigned short func_ref;
 #ifdef DEBUGMALLOC_EXTENSIONS
   int extra_ref; /* Used to verify ref count */

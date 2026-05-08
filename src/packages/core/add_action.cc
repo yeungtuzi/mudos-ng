@@ -258,8 +258,8 @@ static void enable_commands(int enable, int toggle_action) {
   }
 
   if (enable) {
-    debug(add_action, "Enable commands: %s (ref %d)\n", current_object->obname,
-          current_object->ref);
+    debug(add_action, "Enable commands: %s (ref %u)\n", current_object->obname,
+          current_object->ref.load());
 
     current_object->flags |= O_ENABLE_COMMANDS;
     set_command_giver(current_object);
@@ -279,8 +279,8 @@ static void enable_commands(int enable, int toggle_action) {
       }
     }
   } else {
-    debug(add_action, "Disable commands: %s (ref %d)\n", current_object->obname,
-          current_object->ref);
+    debug(add_action, "Disable commands: %s (ref %u)\n", current_object->obname,
+          current_object->ref.load());
 #ifndef NO_ENVIRONMENT
     debug(add_action, "Clearing all actions: %s\n", current_object->obname);
     /* Remove all sentences defined for the object */

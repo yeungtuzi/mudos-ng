@@ -29,6 +29,38 @@ This project is released under the **MIT License** (consistent with FluffOS). Se
 
 - [纵横天下MUD](https://github.com/yeungtuzi/zhtx) — 基于 MudOS-NG 驱动的 MUD 游戏世界
 
+## Major Upgrades (vs FluffOS upstream)
+
+The following features and improvements have been added since forking from FluffOS:
+
+### Networking & Protocols
+- **SSH Server Support** — accept SSH connections via libssh, with password authentication. Telnet port can coexist or be disabled.
+- **TLS/SSL Encryption** — TLS support for telnet ports with certificate and key configuration.
+- **WebSocket Protocol** — native WebSocket support for web-based MUD clients, with an HTTP debug console.
+- **Telnet Protocol Fixes** — re-offer SGA when linemode activates, thread-safety fixes for Mudlet compatibility.
+
+### Concurrency & Performance (Multi-Threading Initiative)
+- **IO Thread Pool** (Phase 1) — network I/O offloaded to a dedicated thread pool, eliminating I/O stalls on the main VM thread.
+- **Incremental Object Scanning** — fault-tolerant linked-list traversal with batched per-tick processing, inspired by Linux kswapd. Eliminates periodic ~500ms freezes on large MUDs (10000+ objects).
+- **Thread-Local VM State** — ~35 VM execution registers converted to `thread_local`, enabling each thread to independently execute LPC bytecode.
+- **Atomic Reference Counting** — all shared data structures (`object_t`, `array_t`, `mapping_t`, `program_t`) use `std::atomic` refcounts with fine-grained mutex protection.
+- **Per-Thread Eval Timer** — eval cost limit uses per-thread timers (Linux: `SIGEV_THREAD_ID`, macOS: `dispatch_source`) instead of a single process-wide signal.
+- **Heartbeat Thread Pool** — configurable parallel heartbeat execution across multiple worker threads (default off, config option `heartbeat threads`).
+- **Cross-Thread Call Bounce** — automatic detection and main-thread fallback for cross-object calls during parallel heartbeat execution.
+
+### Language & Compiler
+- **Nullish Coalescing** (`??`) and **Logical Assignment Operators** (`||=`, `&&=`, `??=`)
+- **Simplified Function Pointer Syntax** — concise lambda-style function references.
+- **Eval Limit on macOS** — `setitimer`-based execution timeout for non-Linux platforms.
+- **Crash Backtrace** — libunwind integration for detailed crash stack traces on macOS/Linux.
+
+### Infrastructure
+- **CI/CD Pipeline** — GitHub Actions for Ubuntu, macOS, Windows, sanitizer, Docker, and CodeQL across multiple build configurations.
+- **UTF-8 Support** — ICU-based Unicode handling throughout the driver.
+- **Database Integration** — MySQL, PostgreSQL, and SQLite support with async database operations.
+- **Performance Tracing** — OpenTelemetry-style trace spans and instruction-level profiling.
+- **Static Build** — fully static linking support for Docker/Alpine deployment.
+
 ## Build & Usage
 
 ### Prerequisites

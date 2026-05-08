@@ -104,6 +104,8 @@ const FlagEntry INT_FLAGS[] = {
     {"enable mssp", __RC_ENABLE_MSSP__, 1},
     {"enable msp", __RC_ENABLE_MSP__, 1},
     {"enable msdp", __RC_ENABLE_MSDP__, 0},
+    {"swap batch size", __RC_SWAP_BATCH_SIZE__, 100, 0},
+    {"heartbeat threads", __RC_HEARTBEAT_THREADS__, 0, 0},
 };
 
 /*

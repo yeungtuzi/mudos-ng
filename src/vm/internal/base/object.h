@@ -68,8 +68,8 @@ struct sentence_t {
 };
 
 struct object_t {
-  uint32_t ref;         /* Reference count. */
-  unsigned short flags; /* Bits or'ed together from above */
+  std::atomic<uint32_t> ref;         /* Reference count. */
+  std::atomic<unsigned short> flags; /* Bits or'ed together from above */
 #ifdef DEBUGMALLOC_EXTENSIONS
   unsigned int extra_ref; /* Used to check ref count. */
 #endif
@@ -121,10 +121,11 @@ struct object_t {
 
 typedef int (*get_objectsfn_t)(object_t *, void *);
 
-#define add_ref(ob, str)                                                                        \
-  SAFE(if (ob->ref++ > static_cast<decltype(ob->ref)>(-10)) {                                   \
-    debug_message("Ref count dangerously high: %s (%d) calling from %s\n", ob->obname, ob->ref, \
-                  str);                                                                         \
+#define add_ref(ob, str)                                                                \
+  SAFE(if ((ob)->ref.fetch_add(1, std::memory_order_relaxed) + 1 > \
+           static_cast<decltype((ob)->ref.load())>(-10)) {                             \
+    debug_message("Ref count dangerously high: %s (%u) calling from %s\n",            \
+                  (ob)->obname, (ob)->ref.load(), str);                               \
   })
 
 #define ROB_STRING_ERROR 1
@@ -138,9 +139,9 @@ typedef int (*get_objectsfn_t)(object_t *, void *);
 
 #define SETOBNAME(ob, name) (*(const char **)&(ob->obname) = (char *)name)
 
-extern object_t *previous_ob;
+extern thread_local object_t *previous_ob;
 extern int save_svalue_depth;
-extern object_t **cgsp;
+extern thread_local object_t **cgsp;
 #ifdef F_SET_HIDE
 extern int num_hidden;
 #endif

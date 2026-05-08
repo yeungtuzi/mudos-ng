@@ -31,12 +31,12 @@
 #include "vm/internal/base/interpret.h"
 
 // TODO: in interpret.cc
-extern int call_origin;
+extern thread_local int call_origin;
 // TODO: defined in simulate.cc
 [[noreturn]] void error(const char *const, ...);
-extern object_t *current_object;
-extern object_t *command_giver;
-extern object_t *current_interactive;
+extern thread_local object_t *current_object;
+extern thread_local object_t *command_giver;
+extern thread_local object_t *current_interactive;
 
 // TODO: defined in backend.cc
 extern uint64_t g_current_gametick;
@@ -45,7 +45,7 @@ int time_to_next_gametick(std::chrono::milliseconds msec);
 std::chrono::milliseconds gametick_to_time(int ticks);
 
 // TODO: defined in interpret.cc
-extern struct error_context_t *current_error_context;
+extern thread_local struct error_context_t *current_error_context;
 
 void transfer_push_some_svalues(svalue_t *, int);
 void push_some_svalues(svalue_t *, int);

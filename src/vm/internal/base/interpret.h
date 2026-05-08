@@ -111,29 +111,29 @@ struct function_lookup_info_t {
 #define put_shared_string(x) \
   SAFE(sp->type = T_STRING; sp->subtype = STRING_SHARED; sp->u.string = (x);)
 
-extern program_t *current_prog;
-extern short caller_type;
-extern char *pc;
-extern svalue_t *sp;
-extern svalue_t *fp;
-extern svalue_t *const end_of_stack;
-extern svalue_t catch_value;
-extern control_stack_t *const control_stack;
-extern control_stack_t *csp;
-extern int too_deep_error;
-extern int max_eval_error;
-extern int function_index_offset;
-extern int variable_index_offset;
+extern thread_local program_t *current_prog;
+extern thread_local short caller_type;
+extern thread_local char *pc;
+extern thread_local svalue_t *sp;
+extern thread_local svalue_t *fp;
+extern svalue_t *end_of_stack;        // per-thread: set by reset_machine()
+extern thread_local svalue_t catch_value;
+extern control_stack_t *control_stack;  // per-thread: set by reset_machine()
+extern thread_local control_stack_t *csp;
+extern thread_local int too_deep_error;
+extern thread_local int max_eval_error;
+extern thread_local int function_index_offset;
+extern thread_local int variable_index_offset;
 extern int simul_efun_is_loading;
 extern program_t fake_prog;
 extern svalue_t global_lvalue_byte;
-extern int num_varargs;
-extern int st_num_arg;
+extern thread_local int num_varargs;
+extern thread_local int st_num_arg;
 
-extern ref_t *global_ref_list;
-extern int lv_owner_type;
-extern refed_t *lv_owner;
-extern const char *lv_owner_str;
+extern thread_local ref_t *global_ref_list;
+extern thread_local int lv_owner_type;
+extern thread_local refed_t *lv_owner;
+extern thread_local const char *lv_owner_str;
 
 void kill_ref(ref_t *);
 ref_t *make_ref(void);

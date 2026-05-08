@@ -8,7 +8,7 @@
 #endif
 
 struct array_t {
-  uint32_t ref;
+  std::atomic<uint32_t> ref;
 #ifdef DEBUGMALLOC_EXTENSIONS
   int extra_ref;
 #endif

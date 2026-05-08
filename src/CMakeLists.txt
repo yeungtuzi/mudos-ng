@@ -389,6 +389,7 @@ set(SRC
   "base/internal/external_port.cc"
   "base/internal/file.cc"
   "base/internal/io_thread.cc"
+  "base/internal/heartbeat_thread.cc"
   "base/internal/hash.cc"
   "base/internal/log.cc"
   "base/internal/md.cc"
