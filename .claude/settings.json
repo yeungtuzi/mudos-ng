@@ -5,7 +5,11 @@
       "Bash(./src/tests/io_thread_tests --gtest_list_tests)",
       "Bash(./src/tests/lpc_tests)",
       "Bash(./src/tests/io_thread_tests)",
-      "Bash(./src/tests/ofile_tests)"
+      "Bash(./src/tests/ofile_tests)",
+      "Bash(chmod +x /Users/lf/vscode/mudos-ng/testsuite/stress/run_stress.sh)",
+      "Bash(make -j8 install)",
+      "Bash(timeout 60 ../build/bin/driver etc/config.test -fstress/stress_controller -f'stress_controller->go\\(100\\)')",
+      "Bash(bash stress/run_stress.sh 1000 120)"
     ]
   }
 }
