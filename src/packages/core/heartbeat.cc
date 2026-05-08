@@ -65,11 +65,13 @@ int set_heart_beat(object_t *ob, int to) {
 
     if (to == 0) {
       ob->flags &= ~O_HEART_BEAT;
-      thread->remove_heartbeat(ob);
+      // Post to heartbeat thread — its deques are not thread-safe.
+      thread->post([thread, ob]() { thread->remove_heartbeat(ob); });
       return 1;
     }
     ob->flags |= O_HEART_BEAT;
-    thread->modify_heartbeat(ob, to);
+    auto t = to;
+    thread->post([thread, ob, t]() { thread->modify_heartbeat(ob, t); });
     return 1;
   } else {
     // Legacy fallback when pool isn't active: just toggle the flag.

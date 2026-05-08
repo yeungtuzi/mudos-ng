@@ -116,9 +116,9 @@ extern thread_local short caller_type;
 extern thread_local char *pc;
 extern thread_local svalue_t *sp;
 extern thread_local svalue_t *fp;
-extern svalue_t *end_of_stack;        // per-thread: set by reset_machine()
+extern thread_local svalue_t *end_of_stack;  // per-thread: set by reset_machine()
 extern thread_local svalue_t catch_value;
-extern control_stack_t *control_stack;  // per-thread: set by reset_machine()
+extern thread_local control_stack_t *control_stack;  // per-thread: set by reset_machine()
 extern thread_local control_stack_t *csp;
 extern thread_local int too_deep_error;
 extern thread_local int max_eval_error;

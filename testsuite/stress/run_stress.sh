@@ -13,7 +13,7 @@ DURATION="${2:-600}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TESTSUITE_DIR="$(dirname "$SCRIPT_DIR")"
-DRIVER="$TESTSUITE_DIR/../build/bin/driver"
+DRIVER="$TESTSUITE_DIR/../build/src/driver"
 CONFIG="$TESTSUITE_DIR/etc/config.test"
 REPORT_DIR="$TESTSUITE_DIR/../docs"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

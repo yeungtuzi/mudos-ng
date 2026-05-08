@@ -142,14 +142,14 @@ thread_local int st_num_arg;
 // For safety, we leave some buffer in before and after the space.
 static thread_local svalue_t _stack[10 + CFG_EVALUATOR_STACK_SIZE + 10];
 static thread_local svalue_t *const start_of_stack = &_stack[10];
-svalue_t *end_of_stack = nullptr;  // set per-thread in reset_machine()
+thread_local svalue_t *end_of_stack = nullptr;  // set per-thread in reset_machine()
 
 /* Used to throw an error to a catch */
 thread_local svalue_t catch_value = {T_NUMBER};
 
 // For safety, we leave some buffer in before and after the space.
 static thread_local control_stack_t _control_stack[5 + CFG_MAX_CALL_DEPTH + 5];
-control_stack_t *control_stack = nullptr;  // set per-thread in reset_machine()
+thread_local control_stack_t *control_stack = nullptr;  // set per-thread in reset_machine()
 thread_local control_stack_t *csp; /* Points to last element pushed */
 
 thread_local int too_deep_error = 0, max_eval_error = 0;

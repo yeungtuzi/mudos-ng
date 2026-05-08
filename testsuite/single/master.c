@@ -34,7 +34,7 @@ void flag(string str) {
   mixed error;
   string cmd, arg;
 
-  if(sscanf(str, "%(test|speed|stress):%s", cmd, arg) != 2)
+  if(sscanf(str, "%(test|speed|stress_heavy|stress):%s", cmd, arg) != 2)
     cmd = str;
 
   switch (cmd) {
@@ -47,6 +47,14 @@ void flag(string str) {
       break;
     case "stress":
       error = catch("/stress/stress_controller"->go(to_int(arg)));
+      if(error) {
+        has_error = 1;
+        write(error);
+      }
+      break;
+
+    case "stress_heavy":
+      error = catch("/stress/heavy_controller"->go(to_int(arg)));
       if(error) {
         has_error = 1;
         write(error);
