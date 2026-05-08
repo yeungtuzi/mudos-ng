@@ -64,6 +64,19 @@
 - [ ] 性能基准：心跳吞吐量、CPU 利用率、主线程响应延迟
 - [ ] 关闭安全性验证（心跳池→IO池→对象清理）
 
+## Phase 0c: 扫描/执行分离（详见 plan） ##
+- [ ] backend.cc: 主线程扫描只判标志位，LPC 执行 post 给心跳线程池
+- [ ] 心跳池未启用时 fallback 内联执行
+
+## call_out 线程池（详见 plan） ##
+- [ ] call_out.cc: 正延迟 call_out 分发到心跳线程池
+- [ ] 0 延迟 call_out 保留主线程原地执行
+- [ ] g_callout_map_mutex 保护 callout map 并发访问
+
+## 编译线程化（详见 plan） ##
+- [ ] 新建编译线程类
+- [ ] load_object() 改为异步编译
+
 ## packages ##
 - [ ] For linux, deb or rpm or flatpak
 - [ ] For Mac, homebrew

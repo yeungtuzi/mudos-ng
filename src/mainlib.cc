@@ -27,6 +27,7 @@
 #include <time.h>
 #endif
 #endif
+#include <thread>  // for hardware_concurrency
 #include <unistd.h>
 #ifdef HAVE_JEMALLOC
 #define JEMALLOC_MANGLE
@@ -451,9 +452,14 @@ int driver_main(int argc, char **argv) {
   g_io_thread_pool->start();
   debug_message("IO thread pool started with %zu threads.\n", g_io_thread_pool->size());
 
-  // Phase 2: Start heartbeat thread pool (default 0 = disabled).
+  // Phase 2: Start heartbeat thread pool.
+  // 0 = auto-detect (hardware_concurrency - 1, minimum 1),
+  // negative = disabled, positive = explicit thread count.
   {
     int num_hb = CONFIG_INT(__RC_HEARTBEAT_THREADS__);
+    if (num_hb == 0) {
+      num_hb = std::max(1, static_cast<int>(std::thread::hardware_concurrency()) - 1);
+    }
     if (num_hb > 0) {
       g_heartbeat_thread_pool = new HeartbeatThreadPool(static_cast<size_t>(num_hb));
       g_heartbeat_thread_pool->start();
