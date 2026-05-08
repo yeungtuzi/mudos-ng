@@ -1,4 +1,4 @@
-# Have Time #
+# Major Updates #
 
 ## SSH Support ##
 - [x] accept ssh connection at listening port

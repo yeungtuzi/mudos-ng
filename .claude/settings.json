@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ctest -N)",
+      "Bash(./src/tests/io_thread_tests --gtest_list_tests)",
+      "Bash(./src/tests/lpc_tests)",
+      "Bash(./src/tests/io_thread_tests)",
+      "Bash(./src/tests/ofile_tests)"
+    ]
+  }
+}

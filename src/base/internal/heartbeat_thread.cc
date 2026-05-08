@@ -310,7 +310,8 @@ void HeartbeatThreadPool::stop() {
 }
 
 HeartbeatThread *HeartbeatThreadPool::thread_for_object(object_t *ob) {
-  auto hash = reinterpret_cast<uintptr_t>(ob) >> 3;
+  // Multiply by a prime to smooth out alignment bias, then mix high bits.
+  auto hash = reinterpret_cast<uintptr_t>(ob) * 2654435761ULL;
   return threads_[hash % threads_.size()].get();
 }
 
