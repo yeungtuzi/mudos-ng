@@ -7,7 +7,7 @@
 ## network thread ##
 - [x] Pure network I/O thread (Phase 1: IOThread/IOThreadPool — completed, 2 threads, round-robin connection distribution)
 
-## multi-core CPU — 多线程改造 (详见 plan: .claude/plans/4-cpu-declarative-gem.md) ##
+## multi-core CPU — 多线程改造 (详见 plan: docs/multi-threading-plan.md) ##
 
 ### 第〇阶段：对象扫描增量化 ###
 - [x] 0a 容错遍历 — 删除 restart 逻辑，先存 next_all 再处理当前对象
