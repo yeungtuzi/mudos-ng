@@ -2,6 +2,8 @@
 
 #include "packages/core/call_out.h"
 
+#include "base/internal/heartbeat_thread.h"
+
 #include <chrono>
 #include <functional>
 #include <cmath>
@@ -24,6 +26,9 @@ static CalloutHandleMapType g_callout_handle_map;
 // references and only get pruned during reclaim_callouts();
 using CalloutObjectMapType = std::unordered_multimap<object_t *, LPC_INT>;
 static CalloutObjectMapType g_callout_object_handle_map;
+
+// Protects concurrent access to both callout maps.
+static std::mutex g_callout_map_mutex;
 
 // TODO: It maybe possible to change to a per-object counter.
 
@@ -137,9 +142,12 @@ LPC_INT new_call_out(object_t *ob, svalue_t *fun, std::chrono::milliseconds dela
   }
   DBG_CALLOUT("  handle: %" LPC_INT_FMTSTR_P "\n", cop->handle);
 
-  g_callout_handle_map.insert(std::make_pair(cop->handle, cop));
-  g_callout_object_handle_map.insert(
-      std::make_pair(cop->ob ? cop->ob : fun->u.fp->hdr.owner, cop->handle));
+  {
+    std::lock_guard<std::mutex> lock(g_callout_map_mutex);
+    g_callout_handle_map.insert(std::make_pair(cop->handle, cop));
+    g_callout_object_handle_map.insert(
+        std::make_pair(cop->ob ? cop->ob : fun->u.fp->hdr.owner, cop->handle));
+  }
 
   if (CONFIG_INT(__RC_THIS_PLAYER_IN_CALL_OUT__)) {
     cop->command_giver = command_giver; /* save current user context */
@@ -187,6 +195,7 @@ void call_out(pending_call_t *cop) {
 
   // Remove self from callout map
   {
+    std::lock_guard<std::mutex> lock(g_callout_map_mutex);
     int const found = g_callout_handle_map.erase(cop->handle);
     DEBUG_CHECK(!found, "BUG: Rogue callout, not found in map.\n");
   }
@@ -240,21 +249,37 @@ void call_out(pending_call_t *cop) {
     free_empty_array(cop->vs);
   }
 
-  // Executing LPC callback
-  set_eval(max_eval_cost);
-
-  save_command_giver(new_command_giver);
-  /* current object no longer set */
-  if (cop->ob) {
-    DBG_CALLOUT("  func: %s\n", cop->function.s);
-    (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+  // Offload to heartbeat thread pool when available (cop->ob path only).
+  auto *pool = g_heartbeat_thread_pool;
+  if (pool && cop->ob) {
+    auto *thread = pool->thread_for_object(cop->ob);
+    thread->post([cop, ob, num_callout_args, new_command_giver]() {
+      if (ob->flags & O_DESTRUCTED) { free_called_call(cop); return; }
+      set_eval(max_eval_cost);
+      save_command_giver(new_command_giver);
+      if (cop->ob) {
+        (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+      }
+      restore_command_giver();
+      free_called_call(cop);
+    });
   } else {
-    DBG_CALLOUT("  func: <function>\n");
-    (void)safe_call_function_pointer(cop->function.f, num_callout_args);
-  }
-  restore_command_giver();
+    // Fallback: inline execution (no pool, function pointer, or pool disabled).
+    set_eval(max_eval_cost);
 
-  free_called_call(cop);
+    save_command_giver(new_command_giver);
+    /* current object no longer set */
+    if (cop->ob) {
+      DBG_CALLOUT("  func: %s\n", cop->function.s);
+      (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+    } else {
+      DBG_CALLOUT("  func: <function>\n");
+      (void)safe_call_function_pointer(cop->function.f, num_callout_args);
+    }
+    restore_command_giver();
+
+    free_called_call(cop);
+  }
 }
 
 static int time_left(pending_call_t *cop) {
@@ -281,6 +306,7 @@ int remove_call_out(object_t *ob, const char *fun) {
 
   DBG_CALLOUT("remove_call_out: /%s \"%s\"\n", ob->obname, fun);
 
+  std::lock_guard<std::mutex> lock(g_callout_map_mutex);
   auto range = g_callout_object_handle_map.equal_range(ob);
   auto iter = range.first;
   while (iter != range.second) {
@@ -319,6 +345,7 @@ int remove_call_out_by_handle(object_t *ob, LPC_INT handle) {
     return -1;
   }
 
+  std::lock_guard<std::mutex> lock(g_callout_map_mutex);
   auto iter = g_callout_handle_map.find(handle);
   if (iter != g_callout_handle_map.end()) {
     auto *cop = iter->second;

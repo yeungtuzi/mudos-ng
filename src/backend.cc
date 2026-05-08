@@ -32,6 +32,7 @@
 #include "vm/vm.h"
 
 #include "packages/core/heartbeat.h"
+#include "base/internal/heartbeat_thread.h"
 #include "packages/core/reclaim.h"
 #ifdef PACKAGE_MUDLIB_STATS
 #include "packages/mudlib_stats/mudlib_stats.h"
@@ -305,30 +306,73 @@ void look_for_objects_to_swap() {
       ready_for_clean_up = 1;
     }
 
+    // Determine which actions this object needs.
+    bool need_reset = false, need_clean_up = false;
+
     if (!CONFIG_INT(__RC_NO_RESETS__) && !CONFIG_INT(__RC_LAZY_RESETS__)) {
       if ((ob->flags & O_WILL_RESET) && (g_current_gametick >= ob->next_reset) &&
           !(ob->flags & O_RESET_STATE)) {
-        debug(d_flag, "RESET /%s\n", ob->obname);
-        reset_object(ob);
-        if (ob->flags & O_DESTRUCTED) {
-          ob = next;
-          continue;
-        }
+        need_reset = true;
       }
     }
 
     if (time_to_clean_up > 0) {
       if (ready_for_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
-        int const save_reset_state = ob->flags & O_RESET_STATE;
-        debug(d_flag, "clean up /%s\n", ob->obname);
+        need_clean_up = true;
+      }
+    }
 
-        push_number(ob->flags & (O_CLONE) ? 0 : ob->prog->ref.load());
-        set_eval(max_eval_cost);
-        auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
-        if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
-          ob->flags &= ~O_WILL_CLEAN_UP;
+    if (need_reset || need_clean_up) {
+      if (g_heartbeat_thread_pool) {
+        // Offload LPC execution to the heartbeat thread pool.
+        debug(d_flag, "posting %s%s/%s\n",
+              need_reset ? "reset " : "",
+              need_clean_up ? "clean_up " : "",
+              ob->obname);
+
+        auto *thread = g_heartbeat_thread_pool->thread_for_object(ob);
+        thread->post([ob, need_reset, need_clean_up, prog_ref = ob->prog->ref.load(),
+                      save_reset_state = ob->flags & O_RESET_STATE]() {
+          if (ob->flags & O_DESTRUCTED) return;
+
+          if (need_reset) {
+            reset_object(ob);
+            if (ob->flags & O_DESTRUCTED) return;
+          }
+
+          if (need_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
+            push_number(ob->flags & (O_CLONE) ? 0 : prog_ref);
+            set_eval(max_eval_cost);
+            auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
+            if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
+              ob->flags &= ~O_WILL_CLEAN_UP;
+            }
+            ob->flags |= save_reset_state;
+          }
+        });
+      } else {
+        // Fallback: inline execution when heartbeat pool is not active.
+        if (need_reset) {
+          debug(d_flag, "RESET /%s\n", ob->obname);
+          reset_object(ob);
+          if (ob->flags & O_DESTRUCTED) {
+            ob = next;
+            continue;
+          }
         }
-        ob->flags |= save_reset_state;
+
+        if (need_clean_up) {
+          int const save_reset_state = ob->flags & O_RESET_STATE;
+          debug(d_flag, "clean up /%s\n", ob->obname);
+
+          push_number(ob->flags & (O_CLONE) ? 0 : ob->prog->ref.load());
+          set_eval(max_eval_cost);
+          auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
+          if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
+            ob->flags &= ~O_WILL_CLEAN_UP;
+          }
+          ob->flags |= save_reset_state;
+        }
       }
     }
     ob = next;
