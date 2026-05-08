@@ -19,12 +19,6 @@ struct event_base;
 struct event;
 struct object_t;
 
-struct heart_beat_t {
-  object_t *ob;            // nullptr = deleted
-  short heart_beat_ticks;  // remaining ticks
-  short time_to_heart_beat;
-};
-
 class HeartbeatThread {
  public:
   explicit HeartbeatThread(int id);
@@ -41,22 +35,12 @@ class HeartbeatThread {
   // Post a task to this thread's event loop (thread-safe).
   void post(std::function<void()> task);
 
-  // Heartbeat queue management — must be called from the owning thread
-  // (post a lambda that calls these if calling from another thread).
-  void add_heartbeat(object_t *ob, int interval);
-  void remove_heartbeat(object_t *ob);
-  void modify_heartbeat(object_t *ob, int interval);
-  int query_heartbeat(object_t *ob);
-
-  // Process one heartbeat cycle (called per game tick).
-  void process_heartbeats();
+  // Execute one object's heartbeat LPC on this thread.
+  void execute_heartbeat(object_t *ob);
 
   event_base *base() const { return base_; }
   int id() const { return id_; }
   bool is_current_thread() const { return std::this_thread::get_id() == thread_id_; }
-
-  // Per-thread heartbeat count for status reporting.
-  size_t heartbeat_count() const { return heartbeats_.size() + heartbeats_next_.size(); }
 
  private:
   void event_loop();
@@ -77,11 +61,6 @@ class HeartbeatThread {
   std::mutex mutex_;
   std::deque<std::function<void()>> tasks_;
 
-  // Heartbeat queues (only accessed from this thread's event loop).
-  std::deque<heart_beat_t> heartbeats_;
-  std::deque<heart_beat_t> heartbeats_next_;
-
-  // Per-thread eval timer.
   struct PerThreadTimer *eval_timer_{nullptr};
 };
 
@@ -90,15 +69,10 @@ class HeartbeatThreadPool {
   explicit HeartbeatThreadPool(size_t num_threads);
   ~HeartbeatThreadPool();
 
-  HeartbeatThreadPool(const HeartbeatThreadPool &) = delete;
-  HeartbeatThreadPool &operator=(const HeartbeatThreadPool &) = delete;
-
   void start();
   void stop();
 
-  // Assign an object to a heartbeat thread by pointer hash.
   HeartbeatThread *thread_for_object(object_t *ob);
-
   HeartbeatThread *thread(int idx) { return threads_[idx].get(); }
   size_t size() const { return threads_.size(); }
 
@@ -107,12 +81,7 @@ class HeartbeatThreadPool {
 };
 
 extern HeartbeatThreadPool *g_heartbeat_thread_pool;
-
-// Set by heartbeat worker threads during heartbeat execution, nullptr otherwise.
-// Used by call_direct() to detect cross-thread calls.
 extern thread_local class HeartbeatThread *g_current_heartbeat_thread;
-
-// Bounce a heartbeat that encountered a cross-thread call to the main thread.
 void bounce_heartbeat_to_main_thread(object_t *ob);
 
-#endif  // HEARTBEAT_THREAD_H
+#endif

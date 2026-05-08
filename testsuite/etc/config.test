@@ -58,7 +58,7 @@ default error message :
 # like destructing the object. If the function isn't defined by the
 # object, then nothing will happen.
 # This time should be substantially longer than the swapping time.
-time to clean up : 1200
+time to clean up : 0
 
 # TIME_TO_RESET: How many seconds until an object is reset again.
 # This value should be somewhere reasonable in between 'time to clean up'
@@ -69,7 +69,7 @@ time to reset : 1800
 # Machine with too many players and too little memory: 900 (15 minutes)
 # Machine with few players and lot of memory: 10000
 # Machine with infinite memory: 0 (never swap).
-time to swap : 600
+time to swap : 0
 
 # Maximum number of bits in a bit field. They are stored in printable
 # strings, 6 bits per byte.
@@ -86,7 +86,7 @@ maximum call depth : 30
 maximum evaluation cost : 300000000
 
 # This is the maximum array size allowed for one single array.
-maximum array size : 15000
+maximum array size : 50000
 
 # This is the maximum allowed size of a variable of type 'buffer'.
 maximum buffer size : 400000
