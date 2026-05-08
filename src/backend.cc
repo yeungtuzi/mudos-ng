@@ -7,6 +7,9 @@
 #include "backend.h"
 
 #include <chrono>
+#ifdef __APPLE__
+#include <mach/mach.h>
+#endif
 #include <event2/dns.h>     // for evdns_set_log_fn
 #include <event2/event.h>   // for event_add, etc
 #include <event2/thread.h>  // for thread support
@@ -269,10 +272,73 @@ namespace {
  * There are some problems if the object self-destructs in clean_up, so
  * special care has to be taken of how the linked list is used.
  */
+
+// Get process RSS in MB. Cross-platform: macOS uses mach, Linux uses /proc.
+static int64_t get_process_rss_mb() {
+#if defined(__APPLE__)
+  // Use task_info for macOS
+  struct mach_task_basic_info info;
+  mach_msg_type_number_t count = MACH_TASK_BASIC_INFO_COUNT;
+  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO,
+                (task_info_t)&info, &count) == KERN_SUCCESS) {
+    return static_cast<int64_t>(info.resident_size) / (1024 * 1024);
+  }
+  return -1;
+#elif defined(__linux__)
+  // Parse /proc/self/statm — second field is RSS in pages
+  FILE *f = fopen("/proc/self/statm", "r");
+  if (f) {
+    long rss_pages = 0;
+    if (fscanf(f, "%*s %ld", &rss_pages) == 1) {
+      fclose(f);
+      return static_cast<int64_t>(rss_pages) * 4 / 1024;  // 4KB pages → MB
+    }
+    fclose(f);
+  }
+  return -1;
+#else
+  return -1;
+#endif
+}
+
 void look_for_objects_to_swap() {
   int const batch = CONFIG_INT(__RC_SWAP_BATCH_SIZE__);
   static object_t *cursor = nullptr;
   static bool round_complete = false;
+
+  // Memory-pressure-aware throttling.
+  int const max_memory_mb = CONFIG_INT(__RC_MAX_MEMORY_MB__);
+  static int64_t last_memory_check = 0;
+  static int memory_pressure = 0;  // 0=normal, 1=warning, 2=critical
+
+  // Check memory every 30 ticks (~3 seconds at 100ms/tick).
+  static int ticks_since_check = 0;
+  if (max_memory_mb > 0 && ++ticks_since_check >= 30) {
+    ticks_since_check = 0;
+    int64_t rss = get_process_rss_mb();
+    if (rss > 0) {
+      int pct = static_cast<int>(rss * 100 / max_memory_mb);
+      if (pct >= 110 && memory_pressure < 2) {
+        memory_pressure = 2;
+        debug_message("WARNING: memory %lldMB > %dMB (max), aggressive cleanup\n",
+                      (long long)rss, max_memory_mb);
+      } else if (pct >= 90 && memory_pressure < 1) {
+        memory_pressure = 1;
+        debug_message("NOTE: memory %lldMB at %d%% of max %dMB, normal cleanup\n",
+                      (long long)rss, pct, max_memory_mb);
+      } else if (pct < 70 && memory_pressure > 0) {
+        memory_pressure = 0;
+      }
+    }
+  }
+
+  // If memory pressure is 0 (below 90%) and max_memory is set, skip swap
+  // processing entirely unless explicit clean_up/swap times are configured.
+  if (max_memory_mb > 0 && memory_pressure == 0) {
+    add_gametick_event(time_to_next_gametick(std::chrono::minutes(5)),
+                       TickEvent::callback_type(look_for_objects_to_swap));
+    return;
+  }
 
   // Round finished last call: wait 5 minutes before starting the next round.
   if (round_complete) {

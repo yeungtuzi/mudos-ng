@@ -106,6 +106,7 @@ const FlagEntry INT_FLAGS[] = {
     {"enable msdp", __RC_ENABLE_MSDP__, 0},
     {"swap batch size", __RC_SWAP_BATCH_SIZE__, 100, 0},
     {"heartbeat threads", __RC_HEARTBEAT_THREADS__, 0, 0},
+    {"max memory", __RC_MAX_MEMORY_MB__, 0, 0},  // 0 = unlimited
 };
 
 /*

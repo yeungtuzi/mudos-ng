@@ -12,7 +12,7 @@ void log(string msg) {
 }
 
 void do_tests() {
-    int n = 5000;
+    int n = 30000;
     workers = ({});
     log(sprintf("START create %d objects, mem=%dKB", n, memory_info()/1024));
 
