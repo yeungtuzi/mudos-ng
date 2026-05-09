@@ -7,11 +7,13 @@
 #define HEARTBEAT_THREAD_H
 
 #include <atomic>
+#include <chrono>
 #include <deque>
 #include <event2/util.h>
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <pthread.h>
 #include <thread>
 #include <vector>
 
@@ -44,7 +46,7 @@ class HeartbeatThread {
 
   event_base *base() const { return base_; }
   int id() const { return id_; }
-  bool is_current_thread() const { return std::this_thread::get_id() == thread_id_; }
+  bool is_current_thread() const { return pthread_equal(pthread_self(), thread_id_); }
 
  private:
   void event_loop();
@@ -54,12 +56,13 @@ class HeartbeatThread {
   static void wakeup_cb(evutil_socket_t fd, short what, void *arg);
 
   int id_;
-  std::thread::id thread_id_;
+  pthread_t thread_id_{};
   event_base *base_{nullptr};
   evutil_socket_t wakeup_fds_[2] = {-1, -1};
   event *wakeup_event_{nullptr};
-  std::thread thread_;
+  pthread_t thread_{};
   std::atomic<bool> running_{false};
+  std::atomic<bool> ready_{false};  // true once event_loop has entered event_base_loop
 
   std::mutex mutex_;
   std::deque<std::function<void()>> tasks_;
@@ -67,6 +70,11 @@ class HeartbeatThread {
   // Per-thread heartbeat queues (only accessed from this thread's event loop).
   std::deque<heart_beat_t> heartbeats_;
   std::deque<heart_beat_t> heartbeats_next_;
+
+  // Per-instance debug counters (reset each start).
+  int pending_call_count_{0};
+  int heartbeat_call_count_{0};
+  int modify_call_count_{0};
 
   struct PerThreadTimer *eval_timer_{nullptr};
 };
@@ -87,5 +95,11 @@ class HeartbeatThreadPool {
 extern HeartbeatThreadPool *g_heartbeat_thread_pool;
 extern thread_local class HeartbeatThread *g_current_heartbeat_thread;
 void bounce_heartbeat_to_main_thread(object_t *ob);
+
+// Thread-safe call — alternative to call_out, independent of gametick.
+// call(fn): execute immediately on current thread.
+// call(delay_sec, fn): schedule on current thread's event loop after delay.
+void call(int delay_sec, std::function<void()> fn);
+inline void call(std::function<void()> fn) { fn(); }
 
 #endif

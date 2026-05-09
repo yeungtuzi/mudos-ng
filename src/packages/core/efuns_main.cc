@@ -134,8 +134,8 @@ void f_bind() {
   }
 
   new_fp = reinterpret_cast<funptr_t *>(DMALLOC(sizeof(funptr_t), TAG_FUNP, "f_bind"));
-  *new_fp = *old_fp;
-  new_fp->hdr.ref = 1;
+  memcpy(new_fp, old_fp, sizeof(funptr_t));
+  new_fp->hdr.ref.store(1, std::memory_order_relaxed);
   new_fp->hdr.owner = ob; /* one ref from being on stack */
   if (new_fp->hdr.args) {
     new_fp->hdr.args->ref++;
@@ -143,7 +143,7 @@ void f_bind() {
   if ((old_fp->hdr.type & 0x0f) == FP_FUNCTIONAL) {
     new_fp->f.functional.prog->func_ref++;
     debug(d_flag, "add func ref /%s: now %i\n", new_fp->f.functional.prog->filename,
-          new_fp->f.functional.prog->func_ref);
+          new_fp->f.functional.prog->func_ref.load());
   }
 
   free_funp(old_fp);

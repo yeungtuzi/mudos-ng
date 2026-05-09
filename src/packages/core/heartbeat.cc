@@ -79,3 +79,42 @@ array_t *get_heart_beats() {
 
 void check_heartbeats() {}
 void clear_heartbeats() {}
+
+#ifdef F_CALL
+void f_call() {
+  int delay = 0;
+  svalue_t *fn_sv;
+
+  if (st_num_arg == 2) {
+    fn_sv = sp - 1;
+    delay = (sp)->u.number;
+  } else {
+    fn_sv = sp;
+  }
+
+  if (fn_sv->type == T_STRING) {
+    // Resolve function name on current_object, pushing args for apply.
+    // Use apply() to call the named method.
+    auto *ob = current_object;
+    auto name = fn_sv->u.string;
+    push_number(delay);
+    safe_apply(name, ob, 0, ORIGIN_INTERNAL);
+  } else if (fn_sv->type == T_FUNCTION) {
+    auto *fp = fn_sv->u.fp;
+    fp->hdr.ref++;
+    if (delay == 0) {
+      // Execute immediately on current thread.
+      push_refed_funp(fp);
+      (void)safe_call_function_pointer(fp, 0);
+    } else {
+      // Schedule on current thread's event loop after delay.
+      call(delay, [fp]() {
+        (void)safe_call_function_pointer(fp, 0);
+        free_funp(fp);
+      });
+    }
+  }
+
+  pop_n_elems(st_num_arg);
+}
+#endif

@@ -1433,9 +1433,11 @@ void push_malloced_string(const char *p) {
 void push_shared_string(const char *p) {
   STACK_INC;
   sp->type = T_STRING;
-  sp->u.string = p;
+  // Intern in this thread's string table.  Program constants and MALLOC
+  // strings won't be present in a heartbeat thread's local table.
+  // make_shared_string finds or creates the entry with proper ref count.
+  sp->u.string = make_shared_string(p);
   sp->subtype = STRING_SHARED;
-  ref_string(p);
 }
 
 /*

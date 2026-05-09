@@ -1263,7 +1263,7 @@ static int fgv_recurse(program_t *prog, int *idx, const char *name, unsigned sho
     }
   }
   for (i = 0; i < prog->num_variables_defined; i++) {
-    if (prog->variable_table[i] == name &&
+    if (!strcmp(prog->variable_table[i], name) &&
         (!check_nosave || !(prog->variable_types[i] & DECL_NOSAVE))) {
       *idx += i;
       *type = prog->variable_types[i];

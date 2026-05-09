@@ -1108,7 +1108,7 @@ static hash_entry_t *add_hash_entry(const char *str) {
   DEBUG_PP(("add_hash_entry: %s", str));
   he = hash_table[h];
   while (he) {
-    if (he->name == str) {
+    if (!strcmp(he->name, str)) {
       return he;
     }
     he = he->next;
@@ -1132,7 +1132,7 @@ void mark_hash_entry(const char *str) {
   DEBUG_PP(("mark_hash_entry: %s", str));
   he = hash_table[h];
   while (he) {
-    if (he->name == str) {
+    if (!strcmp(he->name, str)) {
       he->flags |= HV_NICKNAME;
       return;
     }
@@ -1558,7 +1558,7 @@ static void parse_obj(int tok, parse_state_t *state, int ordinal) {
     hnode = hash_table[DO_HASH(str, HASH_SIZE)];
     while (hnode) {
       // if(!ordinal) ordinal = 1;
-      if (hnode->name == str) {
+      if (!strcmp(hnode->name, str)) {
         if (hnode->flags & HV_NICKNAME) {
           expand_node(hnode);
         }

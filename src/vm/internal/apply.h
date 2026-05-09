@@ -39,7 +39,7 @@ inline const char *origin_to_name(const int origin) {
 
 // Global static result for apply() ,
 // used by routines that want to return a pointer to an svalue
-extern struct svalue_t apply_ret_value;
+extern thread_local struct svalue_t apply_ret_value;
 
 // Call a specific function on a specific object
 // Result are stored in a global value, no need to free.

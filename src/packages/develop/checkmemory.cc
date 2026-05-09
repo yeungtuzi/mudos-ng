@@ -465,7 +465,7 @@ void check_all_blocks(int flag) {
   char *ptr;
   block_t *ssbl;
   malloc_block_t *msbl;
-  extern svalue_t apply_ret_value;
+  extern thread_local svalue_t apply_ret_value;
 
   outbuf_zero(&out);
   if (!(flag & 2)) {
@@ -866,7 +866,7 @@ void check_all_blocks(int flag) {
               outbuf_addv(&out,
                           "Bad function ref count for program %s, is %d - "
                           "should be %d\n",
-                          prog->filename, prog->func_ref, prog->extra_func_ref);
+                          prog->filename, prog->func_ref.load(), prog->extra_func_ref);
             }
             break;
           case TAG_OBJECT:
@@ -912,7 +912,7 @@ void check_all_blocks(int flag) {
                           "is %d - should be %d\n",
                           fp,
                           fp->hdr.type,
-                          (fp->hdr.owner ? fp->hdr.owner->obname : "(null)"), fp->hdr.ref,
+                          (fp->hdr.owner ? fp->hdr.owner->obname : "(null)"), fp->hdr.ref.load(),
                           fp->hdr.extra_ref);
               switch(fp->hdr.type) {
                 case FP_FUNCTIONAL:
@@ -982,7 +982,7 @@ void check_all_blocks(int flag) {
               outbuf_addv(&out,
                           "Bad ref count for malloc string \"%s\" %s %04x, is "
                           "%d - should be %d\n",
-                          (char *)(msbl + 1), entry->desc, entry->tag, msbl->ref, msbl->extra_ref);
+                          (char *)(msbl + 1), entry->desc, entry->tag, msbl->ref.load(), msbl->extra_ref);
             }
             break;
           case TAG_SHARED_STRING:
@@ -991,7 +991,7 @@ void check_all_blocks(int flag) {
               outbuf_addv(&out,
                           "Bad ref count for shared string \"%s\", is %d - "
                           "should be %d\n",
-                          STRING(ssbl), REFS(ssbl), EXTRA_REF(ssbl));
+                          STRING(ssbl), REFS(ssbl).load(), EXTRA_REF(ssbl));
               std::stringstream ss;
               stralloc_print_entry(ss, ssbl);
               auto result = ss.str();

@@ -114,16 +114,19 @@ void int_free_svalue(svalue_t *v)
       debug(d_flag, "Free_svalue %s (%d) from %s\n", v->u.ob->obname, v->u.ob->ref - 1, tag);
     }
 #endif
-    /* TODO: Set to 0 on condition that REF overflow to negative. */
-    if (v->u.refed->ref > 0) {
-      v->u.refed->ref--;
+    // Atomically decrement and obtain the old value.  Skip immortal
+    // objects (ref==0) to avoid underflow — identical to the old
+    // single-threaded guard but lifted to atomic fetch_sub.
+    if (v->u.refed->ref.load(std::memory_order_relaxed) == 0) {
+      ;  // immortal — nothing to do
+    } else {
+      auto old_ref = v->u.refed->ref.fetch_sub(1, std::memory_order_acq_rel);
 #ifdef DEBUGMALLOC_EXTENSIONS
-      if (v->u.refed != (void *) &the_null_array && v->u.refed != (void *) &null_buf) {
+      if (old_ref >= 1 && v->u.refed != (void *)&the_null_array && v->u.refed != (void *)&null_buf) {
         md_record_ref_journal(PTR_TO_NODET(v->u.refed), false, v->u.refed->ref, tag);
       }
-#endif // DEBUGMALLOC_EXTENSIONS
-    }
-    if (v->u.refed->ref == 0) {
+#endif
+      if (old_ref == 1) {
       switch (v->type) {
         case T_OBJECT:
           dealloc_object(v->u.ob, "free_svalue");
@@ -155,6 +158,7 @@ void int_free_svalue(svalue_t *v)
       }
       v->type |= T_FREED;
     }
+    }  // else (immortal guard)
   } else if (v->type == T_ERROR_HANDLER) {
     (*v->u.error_handler)();
     v->type |= T_FREED;

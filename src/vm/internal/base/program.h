@@ -205,7 +205,7 @@ struct program_t {
   unsigned short flags;
   unsigned short last_inherited;
   std::atomic<unsigned int> ref; /* Reference count */
-  unsigned short func_ref;
+  std::atomic<unsigned short> func_ref;
 #ifdef DEBUGMALLOC_EXTENSIONS
   int extra_ref; /* Used to verify ref count */
   int extra_func_ref;

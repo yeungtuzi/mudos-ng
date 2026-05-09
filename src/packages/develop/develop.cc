@@ -62,7 +62,7 @@ void f_debug_info() {
       outbuf_addv(&out, "total light : %d\n", ob->total_light);
 #endif
       outbuf_addv(&out, "time_of_ref : %" PRIu64 "\n", ob->time_of_ref);
-      outbuf_addv(&out, "ref         : %d\n", ob->ref);
+      outbuf_addv(&out, "ref         : %d\n", ob->ref.load());
 #ifdef DEBUGMALLOC_EXTENSIONS
       outbuf_addv(&out, "extra_ref   : %d\n", ob->extra_ref);
 #endif
@@ -82,7 +82,7 @@ void f_debug_info() {
     case 1:
       ob = arg[1].u.ob;
 
-      outbuf_addv(&out, "program ref's %d\n", ob->prog->ref);
+      outbuf_addv(&out, "program ref's %d\n", ob->prog->ref.load());
       outbuf_addv(&out, "Name /%s\n", ob->prog->filename);
       outbuf_addv(&out, "program size %d\n", ob->prog->program_size);
       outbuf_addv(

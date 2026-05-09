@@ -2,7 +2,6 @@
 
 ## SSH Support ##
 - [x] accept ssh connection at listening port
-- [ ] make telnet port optional (default port is for SSH), with new config option "LegacyPort"
 
 ## network thread ##
 - [x] Pure network I/O thread (Phase 1: IOThread/IOThreadPool — completed, 2 threads, round-robin connection distribution)
@@ -67,17 +66,19 @@
 ## 待完成工作 ##
 
 ### 短期 ###
-- [ ] 6B (未来): promise/future 阻塞式跨线程跳转 + 死锁防护
-- [ ] TSan 构建验证 + 1/2/4/8 线程压力测试（1000+ 心跳对象）
+- [x] 心跳队列为空问题修复（ready flag + socket write 竞态 + thread_for_object 哈希修正）
+- [x] 30000 对象创建 + 心跳队列分发验证（对象均匀分布到 8 线程，每线程 3000-4400 对象）
+- [x] test_heartbeat_thread.cc 单元测试 (14 tests) + test_io_thread.cc (14 tests)
+- [x] 线程安全修复：funptr_hdr_t::ref 原子化、program_t::func_ref 原子化、apply_ret_value → thread_local
+- [x] debugmalloc 多线程安全：md_refjournal mutex、MDmalloc/MDfree mutex、DEBUGMALLOC_EXTENSIONS 临时关闭
+- [ ] 30000 对象心跳执行稳定性 — 进度: push_shared_string/timer/svalue_to_int/int_free_string 已修复，当前 crash 在 extend_string→debugrealloc→MDfree, 待定位最后一个 bug
+- [ ] TSan 构建验证
 - [ ] 性能基准：心跳吞吐量、CPU 利用率、主线程响应延迟
 - [ ] 关闭安全性验证（心跳池→IO池→对象清理）
-- [ ] 新建 test_heartbeat_thread.cc 单元测试
+- [ ] 压力测试脚本化（1K/5K/10K/30K 对象梯度）
 
 ### 中期 ###
-- [ ] 编译线程化：新建编译线程类，load_object() 改为异步编译（需编译器状态隔离）
-- [ ] make telnet port optional，新配置项 "LegacyPort"
+- [ ] 6B (未来): promise/future 阻塞式跨线程跳转 + 死锁防护
 
 ### 长期 / 非驱动层 ###
-- [ ] For linux, deb or rpm or flatpak
-- [ ] For Mac, homebrew
-- [ ] Windows, TBD
+- [ ] 驱动层外围完善

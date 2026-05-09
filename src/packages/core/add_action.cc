@@ -369,7 +369,7 @@ static int user_parser(char *buff) {
       }
     } else {
       /* note: if was add_action(blah, "") then accept it */
-      if (s->verb[0] && (user_verb != s->verb)) {
+      if (s->verb[0] && strcmp(user_verb, s->verb)) {
         continue;
       }
     }

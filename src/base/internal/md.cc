@@ -13,6 +13,7 @@
 #include <cstdlib>  // malloc etc
 #include <cinttypes>
 #include <map>
+#include <mutex>
 #include <vector>
 #include <string>
 
@@ -35,16 +36,19 @@ unsigned int hiwater = 0L;
 // TODO: defined in backend.cc
 extern uint64_t g_current_gametick;
 
+namespace {
+std::recursive_mutex md_global_mutex;  // protects debugmalloc hash table
 #ifdef DEBUGMALLOC_EXTENSIONS
 // journal to record all ref/unref operations
-namespace {
 std::map<int, std::vector<std::string>> md_refjournal;
-} // namespace
+std::mutex md_refjournal_mutex;
 #endif
+} // namespace
 
 void md_record_ref_journal(md_node_t *node, bool is_ref, int current_ref, std::string desc) {
 #ifdef DEBUGMALLOC_EXTENSIONS
   auto id = node->id;
+  std::lock_guard<std::mutex> lk(md_refjournal_mutex);
   auto it = md_refjournal.find(id);
   if (it == md_refjournal.end()) {
     md_refjournal[id] = std::vector<std::string>();
@@ -57,6 +61,7 @@ void md_record_ref_journal(md_node_t *node, bool is_ref, int current_ref, std::s
 void md_print_ref_journal(md_node_t *node, outbuffer_t *outbuf) {
 #ifdef DEBUGMALLOC_EXTENSIONS
   auto id = node->id;
+  std::lock_guard<std::mutex> lk(md_refjournal_mutex);
   auto it = md_refjournal.find(id);
   if (it == md_refjournal.end()) {
     return;
@@ -71,6 +76,7 @@ namespace {
 void clear_ref_journal(md_node_t* node) {
 #ifdef DEBUGMALLOC_EXTENSIONS
   auto id = node->id;
+  std::lock_guard<std::mutex> lk(md_refjournal_mutex);
   auto it = md_refjournal.find(id);
   if (it == md_refjournal.end()) {
     return;
@@ -82,6 +88,7 @@ void clear_ref_journal(md_node_t* node) {
 
 
 void MDmalloc(md_node_t *node, int size, int tag, const char *desc) {
+  std::lock_guard<std::recursive_mutex> lk(md_global_mutex);
   unsigned long h;
   static int count = 0;
 
@@ -121,6 +128,7 @@ void MDmalloc(md_node_t *node, int size, int tag, const char *desc) {
 
 #ifdef DEBUGMALLOC_EXTENSIONS
 void set_tag(const void *ptr, int tag) {
+  std::lock_guard<std::recursive_mutex> lk(md_global_mutex);
   md_node_t *node = PTR_TO_NODET(ptr);
 
   if ((node->tag & 0xff) > MAX_CATEGORY) {
@@ -147,6 +155,7 @@ void set_tag(const void *ptr, int tag) {
 #endif
 
 int MDfree(md_node_t *ptr) {
+  std::lock_guard<std::recursive_mutex> lk(md_global_mutex);
   unsigned long h;
   md_node_t *entry, **oentry;
 

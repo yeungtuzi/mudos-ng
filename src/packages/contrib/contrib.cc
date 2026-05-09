@@ -677,7 +677,7 @@ void f_terminal_colour() {
 
     for (elt = mtab[tmp & k]; elt; elt = elt->next) {
       if (elt->values->type == T_STRING && (elt->values + 1)->type == T_STRING &&
-          resetstrname == elt->values->u.string) {
+          !strcmp(resetstrname, elt->values->u.string)) {
         resetstr = (elt->values + 1)->u.string;
         resetstrlen = strlen((elt->values + 1)->u.string);
         break;
@@ -716,7 +716,7 @@ void f_terminal_colour() {
       tmp = MAP_SVAL_HASH(str);
       for (elt = mtab[tmp & k]; elt; elt = elt->next) {
         if (elt->values->type == T_STRING && (elt->values + 1)->type == T_STRING &&
-            cp == elt->values->u.string) {
+            !strcmp(cp, elt->values->u.string)) {
           parts[i] = (elt->values + 1)->u.string;
           /* Negative indicates don't count for wrapping */
           lens[i] = SVALUE_STRLEN(elt->values + 1);

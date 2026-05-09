@@ -1,5 +1,17 @@
 # MudOS-NG 多线程改造 — 工作计划
 
+## 最新状态 (2026-05-09)
+
+- **Phase 0-6, 8 已完成** — 对象增量扫描、VM thread_local、原子引用计数、每线程计时器、心跳线程池、心跳迁移、跨线程 bounce、call_out 线程池
+- **30000 对象压力测试** — 对象创建 1s 完成，均匀分片到 8 线程（每线程 3000-4400），process_heartbeats #1 全线程成功触发
+- **已修复的线程安全 bug（Phase 2 补充）：**
+  - `funptr_hdr_t::ref` → `std::atomic<uint32_t>`（多线程同时创建 closure 导致 ref count 丢失）
+  - `program_t::func_ref` → `std::atomic<unsigned short>`（dealloc_funp 竞争）
+  - `apply_ret_value` → `thread_local`（call_function_pointer 多线程共享写入导致 double-free）
+  - `debugmalloc` 全局状态加 mutex 保护，`DEBUGMALLOC_EXTENSIONS` 临时关闭（hash table/journal 竞争）
+- **当前阻塞** — 30000 对象心跳执行期间静默 segfault（无 FATAL 日志），需 ASAN/LLDB 定位
+- **下一目标** — 修复 segfault 使 30000 对象心跳稳定运行 30s+
+
 ## 背景
 
 MudOS-NG 目前所有 LPC 代码都在单一线程上通过 libevent 主循环执行。这导致三个主要的运行时瓶颈：
@@ -642,6 +654,22 @@ make -j$(nproc)
 | `src/base/internal/rc.cc` | 5 | 新增 `__RC_HEARTBEAT_THREADS__` 配置 |
 | `src/include/runtime_config.h` | 5 | 新增 `__RC_HEARTBEAT_THREADS__` 枚举 |
 | `src/tests/test_heartbeat_thread.cc` | 4 | **新增** — 单元测试 |
+| `src/tests/test_io_thread.cc` | 1 | **新增** — IO 线程池单元测试 |
+| **Phase 2 补充（bug 修复）：** |
+| `src/vm/internal/base/function.h` | 2+ | `funptr_hdr_t::ref` → `std::atomic<uint32_t>` |
+| `src/vm/internal/base/function.cc` | 2+ | `func_ref`/`hdr.ref` 原子化调试打印用 `.load()` |
+| `src/vm/internal/base/program.h` | 2+ | `func_ref` → `std::atomic<unsigned short>` |
+| `src/vm/internal/apply.h` | 2+ | `apply_ret_value` → `extern thread_local` |
+| `src/vm/internal/apply.cc` | 2+ | `apply_ret_value` → `thread_local` |
+| `src/vm/internal/base/svalue.cc` | 2+ | `int_free_svalue` 加 immortal guard (ref==0 时不 fetch_sub) |
+| `src/base/internal/stralloc.h` | 2+ | `block_t::refs`/`malloc_block_t::ref` → atomic；INC/DEC_COUNTED_REF 宏原子化 |
+| `src/base/internal/stralloc.cc` | 2+ | `fmt::format` 原子化适配 `.load()` |
+| `src/base/internal/md.cc` | 2+ | `md_refjournal` map 加 mutex；`MDmalloc`/`MDfree` 加 mutex |
+| `src/packages/core/efuns_main.cc` | 2+ | `funptr_t` copy 改用 `memcpy` + `.store()` |
+| `src/packages/develop/checkmemory.cc` | 2+ | 原子 ref 格式化适配 `.load()` |
+| `src/packages/core/file.cc` | 2+ | 局部 `extern apply_ret_value` → `thread_local` |
+| `src/packages/core/reclaim.cc` | 2+ | `func_ref` 调试打印用 `.load()` |
+| `build/src/config.h` | 2+ | 临时关闭 `DEBUGMALLOC_EXTENSIONS`（多线程兼容） |
 
 ---
 

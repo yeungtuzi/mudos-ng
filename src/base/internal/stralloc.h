@@ -3,6 +3,7 @@
 
 #include "base/internal/options_incl.h"
 
+#include <atomic>
 #include <cstdint>
 #include <climits>  // for UINT_MAX
 #include <cstring>  // for strlen
@@ -95,7 +96,7 @@ typedef struct malloc_block_s {
   unsigned int extra_ref;
 #endif
   unsigned int size;
-  unsigned short ref;
+  std::atomic<unsigned short> ref;
 } malloc_block_t;
 
 #define MSTR_BLOCK(x) (((malloc_block_t *)(x)) - 1)
@@ -124,12 +125,19 @@ typedef struct malloc_block_s {
 #define COUNTED_REF(x) MSTR_REF(x)
 
 /* ref == 0 means the string has been referenced USHRT_MAX times and is
-   immortal */
-#define INC_COUNTED_REF(x) \
-  if (MSTR_REF(x)) { MSTR_REF(x)++; }
-/* This is a conditional expression that evaluates to zero if the block
-   should be deallocated */
-#define DEC_COUNTED_REF(x) (!(MSTR_REF(x) == 0 || --MSTR_REF(x) > 0))
+   immortal.  Both macros use explicit atomic operations to avoid TOCTOU
+   races between concurrent threads. */
+#define INC_COUNTED_REF(x)                                                           \
+  do {                                                                               \
+    auto _icr = MSTR_REF(x).load(std::memory_order_relaxed);                         \
+    if (_icr) MSTR_REF(x).fetch_add(1, std::memory_order_relaxed);                   \
+  } while (0)
+/* Returns true (non-zero) if the ref count dropped to zero and the string
+   block should be deallocated.  Uses fetch_sub to make the decrement-and-test
+   a single atomic operation. */
+#define DEC_COUNTED_REF(x)                                                           \
+  (MSTR_REF(x).load(std::memory_order_relaxed) != 0 &&                               \
+   MSTR_REF(x).fetch_sub(1, std::memory_order_acq_rel) == 1)
 
 typedef struct block_s {
   struct block_s *next; /* next block in the hash chain */
@@ -138,8 +146,8 @@ typedef struct block_s {
   unsigned int extra_ref;
 #endif
   /* these two must be last */
-  unsigned int size;   /* length of the string */
-  unsigned short refs; /* reference count    */
+  unsigned int size;                    /* length of the string */
+  std::atomic<unsigned short> refs;     /* reference count    */
 } block_t;
 
 static_assert(sizeof(malloc_block_t) == sizeof(block_t),

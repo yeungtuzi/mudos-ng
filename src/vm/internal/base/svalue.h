@@ -43,7 +43,7 @@ struct svalue_t {
 };
 
 struct ref_t {
-  uint32_t ref;
+  std::atomic<uint32_t> ref;
 
   struct ref_t *next, *prev;
   struct control_stack_t *csp;

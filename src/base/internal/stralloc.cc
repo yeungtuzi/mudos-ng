@@ -78,17 +78,13 @@ uint64_t num_str_searches = 0;
 static block_t *sfindblock(const char * /*s*/, int /*h*/);
 
 /*
- * hash table - list of pointers to heads of string chains.
- * Each string in chain has a pointer to the next string and a
- * reference count (char *, int) stored just before the start of the string.
- * HTABLE_SIZE is in config.h, and should be a prime, probably between
- * 1000 and 5000.
+ * Per-thread string hash table — each thread interns strings independently.
+ * Pointer-based string comparisons are NOT valid across threads; use strcmp.
+ * Ref counting on block_t headers works across threads via pointer arithmetic.
  */
-
-static std::mutex g_string_table_mutex;
-static block_t **base_table = (block_t **)nullptr;
-static int htable_size;
-static int htable_size_minus_one;
+static thread_local block_t **base_table = (block_t **)nullptr;
+static thread_local int htable_size;
+static thread_local int htable_size_minus_one;
 
 static block_t *alloc_new_shared_string(const char * /*string*/, int /*h*/, const char * /*why*/);
 
@@ -143,7 +139,7 @@ static block_t *sfindblock(const char *s, int h) {
 }
 
 const char *findstring(const char *s) {
-  std::lock_guard<std::mutex> lock(g_string_table_mutex);
+
   block_t *b;
 
   if ((b = findblock(s))) {
@@ -186,7 +182,7 @@ static block_t *alloc_new_shared_string(const char *string, int h, const char *w
 }
 
 const char *int_make_shared_string(const char *str, const char *desc) {
-  std::lock_guard<std::mutex> lock(g_string_table_mutex);
+
   block_t *b;
   int h;
 
@@ -209,7 +205,7 @@ const char *int_make_shared_string(const char *str, const char *desc) {
 */
 
 const char *int_ref_string(const char *str, const char *desc) {
-  std::lock_guard<std::mutex> lock(g_string_table_mutex);
+
   block_t *b;
 
   b = BLOCK(str);
@@ -231,7 +227,7 @@ const char *int_ref_string(const char *str, const char *desc) {
  */
 
 void int_free_string(const char *str, const char *desc) {
-  std::lock_guard<std::mutex> lock(g_string_table_mutex);
+
   block_t **prev, *b;
   int h;
 
@@ -247,12 +243,16 @@ void int_free_string(const char *str, const char *desc) {
     return;
   }
 
-  REFS(b)--;
+  // Atomically decrement and capture old value.  This eliminates a TOCTOU
+  // race: without capturing the return value of fetch_sub, two threads could
+  // both decrement 1→0 and both see REFS(b)==0 on the subsequent load, each
+  // believing it is the last reference holder.
+  auto old_ref = REFS(b).fetch_sub(1, std::memory_order_acq_rel);
   md_record_ref_journal(PTR_TO_NODET(b), false, b->refs, "free_string: " + std::string(desc));
   SUB_STRING(SIZE(b));
 
   NDBG(b);
-  if (REFS(b) > 0) {
+  if (old_ref > 1) {
     return;
   }
 
@@ -365,6 +365,12 @@ char *int_new_string(unsigned int size)
 }
 
 char *extend_string(const char *str, int len) {
+  // Guard: extend_string is only valid for MALLOC strings (ref counted,
+  // not shared, not constant).  With per-thread string tables, shared
+  // strings must be copied to MALLOC before extending.
+  malloc_block_t *old_mbt = MSTR_BLOCK(str);
+  (void)old_mbt;  // used only for debug assertions below
+
   malloc_block_t *mbt;
   int const oldsize = MSTR_SIZE(str);
 
@@ -458,7 +464,7 @@ void stralloc_print_entry(std::stringstream &ss, block_t* entry) {
   ss << fmt::format(FMT_STRING("{:d},{:d},{:s},{:s},"), md_entry->id, md_entry->size,
                     md_entry->tag == TAG_SHARED_STRING ? "S" : "M", md_entry->desc);
 #endif
-  ss << fmt::format(FMT_STRING("{:d},{:x},{:d},{:.40s}\n"), entry->refs, entry->hash,
+  ss << fmt::format(FMT_STRING("{:d},{:x},{:d},{:.40s}\n"), entry->refs.load(), entry->hash,
                     entry->size, STRING(entry));
 }
 

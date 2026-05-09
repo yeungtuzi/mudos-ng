@@ -191,44 +191,16 @@ void per_thread_timer_delete(PerThreadTimer *t) {
 
 #elif defined(__APPLE__)
 
-#include <dispatch/dispatch.h>
+// macOS: no-op timer.  The eval cost counter enforces execution limits;
+// the timer was only a backup safety mechanism.  GCD timers deadlock on
+// threads without a CFRunLoop, and worker-thread timers cause cross-thread
+// access issues with the thread_local outoftime variable.
 
-struct PerThreadTimer {
-  dispatch_source_t source;
-  dispatch_queue_t queue;
-};
-
-PerThreadTimer *per_thread_timer_create(void) {
-  auto *pt = new PerThreadTimer;
-  pt->queue = dispatch_queue_create("eval_timer", DISPATCH_QUEUE_SERIAL);
-  pt->source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, pt->queue);
-
-  __block volatile int *ot = &outoftime;
-  dispatch_source_set_event_handler(pt->source, ^{
-    *ot = 1;
-  });
-  dispatch_resume(pt->source);
-  return pt;
-}
-
-void per_thread_timer_set(PerThreadTimer *t, uint64_t micros) {
-  dispatch_source_set_timer(t->source,
-                            dispatch_time(DISPATCH_TIME_NOW, static_cast<int64_t>(micros) * 1000),
-                            DISPATCH_TIME_FOREVER, 0);
-}
-
-uint64_t per_thread_timer_get(PerThreadTimer *t) {
-  // dispatch_source doesn't provide a "time remaining" query.
-  // Return a non-zero default; the eval loop checks outoftime separately.
-  return 100;
-}
-
-void per_thread_timer_delete(PerThreadTimer *t) {
-  dispatch_source_cancel(t->source);
-  dispatch_release(t->source);
-  dispatch_release(t->queue);
-  delete t;
-}
+struct PerThreadTimer {};
+PerThreadTimer *per_thread_timer_create(void) { return new PerThreadTimer; }
+void per_thread_timer_set(PerThreadTimer *, uint64_t) {}
+uint64_t per_thread_timer_get(PerThreadTimer *) { return 100; }
+void per_thread_timer_delete(PerThreadTimer *t) { delete t; }
 
 #else  // !__linux__ && !__APPLE__
 

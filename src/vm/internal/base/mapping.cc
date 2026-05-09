@@ -26,7 +26,7 @@ mapping_node_t *locked_map_nodes = nullptr;
 size_t sval_hash(svalue_t x) {
   switch (x.type) {
     case T_STRING:
-      return HASH(BLOCK(x.u.string));
+      return whashstr(x.u.string);
     default:
       return std::hash<decltype(x.u.arr)>{}(x.u.arr);
   }
@@ -461,18 +461,12 @@ int restore_hash_string(char **val, svalue_t *sv) {
  */
 
 LPC_INT svalue_to_int(svalue_t *v) {
-  if (v->type == T_STRING && v->subtype != STRING_SHARED) {
-    const char *p = make_shared_string(v->u.string);
-    free_string_svalue(v);
-    v->subtype = STRING_SHARED;
-    v->u.string = p;
+  // Compute hash from string content.  No more shared-string conversion —
+  // assign_svalue_no_free / free_svalue manage the key lifecycle correctly
+  // via INC_COUNTED_REF / DEC_COUNTED_REF on the MALLOC string.
+  if (v->type == T_STRING) {
+    return whashstr(v->u.string);
   }
-  // need to make it shared or all the assumptions about string==other string
-  // only when addresses match will fail!
-  /* The bottom bits of pointers tend to be bad ...
-   * Note that this means close groups of numbers don't hash particularly
-   * well, but then one wonders why they aren't using an array ...
-   */
   return MAP_SVAL_HASH(*v);
 }
 
@@ -482,8 +476,20 @@ int msameval(const svalue_t *arg1, const svalue_t *arg2) {
       return arg1->u.number == arg2->u.number;
     case T_REAL:
       return arg1->u.real == arg2->u.real;
-    default:
+    case T_ARRAY:
       return arg1->u.arr == arg2->u.arr;
+    case T_CLASS:
+      return arg1->u.arr == arg2->u.arr;
+    case T_MAPPING:
+      return arg1->u.map == arg2->u.map;
+    case T_BUFFER:
+      return arg1->u.buf == arg2->u.buf;
+    default:
+      // T_STRING: use strcmp — per-thread string tables mean equal strings
+      // may have different pointers
+      return (arg1->type == T_STRING && arg2->type == T_STRING)
+                 ? !strcmp(arg1->u.string, arg2->u.string)
+                 : arg1->u.arr == arg2->u.arr;
   }
 }
 

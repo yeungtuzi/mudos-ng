@@ -55,6 +55,7 @@ int call_out(string | function, int|float, ...);
 int call_out_walltime(string | function, int|float, ...);
 mixed *call_out_info();
 int find_call_out(int | string);
+void call(string|function, int|void);
 int remove_call_out(int | void | string);
 
 int member_array(mixed, string | mixed *, void | int, void | int);

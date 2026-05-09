@@ -373,7 +373,7 @@ static int find_class_member(int which, const char *name, unsigned short *type) 
   cd = (reinterpret_cast<class_def_t *>(mem_block[A_CLASS_DEF].block)) + which;
   cme = (reinterpret_cast<class_member_entry_t *>(mem_block[A_CLASS_MEMBER].block)) + cd->index;
   for (i = 0; i < cd->size; i++) {
-    if (PROG_STRING(cme[i].membername) == name) {
+    if (!strcmp(PROG_STRING(cme[i].membername), name)) {
       break;
     }
   }
@@ -501,7 +501,7 @@ static void check_class(char *name, const program_t *prog, int idx, int nidx) {
     fix_class_type(&newtype, prog);
 
     if (sme2[i].type != newtype ||
-        prog->strings[sme1[i].membername] != PROG_STRING(sme2[i].membername)) {
+        strcmp(prog->strings[sme1[i].membername], PROG_STRING(sme2[i].membername)) != 0) {
       yyerror("Definitions of class '%s' disagree.", name);
       return;
     }
@@ -906,8 +906,7 @@ int compatible_types2(int t1, int t2) {
 static int find_matching_function(program_t *prog, const char *name, parse_node_t *node) {
   /* Search our function table */
   for (int i = 0; i < prog->num_functions_defined; i++) {
-      // rely on the fact that name is a shared string, can simply compare pointers for equality
-      if(name == prog->function_table[i].funcname) {
+      if(!strcmp(name, prog->function_table[i].funcname)) {
           int ri;
           int flags;
           int type;

@@ -27,9 +27,11 @@ struct functional_t {
   // char lpccode[80];
 };
 
+#include <atomic>
+
 /* common header */
 struct funptr_hdr_t {
-  uint32_t ref;
+  std::atomic<uint32_t> ref;
   short type; /* FP_* is used */
 #ifdef DEBUGMALLOC_EXTENSIONS
   int extra_ref;
