@@ -401,20 +401,27 @@ void look_for_objects_to_swap() {
                       save_reset_state = ob->flags & O_RESET_STATE]() {
           if (ob->flags & O_DESTRUCTED) return;
 
-          if (need_reset) {
-            reset_object(ob);
-            if (ob->flags & O_DESTRUCTED) return;
-          }
-
-          if (need_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
-            push_number(ob->flags & (O_CLONE) ? 0 : prog_ref);
-            set_eval(max_eval_cost);
-            auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
-            if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
-              ob->flags &= ~O_WILL_CLEAN_UP;
+          error_context_t econ;
+          save_context(&econ);
+          try {
+            if (need_reset) {
+              reset_object(ob);
+              if (ob->flags & O_DESTRUCTED) { restore_context(&econ); return; }
             }
-            ob->flags |= save_reset_state;
+
+            if (need_clean_up && (ob->flags & O_WILL_CLEAN_UP)) {
+              push_number(ob->flags & (O_CLONE) ? 0 : prog_ref);
+              set_eval(max_eval_cost);
+              auto *svp = safe_apply(APPLY_CLEAN_UP, ob, 1, ORIGIN_DRIVER);
+              if (!svp || (svp->type == T_NUMBER && svp->u.number == 0)) {
+                ob->flags &= ~O_WILL_CLEAN_UP;
+              }
+              ob->flags |= save_reset_state;
+            }
+          } catch (const char *) {
+            restore_context(&econ);
           }
+          pop_context(&econ);
         });
       } else {
         // Fallback: inline execution when heartbeat pool is not active.

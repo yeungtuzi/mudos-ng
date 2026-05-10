@@ -167,7 +167,16 @@ void HeartbeatThread::process_pending_tasks() {
     fflush(stderr);
   }
 
-  for (auto &t : tasks) t();
+  for (auto &t : tasks) {
+    error_context_t econ;
+    save_context(&econ);
+    try {
+      t();
+    } catch (const char *) {
+      restore_context(&econ);
+    }
+    pop_context(&econ);
+  }
 }
 
 void HeartbeatThread::wakeup_cb(evutil_socket_t, short, void *arg) {
