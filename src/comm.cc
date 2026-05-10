@@ -702,9 +702,13 @@ void add_message(object_t *who, const char *data, int len) {
     ip->io_thread->post([ip, buf, len]() {
       output_to_user(ip, buf, len);
       delete[] buf;
+      // Immediately flush to socket after every output; the bufferevent
+      // may have evbuffer_freeze set, which prevents auto-drain.
+      flush_message(ip);
     });
   } else {
     output_to_user(ip, data, len);
+    flush_message(ip);
   }
 
   add_message_calls++;
