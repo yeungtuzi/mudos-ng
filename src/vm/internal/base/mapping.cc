@@ -184,15 +184,20 @@ mapping_node_t *new_map_node() {
   mapping_node_t *ret;
   int i;
 
-  std::lock_guard<std::mutex> lock(g_node_mutex);
+  {
+    std::lock_guard<std::mutex> lock(g_node_mutex);
 
-  if ((ret = free_nodes)) {
-    free_nodes = ret->next;
-  } else {
+    if ((ret = free_nodes)) {
+      free_nodes = ret->next;
+    }
+  }
+
+  if (!ret) {
+    // Allocate outside lock to avoid deadlock: MDfree→dealloc_mapping→free_node
+    // holds md_global_mutex then g_node_mutex, so we must not hold g_node_mutex
+    // while calling DMALLOC (which acquires md_global_mutex).
     mnb = reinterpret_cast<mapping_node_block_t *>(
         DMALLOC(sizeof(mapping_node_block_t), TAG_MAP_NODE_BLOCK, "new_map_node"));
-    mnb->next = mapping_node_blocks;
-    mapping_node_blocks = mnb;
     mnb->nodes[MNB_SIZE - 1].next = nullptr;
     mnb->nodes[MNB_SIZE - 1].values[0] = const0u;
     mnb->nodes[MNB_SIZE - 1].values[1] = const0u;
@@ -203,6 +208,10 @@ mapping_node_t *new_map_node() {
       mnb->nodes[i].values[1] = const0u;
     }
     ret = &mnb->nodes[0];
+
+    std::lock_guard<std::mutex> lock(g_node_mutex);
+    mnb->next = mapping_node_blocks;
+    mapping_node_blocks = mnb;
     free_nodes = &mnb->nodes[1];
   }
   return ret;
