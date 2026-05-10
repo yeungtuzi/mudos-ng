@@ -249,30 +249,45 @@ void call_out(pending_call_t *cop) {
     free_empty_array(cop->vs);
   }
 
-  // FIXME: Phase 8 call_out thread pool is disabled because the string table
-  // is now thread_local (each thread has its own hash table).  When a call_out
-  // is created on the main thread, cop->function.s is interned in the main
-  // thread's string table.  If free_called_call() runs on a heartbeat thread,
-  // int_free_string → findblock searches the heartbeat thread's hash table
-  // and cannot find the string, triggering:
-  //   FATAL: free_string called on non-shared string.
-  // To re-enable, either make the string table global again (with a mutex) or
-  // add a cross-thread string cleanup mechanism (e.g. a global "zombie" list).
-
-  // Inline execution on the main thread.
-  set_eval(max_eval_cost);
-
-  save_command_giver(new_command_giver);
-  /* current object no longer set */
-  if (cop->ob) {
-    DBG_CALLOUT("  func: %s\n", cop->function.s);
-    (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+  // Offload to heartbeat thread pool when available (cop->ob path only).
+  // String table is now global (shared_mutex protected), so cross-thread
+  // free_string works correctly.
+  auto *pool = g_heartbeat_thread_pool;
+  if (pool && cop->ob) {
+    auto *thread = pool->thread_for_object(cop->ob);
+    thread->post([cop, ob, num_callout_args, new_command_giver]() {
+      if (ob->flags & O_DESTRUCTED) { free_called_call(cop); return; }
+      error_context_t econ;
+      save_context(&econ);
+      try {
+        set_eval(max_eval_cost);
+        save_command_giver(new_command_giver);
+        if (cop->ob) {
+          (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+        }
+        restore_command_giver();
+      } catch (const char *) {
+        restore_context(&econ);
+      }
+      pop_context(&econ);
+      free_called_call(cop);
+    });
   } else {
-    DBG_CALLOUT("  func: <function>\n");
-    (void)safe_call_function_pointer(cop->function.f, num_callout_args);
+    // Fallback: inline execution (no pool, function pointer, or pool disabled).
+    set_eval(max_eval_cost);
+
+    save_command_giver(new_command_giver);
+    /* current object no longer set */
+    if (cop->ob) {
+      DBG_CALLOUT("  func: %s\n", cop->function.s);
+      (void)safe_apply(cop->function.s, cop->ob, num_callout_args, ORIGIN_INTERNAL);
+    } else {
+      DBG_CALLOUT("  func: <function>\n");
+      (void)safe_call_function_pointer(cop->function.f, num_callout_args);
+    }
+    restore_command_giver();
+    free_called_call(cop);
   }
-  restore_command_giver();
-  free_called_call(cop);
 }
 
 static int time_left(pending_call_t *cop) {

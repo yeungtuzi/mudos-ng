@@ -186,7 +186,6 @@ void HeartbeatThread::wakeup_cb(evutil_socket_t, short, void *arg) {
 void HeartbeatThread::init_vm_state() {
   eval_timer_ = per_thread_timer_create();
   init_thread_eval();
-  init_strings();  // initialize per-thread string table
   reset_machine(1);
 }
 void HeartbeatThread::cleanup_vm_state() {

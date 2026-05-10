@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <cstring>
 
-#include "base/internal/stralloc.h"  // for init_strings
 #include "vm/internal/eval_limit.h"  // for init_thread_eval
 #include "vm/internal/base/interpret.h"  // for reset_machine
 
@@ -123,12 +122,10 @@ void IOThread::post(std::function<void()> task) {
 }
 
 void IOThread::event_loop() {
-  // IO threads inherit LPC execution capability from the original
-  // single-threaded design: telnet negotiation handlers on the IO thread
-  // call safe_apply() directly (e.g. APPLY_GMCP, APPLY_TERMINAL_TYPE).
-  // Since VM state is now thread_local, each IO thread must initialize
-  // its own copy (string table, eval timer, machine registers).
-  init_strings();
+  // IO threads can call safe_apply() from telnet negotiation handlers
+  // (e.g. APPLY_GMCP, APPLY_TERMINAL_TYPE). Since VM state is now
+  // thread_local, each IO thread must initialize its eval timer and
+  // machine registers. The string table is global (shared_mutex protected).
   init_thread_eval();
   reset_machine(1);
 

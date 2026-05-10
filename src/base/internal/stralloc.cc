@@ -78,13 +78,17 @@ uint64_t num_str_searches = 0;
 static block_t *sfindblock(const char * /*s*/, int /*h*/);
 
 /*
- * Per-thread string hash table — each thread interns strings independently.
- * Pointer-based string comparisons are NOT valid across threads; use strcmp.
- * Ref counting on block_t headers works across threads via pointer arithmetic.
+ * Global string hash table — shared across all threads.
+ * Protected by a shared_mutex: findblock/findstring take a shared (read) lock;
+ * insert and remove take an exclusive (write) lock.
+ * Ref counting on block_t headers uses std::atomic and needs no lock.
  */
-static thread_local block_t **base_table = (block_t **)nullptr;
-static thread_local int htable_size;
-static thread_local int htable_size_minus_one;
+static block_t **base_table = (block_t **)nullptr;
+static int htable_size;
+static int htable_size_minus_one;
+
+#include <shared_mutex>
+static std::shared_mutex g_string_table_mutex;
 
 static block_t *alloc_new_shared_string(const char * /*string*/, int /*h*/, const char * /*why*/);
 
@@ -142,6 +146,7 @@ const char *findstring(const char *s) {
 
   block_t *b;
 
+  std::shared_lock<std::shared_mutex> lock(g_string_table_mutex);
   if ((b = findblock(s))) {
     return STRING(b);
   }
@@ -186,15 +191,35 @@ const char *int_make_shared_string(const char *str, const char *desc) {
   block_t *b;
   int h;
 
-  b = hfindblock(str, h); /* hfindblock macro sets h = StrHash(s) */
-  if (!b) {
-    b = alloc_new_shared_string(str, h, desc);
-  } else {
-    if (REFS(b)) {
-      REFS(b)++;
-      md_record_ref_journal(PTR_TO_NODET(b), true, b->refs, "int_make_shared_string: " + std::string(desc));
+  {
+    std::shared_lock<std::shared_mutex> lock(g_string_table_mutex);
+    b = hfindblock(str, h); /* hfindblock macro sets h = StrHash(s) */
+    if (b) {
+      if (REFS(b)) {
+        REFS(b)++;
+        md_record_ref_journal(PTR_TO_NODET(b), true, b->refs, "int_make_shared_string: " + std::string(desc));
+      }
+      ADD_STRING(SIZE(b));
+      NDBG(b);
+      return (STRING(b));
     }
-    ADD_STRING(SIZE(b));
+  }
+
+  // Not found under shared lock — acquire exclusive lock to insert.
+  {
+    std::unique_lock<std::shared_mutex> lock(g_string_table_mutex);
+    // Double-check: another thread may have inserted while we waited.
+    b = sfindblock(str, h);
+    if (b) {
+      if (REFS(b)) {
+        REFS(b)++;
+        md_record_ref_journal(PTR_TO_NODET(b), true, b->refs, "int_make_shared_string: " + std::string(desc));
+      }
+      ADD_STRING(SIZE(b));
+      NDBG(b);
+      return (STRING(b));
+    }
+    b = alloc_new_shared_string(str, h, desc);
   }
   NDBG(b);
   return (STRING(b));
@@ -232,8 +257,11 @@ void int_free_string(const char *str, const char *desc) {
   int h;
 
   b = BLOCK(str);
-  DEBUG_CHECK1(b != findblock(str), "stralloc.c: free_string called on non-shared string: %s.\n",
-               str);
+  {
+    std::shared_lock<std::shared_mutex> lock(g_string_table_mutex);
+    DEBUG_CHECK1(b != findblock(str), "stralloc.c: free_string called on non-shared string: %s.\n",
+                 str);
+  }
 
   /*
    * if a string has been ref'd USHRT_MAX times then we assume that its used
@@ -256,12 +284,14 @@ void int_free_string(const char *str, const char *desc) {
     return;
   }
 
-  // h = StrHash(str);
-  h = HASH(BLOCK(str));
-  prev = base_table + h;
-  while ((b = *prev)) {
-    if (STRING(b) == str) {
-      *prev = NEXT(b);
+  // Last reference — remove from global hash table under exclusive lock.
+  {
+    std::unique_lock<std::shared_mutex> lock(g_string_table_mutex);
+    h = HASH(BLOCK(str));
+    prev = base_table + h;
+    while ((b = *prev)) {
+      if (STRING(b) == str) {
+        *prev = NEXT(b);
       break;
     }
     prev = &(NEXT(b));
@@ -272,13 +302,14 @@ void int_free_string(const char *str, const char *desc) {
   SUB_NEW_STRING(SIZE(b), sizeof(block_t));
   FREE(b);
   CHECK_STRING_STATS;
+  } // end unique_lock scope for hash table removal
 }
 
 void deallocate_string(char *str) {
   int h;
   block_t *b, **prev;
 
-  // h = StrHash(str);
+  std::unique_lock<std::shared_mutex> lock(g_string_table_mutex);
   h = HASH(BLOCK(str));
   prev = base_table + h;
   while ((b = *prev)) {
@@ -289,7 +320,6 @@ void deallocate_string(char *str) {
     prev = &(NEXT(b));
   }
   DEBUG_CHECK1(!b, "stralloc.c: deallocate_string called on non-shared string: %s.\n", str);
-  // printf("freeing string: %s\n", str);
   FREE(b);
 }
 
