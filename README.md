@@ -47,6 +47,7 @@ The following features and improvements have been added since forking from Fluff
 - **Per-Thread Eval Timer** — eval cost limit uses per-thread timers (Linux: `SIGEV_THREAD_ID`, macOS: `dispatch_source`) instead of a single process-wide signal.
 - **Heartbeat Thread Pool** — configurable parallel heartbeat execution across multiple worker threads (default off, config option `heartbeat threads`).
 - **Cross-Thread Call Bounce** — automatic detection and main-thread fallback for cross-object calls during parallel heartbeat execution.
+- **Heartbeat Multi-Threading Postmortem** — [detailed postmortem](docs/multithread-heartbeat-postmortem.md) of the 2.5-day effort: 9 concurrency bugs found and fixed (double-free, deadlock, race conditions, string safety), architecture design, debugging techniques, lock ordering principles, and lessons learned from moving `heart_beat()` to a thread pool.
 
 ### Language & Compiler
 - **Nullish Coalescing** (`??`) and **Logical Assignment Operators** (`||=`, `&&=`, `??=`)
