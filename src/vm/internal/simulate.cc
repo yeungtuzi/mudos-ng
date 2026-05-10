@@ -104,10 +104,10 @@ void shutdownMudOS(int exit_code) {
 
 /* prevents infinite inherit loops.
  No, mark-and-sweep solution won't work.  Exercise for reader.  */
-static int num_objects_this_thread = 0;
+static thread_local int num_objects_this_thread = 0;
 
 #ifndef NO_ENVIRONMENT
-static object_t *restrict_destruct;
+static thread_local object_t *restrict_destruct;
 #endif
 
 std::mutex g_object_list_mutex;
@@ -589,7 +589,7 @@ object_t *load_object(const char *lname, int callcreate) {
 }
 
 static char *make_new_name(const char *str) {
-  static unsigned int i;
+  static thread_local unsigned int i;
   char *p = reinterpret_cast<char *>(DMALLOC(strlen(str) + 12, TAG_OBJ_NAME, "make_new_name"));
 
   (void)sprintf(p, "%s#%u", str, i);
@@ -1599,7 +1599,7 @@ void add_light(object_t *p, int n) {
 }
 #endif
 
-static sentence_t *sent_free = nullptr;
+static thread_local sentence_t *sent_free = nullptr;
 uint64_t tot_alloc_sentence;
 
 sentence_t *alloc_sentence() {
@@ -1719,8 +1719,8 @@ void free_sentence(sentence_t *p) {
   std::abort();
 }
 
-static int num_error = 0;
-static int num_mudlib_error = 0;
+static thread_local int num_error = 0;
+static thread_local int num_mudlib_error = 0;
 
 /*
  * Error() has been "fixed" so that users can catch and throw them.

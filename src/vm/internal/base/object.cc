@@ -45,7 +45,7 @@ static int restore_array(char **str, svalue_t * /*ret*/);
 static int restore_class(char **str, svalue_t * /*ret*/);
 
 #ifdef F_SET_HIDE
-int num_hidden = 0;
+thread_local int num_hidden = 0;
 
 int valid_hide(object_t *obj) {
   svalue_t *ret;
@@ -59,8 +59,8 @@ int valid_hide(object_t *obj) {
 }
 #endif
 
-int save_svalue_depth = 0, max_depth;
-int *sizes = nullptr;
+thread_local int save_svalue_depth = 0, max_depth;
+thread_local int *sizes = nullptr;
 
 int svalue_save_size(svalue_t *v) {
   switch (v->type) {
@@ -1493,7 +1493,7 @@ const int SAVE_EXTENSION_GZ_LENGTH = strlen(SAVE_GZ_EXTENSION);
 
 int save_object(object_t *ob, const char *file, int save_zeros) {
   char *name, *p;
-  static char save_name[256], tmp_name[256];
+  static thread_local char save_name[256], tmp_name[256];
   int len;
   FILE *f;
   int success;

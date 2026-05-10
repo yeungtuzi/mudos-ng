@@ -5,9 +5,11 @@
 #include <deque>
 #include <map>
 #include <functional>
+#include <mutex>
 
 #include "vm/internal/base/machine.h"
 
+static std::mutex g_node_mutex;
 mapping_node_t *locked_map_nodes = nullptr;
 
 /*
@@ -182,6 +184,8 @@ mapping_node_t *new_map_node() {
   mapping_node_t *ret;
   int i;
 
+  std::lock_guard<std::mutex> lock(g_node_mutex);
+
   if ((ret = free_nodes)) {
     free_nodes = ret->next;
   } else {
@@ -212,6 +216,7 @@ void unlock_mapping(mapping_t *m) {
     if ((*mn)->values[0].u.map == m) {
       free_svalue((*mn)->values + 1, "free_locked_nodes");
       /* take it out of the locked list ... */
+      std::lock_guard<std::mutex> lock(g_node_mutex);
       tmp = *mn;
       *mn = (*mn)->next;
       /* and add it to the free list */
@@ -226,12 +231,14 @@ void unlock_mapping(mapping_t *m) {
 
 void free_node(mapping_t *m, mapping_node_t *mn) {
   if (m->count & MAP_LOCKED) {
+    std::lock_guard<std::mutex> lock(g_node_mutex);
     mn->next = locked_map_nodes;
     locked_map_nodes = mn;
     mn->values[0].u.map = m;
   } else {
     free_svalue(mn->values + 1, "free_node");
     *(mn->values + 1) = const0u;
+    std::lock_guard<std::mutex> lock(g_node_mutex);
     mn->next = free_nodes;
     free_nodes = mn;
   }
@@ -1210,10 +1217,10 @@ static svalue_t *insert_in_mapping(mapping_t *m, const char *key) {
   svalue_t *ret;
 
   lv.type = T_STRING;
-  lv.subtype = STRING_CONSTANT;
-  lv.u.string = key;
+  lv.subtype = STRING_SHARED;
+  lv.u.string = make_shared_string(key);
   ret = find_for_insert(m, &lv, 1);
-  /* lv.u.string will have been converted to a shared string */
+  /* lv.u.string is a shared string, safe to free */
   free_string(lv.u.string);
   return ret;
 }

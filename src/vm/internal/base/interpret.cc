@@ -101,7 +101,7 @@ static inline void assign_value_to_lvalue(svalue_t *lval, svalue_t *value, const
 }
 
 #ifdef DEBUG
-int stack_in_use_as_temporary = 0;
+thread_local int stack_in_use_as_temporary = 0;
 #endif
 
 int inter_sscanf(svalue_t * /*arg*/, svalue_t * /*s0*/, svalue_t * /*s1*/, int /*num_arg*/);
@@ -575,19 +575,19 @@ void pop_stack() {
   free_svalue(sp--, "pop_stack");
 }
 
-svalue_t global_lvalue_byte = {T_LVALUE_BYTE};
+thread_local svalue_t global_lvalue_byte = {T_LVALUE_BYTE};
 
 thread_local int lv_owner_type;
 thread_local refed_t *lv_owner;
 thread_local const char *lv_owner_str;
 
 // LVALUE points to an character(codepoint) in string
-static struct {
+static thread_local struct {
   int32_t index;
   svalue_t *owner;
   std::unique_ptr<EGCSmartIterator> iter;
 } global_lvalue_codepoint;
-static svalue_t global_lvalue_codepoint_sv = {T_LVALUE_CODEPOINT};
+static thread_local svalue_t global_lvalue_codepoint_sv = {T_LVALUE_CODEPOINT};
 
 /*
  * Compute the address of an array element.
@@ -764,12 +764,12 @@ void push_indexed_lvalue(int reverse) {
   }
 }
 
-static struct lvalue_range {
+static thread_local struct lvalue_range {
   size_t ind1, ind2, size;
   svalue_t *owner;
 } global_lvalue_range;
 
-static svalue_t global_lvalue_range_sv = {T_LVALUE_RANGE};
+static thread_local svalue_t global_lvalue_range_sv = {T_LVALUE_RANGE};
 
 static void push_lvalue_range(int code) {
   int32_t ind1, ind2;
@@ -1627,8 +1627,8 @@ void break_point() {
 }
 #endif
 
-program_t fake_prog = {"<driver>"};
-unsigned char fake_program = F_RETURN;
+thread_local program_t fake_prog = {"<driver>"};
+thread_local unsigned char fake_program = F_RETURN;
 
 /*
  * Very similar to push_control_stack() [which see].  The purpose of this is

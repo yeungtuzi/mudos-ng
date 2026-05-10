@@ -125,8 +125,8 @@ extern thread_local int max_eval_error;
 extern thread_local int function_index_offset;
 extern thread_local int variable_index_offset;
 extern int simul_efun_is_loading;
-extern program_t fake_prog;
-extern svalue_t global_lvalue_byte;
+extern thread_local program_t fake_prog;
+extern thread_local svalue_t global_lvalue_byte;
 extern thread_local int num_varargs;
 extern thread_local int st_num_arg;
 

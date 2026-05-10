@@ -178,7 +178,7 @@ using sprintf_state_t = struct _sprintf_state {
   struct _sprintf_state *next;
 };
 
-static sprintf_state_t *sprintf_state = nullptr;
+static thread_local sprintf_state_t *sprintf_state = nullptr;
 
 static void add_space(outbuffer_t * /*outbuf*/, int indent);
 static void add_justified(const char *str, int swidth, int slen, pad_info_t *pad, int fs,
