@@ -696,7 +696,7 @@ void push_indexed_lvalue(int reverse) {
       if (!(lv = find_for_insert(sp->u.map, sp - 1, 0))) {
         mapping_too_large();
       }
-      sp->u.map->ref--;
+      sp->u.map->ref.fetch_sub(1, std::memory_order_acq_rel);
 #ifdef REF_RESERVED_WORD
       lv_owner_type = T_MAPPING;
       lv_owner = reinterpret_cast<refed_t *>(sp->u.map);

@@ -1,5 +1,7 @@
 /* mapping.h - 1992/07/19 */
 
+#include <atomic>
+
 #ifdef PACKAGE_MUDLIB_STATS
 #include "packages/mudlib_stats/mudlib_stats.h"
 #endif
@@ -36,7 +38,7 @@ typedef struct mapping_node_block_s {
 #define MAP_COUNT(m) ((m)->count & ~MAP_LOCKED)
 
 struct mapping_t {
-  uint32_t ref; /* how many times this map has been referenced */
+  std::atomic<uint32_t> ref; /* how many times this map has been referenced */
 #ifdef DEBUGMALLOC_EXTENSIONS
   int extra_ref;
 #endif

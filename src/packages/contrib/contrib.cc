@@ -2008,7 +2008,7 @@ static int memory_share(svalue_t *sv) {
       subtotal = sizeof(mapping_t);
       mapTraverse(sv->u.map, node_share, &subtotal);
       calldepth--;
-      return total + subtotal / sv->u.map->ref;
+      return total + subtotal / sv->u.map->ref.load(std::memory_order_relaxed);
     case T_FUNCTION: {
       svalue_t tmp;
       tmp.type = T_ARRAY;

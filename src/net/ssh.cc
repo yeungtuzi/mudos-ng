@@ -23,6 +23,14 @@
 #include <vector>
 
 #include "comm.h"
+
+// libssh 0.9.x compatibility
+#if LIBSSH_VERSION_MAJOR == 0 && LIBSSH_VERSION_MINOR < 10
+#define ssh_pki_generate_key ssh_pki_generate_key_compat
+static inline int ssh_pki_generate_key_compat(int type, const char *, ssh_key *pkey) {
+  return ssh_pki_generate(static_cast<ssh_keytypes_e>(type), 2048, pkey);
+}
+#endif
 #include "interactive.h"
 
 // Re-import mudos string macros (lost when we undef'd string_copy above)
@@ -119,8 +127,6 @@ ssh_bind ssh_server_init(const char *config_dir) {
     debug_message("SSH: generated host key at %s.\n", key_path.c_str());
   }
 
-  // Read PEM file into string for SSH_BIND_OPTIONS_IMPORT_KEY_STR
-  // (SSH_BIND_OPTIONS_IMPORT_KEY file-path variant is broken on this libssh)
   auto bind = ssh_bind_new();
   if (!bind) {
     ssh_key_free(hostkey);
@@ -128,6 +134,9 @@ ssh_bind ssh_server_init(const char *config_dir) {
   }
   ssh_key_free(hostkey);
 
+  int rc;
+#if LIBSSH_VERSION_MAJOR > 0 || LIBSSH_VERSION_MINOR >= 10
+  // Read PEM file into string for SSH_BIND_OPTIONS_IMPORT_KEY_STR
   std::string pem;
   {
     int fd = open(key_path.c_str(), O_RDONLY);
@@ -143,8 +152,10 @@ ssh_bind ssh_server_init(const char *config_dir) {
     }
     close(fd);
   }
-
-  int rc = ssh_bind_options_set(bind, SSH_BIND_OPTIONS_IMPORT_KEY_STR, pem.c_str());
+  rc = ssh_bind_options_set(bind, SSH_BIND_OPTIONS_IMPORT_KEY_STR, pem.c_str());
+#else
+  rc = ssh_bind_options_set(bind, SSH_BIND_OPTIONS_IMPORT_KEY, key_path.c_str());
+#endif
   if (rc != SSH_OK) {
     debug_message("SSH: failed to import host key (err=%d).\n", rc);
     ssh_bind_free(bind);

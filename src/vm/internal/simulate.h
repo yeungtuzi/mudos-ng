@@ -1,6 +1,7 @@
 #ifndef SIMULATE_H
 #define SIMULATE_H
 
+#include <mutex>
 #include "vm/internal/base/machine.h"
 
 #define V_SHORT 1

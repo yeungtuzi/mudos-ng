@@ -288,7 +288,7 @@ mapping_t *allocate_mapping(int n) {
     error("Allocate_mapping 2 - out of memory.\n");
   }
   total_mapping_size += sizeof(mapping_t) + n;
-  newmap->ref = 1;
+  newmap->ref.store(1, std::memory_order_relaxed);
   newmap->count = 0;
 #ifdef PACKAGE_MUDLIB_STATS
   if (current_object) {
@@ -359,7 +359,7 @@ static mapping_t *copyMapping(mapping_t *m) {
   }
   newmap->table_size = k++;
   newmap->unfilled = m->unfilled;
-  newmap->ref = 1;
+  newmap->ref.store(1, std::memory_order_relaxed);
   c = newmap->table = reinterpret_cast<mapping_node_t **>(
       DCALLOC(k, sizeof(mapping_node_t *), TAG_MAP_TBL, "copy_mapping: 2"));
   if (!c) {
@@ -992,7 +992,7 @@ void map_mapping(svalue_t *arg, int num_arg) {
 
   process_efun_callback(1, &ftc, F_MAP);
 
-  if (arg->u.map->ref > 1) {
+  if (arg->u.map->ref.load(std::memory_order_relaxed) > 1) {
     m = copyMapping(arg->u.map);
     free_mapping(arg->u.map);
     arg->u.map = m;
@@ -1032,7 +1032,7 @@ void filter_mapping(svalue_t *arg, int num_arg) {
 
   process_efun_callback(1, &ftc, F_FILTER);
 
-  if (arg->u.map->ref > 1) {
+  if (arg->u.map->ref.load(std::memory_order_relaxed) > 1) {
     m = copyMapping(arg->u.map);
     free_mapping(arg->u.map);
     arg->u.map = m;

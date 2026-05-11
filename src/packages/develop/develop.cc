@@ -125,7 +125,7 @@ void f_refs() {
 
   switch (sp->type) {
     case T_MAPPING:
-      r = sp->u.map->ref;
+      r = sp->u.map->ref.load(std::memory_order_relaxed);
       break;
     case T_CLASS:
     case T_ARRAY:
